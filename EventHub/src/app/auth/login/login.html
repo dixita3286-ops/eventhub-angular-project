@@ -1,1 +1,17 @@
-<p>login works!</p>
+<div class="login-box">
+  <h2>EventHub Login</h2>
+
+  <input
+    type="email"
+    placeholder="Email"
+    [(ngModel)]="email"
+  />
+
+  <input
+    type="password"
+    placeholder="Password"
+    [(ngModel)]="password"
+  />
+
+  <button type="button" (click)="login()">Login</button>
+</div>
