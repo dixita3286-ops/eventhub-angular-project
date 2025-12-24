@@ -4,12 +4,15 @@ import { Login } from './auth/login/login';
 import { AdminDashboard } from './admin/dashboard/dashboard';
 import { StudentDashboard } from './student/dashboard/dashboard';
 import { OrganizerDashboard } from './organizer/dashboard/dashboard';
+import { Register } from './auth/register/register';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
   { path: '', component: Login },
+
+  { path: 'register', component: Register },
 
   {
     path: 'admin',

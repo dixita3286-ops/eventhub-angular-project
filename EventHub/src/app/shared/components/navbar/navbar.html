@@ -1,1 +1,26 @@
-<p>navbar works!</p>
+<nav class="navbar" *ngIf="showNavbar && user">
+  <div class="logo">EventHub</div>
+
+  <!-- ADMIN -->
+  <ul class="links" *ngIf="user.role === 'admin'">
+    <li><a routerLink="/admin">Dashboard</a></li>
+    <li><a>Manage Events</a></li>
+    <li><a>Manage Users</a></li>
+  </ul>
+
+  <!-- ORGANIZER -->
+  <ul class="links" *ngIf="user.role === 'organizer'">
+    <li><a routerLink="/organizer">Dashboard</a></li>
+    <li><a>Create Event</a></li>
+    <li><a>My Events</a></li>
+  </ul>
+
+  <!-- STUDENT -->
+  <ul class="links" *ngIf="user.role === 'student'">
+    <li><a routerLink="/student">Dashboard</a></li>
+    <li><a>All Events</a></li>
+    <li><a>My Registrations</a></li>
+  </ul>
+
+  <button class="logout" (click)="logout()">Logout</button>
+</nav>

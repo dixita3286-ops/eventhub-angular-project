@@ -1,17 +1,29 @@
-<div class="login-box">
-  <h2>EventHub Login</h2>
+<div class="login-container">
+  <div class="login-card">
+    <h2>EventHub</h2>
+    <p class="subtitle">College Event Management System</p>
 
-  <input
-    type="email"
-    placeholder="Email"
-    [(ngModel)]="email"
-  />
+    <input
+      type="email"
+      placeholder="Email address"
+      [(ngModel)]="email"
+    />
 
-  <input
-    type="password"
-    placeholder="Password"
-    [(ngModel)]="password"
-  />
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+    />
 
-  <button type="button" (click)="login()">Login</button>
+    <button type="button" (click)="login()">Login</button>
+
+    <p class="note">
+      Login using Admin / Organizer / Student credentials
+    </p>
+
+    <p class="note">
+      Don’t have an account?
+      <span class="link" (click)="goToRegister()">Register</span>
+    </p>
+  </div>
 </div>

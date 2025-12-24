@@ -25,10 +25,6 @@ app.listen(5000, () => {
   console.log('Server running on port 5000');
 });
 
-const User = require('./models/User');
 
-app.get('/test-login', async (req, res) => {
-  const user = await User.findOne({ email: 'admin@gmail.com' });
-  res.json(user);
-});
+
 

@@ -6,19 +6,20 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AuthService {
 
-  private apiUrl = 'http://localhost:5000/api/auth';
+  private baseUrl = 'http://localhost:5000/api/auth';
 
   constructor(private http: HttpClient) {}
 
   login(data: { email: string; password: string }) {
-    return this.http.post<any>(`${this.apiUrl}/login`, data);
+    return this.http.post<any>(`${this.baseUrl}/login`, data);
   }
 
-  getUser() {
-    return JSON.parse(localStorage.getItem('user') || 'null');
-  }
-
-  logout() {
-    localStorage.removeItem('user');
+  register(data: {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+  }) {
+    return this.http.post<any>(`${this.baseUrl}/register`, data);
   }
 }
