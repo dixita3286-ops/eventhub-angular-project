@@ -1,26 +1,59 @@
-<nav class="navbar" *ngIf="showNavbar && user">
-  <div class="logo">EventHub</div>
+<nav class="navbar">
 
-  <!-- ADMIN -->
-  <ul class="links" *ngIf="user.role === 'admin'">
-    <li><a routerLink="/admin">Dashboard</a></li>
-    <li><a>Manage Events</a></li>
-    <li><a>Manage Users</a></li>
-  </ul>
+  <!-- LEFT -->
+  <div class="left">
+    @if (user) {
+      <span class="menu-icon" (click)="toggleMenu()">☰</span>
+    }
+    <span class="logo" routerLink="/">EventHub</span>
+  </div>
 
-  <!-- ORGANIZER -->
-  <ul class="links" *ngIf="user.role === 'organizer'">
-    <li><a routerLink="/organizer">Dashboard</a></li>
-    <li><a>Create Event</a></li>
-    <li><a>My Events</a></li>
-  </ul>
+  <!-- RIGHT -->
+  <div class="right">
 
-  <!-- STUDENT -->
-  <ul class="links" *ngIf="user.role === 'student'">
-    <li><a routerLink="/student">Dashboard</a></li>
-    <li><a>All Events</a></li>
-    <li><a>My Registrations</a></li>
-  </ul>
+    <!-- SEARCH -->
+    <div class="search-box">
+      <input type="text" placeholder="Search events..." />
+      <span class="search-icon">🔍</span>
+    </div>
 
-  <button class="logout" (click)="logout()">Logout</button>
+    <!-- NOT LOGGED IN -->
+    @if (!user) {
+      <div class="profile" (click)="toggleProfile()">👤</div>
+
+      @if (showProfileMenu) {
+        <div class="dropdown">
+          <div (click)="goTo('/login')">Login</div>
+          <div (click)="goTo('/register')">Sign Up</div>
+        </div>
+      }
+    }
+
+    <!-- LOGGED IN -->
+    @if (user && showMenu) {
+      <div class="menu-dropdown">
+
+        @if (user.role === 'admin') {
+          <div (click)="goTo('/admin')">Dashboard</div>
+          <div>Manage Events</div>
+          <div>Manage Users</div>
+        }
+
+        @if (user.role === 'organizer') {
+          <div (click)="goTo('/organizer')">Dashboard</div>
+          <div>Create Event</div>
+          <div>My Events</div>
+        }
+
+        @if (user.role === 'student') {
+          <div (click)="goTo('/student')">Dashboard</div>
+          <div>All Events</div>
+          <div>My Registrations</div>
+        }
+
+        <div class="logout" (click)="logout()">Logout</div>
+      </div>
+    }
+
+  </div>
 </nav>

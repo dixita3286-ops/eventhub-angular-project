@@ -1,17 +1,19 @@
 import { Routes } from '@angular/router';
 
+import { Landing } from './public/landing/landing';
 import { Login } from './auth/login/login';
+import { Register } from './auth/register/register';
+
 import { AdminDashboard } from './admin/dashboard/dashboard';
 import { StudentDashboard } from './student/dashboard/dashboard';
 import { OrganizerDashboard } from './organizer/dashboard/dashboard';
-import { Register } from './auth/register/register';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
-  { path: '', component: Login },
-
+  { path: '', component: Landing },
+  { path: 'login', component: Login },
   { path: 'register', component: Register },
 
   {
@@ -20,14 +22,12 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'admin' }
   },
-
   {
     path: 'student',
     component: StudentDashboard,
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' }
   },
-
   {
     path: 'organizer',
     component: OrganizerDashboard,

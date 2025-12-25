@@ -1,36 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
-export class Navbar implements OnInit {
+export class Navbar {
 
   user: any = null;
-  showNavbar = false;
+  showMenu = false;
+  showProfileMenu = false;
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        this.loadUser();
-        this.showNavbar = event.url !== '/';
-      }
-    });
+  constructor(private router: Router) {
+    const storedUser = localStorage.getItem('user');
+    this.user = storedUser ? JSON.parse(storedUser) : null;
   }
 
-  loadUser() {
-    this.user = JSON.parse(localStorage.getItem('user') || 'null');
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
+  }
+
+  toggleProfile() {
+    this.showProfileMenu = !this.showProfileMenu;
   }
 
   logout() {
     localStorage.removeItem('user');
-    this.router.navigate(['/']);
+    this.user = null;
+    this.router.navigate(['/login']);
+  }
+
+  goTo(path: string) {
+    this.showMenu = false;
+    this.router.navigate([path]);
   }
 }

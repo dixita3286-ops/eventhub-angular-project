@@ -1,0 +1,41 @@
+<!-- HERO SECTION -->
+<section class="hero">
+  <h1>EventHub</h1>
+  <p>Discover and participate in exciting college events</p>
+
+  <div class="hero-buttons">
+    <button (click)="goToLogin()">Login</button>
+    <button class="outline" (click)="goToRegister()">Register</button>
+  </div>
+</section>
+
+<!-- EVENTS SECTION -->
+<section class="events-section">
+  <h2>Upcoming Events</h2>
+
+  <div class="events-container">
+    <div class="event-card" *ngFor="let event of events">
+      <img
+        [src]="'http://localhost:5000' + event.eventImage"
+        alt="Event Image"
+      />
+
+      <div class="card-body">
+        <h3>{{ event.title }}</h3>
+        <p class="category">{{ event.category }}</p>
+        <p class="desc">{{ event.description }}</p>
+
+        <div class="details">
+          <span>📍 {{ event.venue }}</span>
+          <span>📅 {{ event.date | date }}</span>
+        </div>
+
+        <p class="fee">₹ {{ event.registrationFee }}</p>
+
+        <button class="login-btn" (click)="goToLogin()">
+          Login to Register
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
