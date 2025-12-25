@@ -21,6 +21,9 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 
+const eventRoutes = require('./routes/event.routes');
+app.use('/api/events', eventRoutes);
+
 app.listen(5000, () => {
   console.log('Server running on port 5000');
 });
