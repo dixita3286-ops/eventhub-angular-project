@@ -1,41 +1,31 @@
-<!-- HERO SECTION -->
 <section class="hero">
-  <h1>EventHub</h1>
-  <p>Discover and participate in exciting college events</p>
+  <!-- LEFT CONTENT -->
+  <div class="hero-left">
+    <h1>
+      Effortlessly<br />
+      <span>plan your</span><br />
+      events
+    </h1>
 
-  <div class="hero-buttons">
-    <button (click)="goToLogin()">Login</button>
-    <button class="outline" (click)="goToRegister()">Register</button>
+    <p>
+      Make event planning easy with our comprehensive platform.
+      From start to finish, we streamline the process and offer
+      dedicated support to make your event a success.
+    </p>
+
+    <div class="hero-actions">
+      <button class="primary-btn">Plan an Event</button>
+      <button class="outline-btn">Find an Expert</button>
+    </div>
   </div>
-</section>
 
-<!-- EVENTS SECTION -->
-<section class="events-section">
-  <h2>Upcoming Events</h2>
-
-  <div class="events-container">
-    <div class="event-card" *ngFor="let event of events">
-      <img
-        [src]="'http://localhost:5000' + event.eventImage"
-        alt="Event Image"
-      />
-
-      <div class="card-body">
-        <h3>{{ event.title }}</h3>
-        <p class="category">{{ event.category }}</p>
-        <p class="desc">{{ event.description }}</p>
-
-        <div class="details">
-          <span>📍 {{ event.venue }}</span>
-          <span>📅 {{ event.date | date }}</span>
-        </div>
-
-        <p class="fee">₹ {{ event.registrationFee }}</p>
-
-        <button class="login-btn" (click)="goToLogin()">
-          Login to Register
-        </button>
-      </div>
+  <!-- RIGHT IMAGE GRID -->
+  <div class="hero-right">
+    <div class="grid">
+      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30" />
+      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3" />
+      <img src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac" />
+      <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf" />
     </div>
   </div>
 </section>
