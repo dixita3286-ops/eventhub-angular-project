@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect('mongodb://127.0.0.1:27017/EventHub')
+mongoose.connect('mongodb+srv://dixita_1704:dixita1704@cluster0.syxxncf.mongodb.net/EventHub')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
