@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
 
   private baseUrl = 'http://localhost:5000/api/auth';
@@ -21,5 +19,23 @@ export class AuthService {
     role: string;
   }) {
     return this.http.post<any>(`${this.baseUrl}/register`, data);
+  }
+
+  // 🔥 ADD THESE
+  setUser(user: any) {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  getUser() {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+
+  isLoggedIn() {
+    return !!localStorage.getItem('user');
+  }
+
+  logout() {
+    localStorage.removeItem('user');
   }
 }

@@ -6,7 +6,7 @@ export const roleGuard: CanActivateFn = (route) => {
   const user = JSON.parse(localStorage.getItem('user') || 'null');
 
   if (!user) {
-    return router.createUrlTree(['/']);
+    return router.createUrlTree(['/login']);
   }
 
   const allowedRole = route.data?.['role'];

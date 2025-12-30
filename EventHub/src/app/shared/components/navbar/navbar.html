@@ -46,7 +46,8 @@
         }
 
         @if (user.role === 'student') {
-          <div (click)="goTo('/student')">Dashboard</div>
+          <div (click)="goTo('/student')">Home</div>
+          <div (click)="goTo('/student/dashboard')">My Dashboard</div>
           <div>All Events</div>
           <div>My Registrations</div>
         }

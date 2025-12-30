@@ -4,9 +4,11 @@ import { Landing } from './public/landing/landing';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
 
-import { AdminDashboard } from './admin/dashboard/dashboard';
-import { StudentDashboard } from './student/dashboard/dashboard';
-import { OrganizerDashboard } from './organizer/dashboard/dashboard';
+import { AdminHome } from './admin/admin-home/admin-home';
+import { OrganizerHome } from './organizer/organizer-home/organizer-home';
+
+import { StudentHome } from './student/student-home/student-home';
+import { StudentDashboard } from './student/student-dashboard/student-dashboard';
 
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
@@ -18,19 +20,25 @@ export const routes: Routes = [
 
   {
     path: 'admin',
-    component: AdminDashboard,
+    component: AdminHome,
     canActivate: [authGuard, roleGuard],
     data: { role: 'admin' }
   },
+
   {
-    path: 'student',
-    component: StudentDashboard,
-    canActivate: [authGuard, roleGuard],
-    data: { role: 'student' }
-  },
+  path: 'student',
+  canActivate: [authGuard, roleGuard],
+  data: { role: 'student' },
+  children: [
+    { path: '', component: StudentHome },          // HOME
+    { path: 'dashboard', component: StudentDashboard } // DASHBOARD
+  ]
+}
+,
+
   {
     path: 'organizer',
-    component: OrganizerDashboard,
+    component: OrganizerHome,
     canActivate: [authGuard, roleGuard],
     data: { role: 'organizer' }
   }

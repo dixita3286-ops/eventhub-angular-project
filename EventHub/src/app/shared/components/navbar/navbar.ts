@@ -1,19 +1,23 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
+  imports: [CommonModule, RouterLink], // 🔥 REQUIRED for @if & routerLink
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
 export class Navbar {
 
+  private router = inject(Router);
+
   user: any = null;
   showMenu = false;
   showProfileMenu = false;
 
-  constructor(private router: Router) {
+  constructor() {
     const storedUser = localStorage.getItem('user');
     this.user = storedUser ? JSON.parse(storedUser) : null;
   }
@@ -26,14 +30,15 @@ export class Navbar {
     this.showProfileMenu = !this.showProfileMenu;
   }
 
+  goTo(path: string) {
+    this.showMenu = false;
+    this.showProfileMenu = false;
+    this.router.navigateByUrl(path); // 🔥 latest & clean
+  }
+
   logout() {
     localStorage.removeItem('user');
     this.user = null;
-    this.router.navigate(['/login']);
-  }
-
-  goTo(path: string) {
-    this.showMenu = false;
-    this.router.navigate([path]);
+    this.router.navigateByUrl('/login');
   }
 }
