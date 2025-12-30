@@ -2,9 +2,6 @@
 
   <!-- LEFT -->
   <div class="left">
-    @if (user) {
-      <span class="menu-icon" (click)="toggleMenu()">☰</span>
-    }
     <span class="logo" routerLink="/">EventHub</span>
   </div>
 
@@ -16,6 +13,11 @@
       <input type="text" placeholder="Search events..." />
       <span class="search-icon">🔍</span>
     </div>
+
+    <!-- MENU ICON (RIGHT SIDE) -->
+    @if (user) {
+      <span class="menu-icon" (click)="toggleMenu()">☰</span>
+    }
 
     <!-- NOT LOGGED IN -->
     @if (!user) {
@@ -34,22 +36,23 @@
       <div class="menu-dropdown">
 
         @if (user.role === 'admin') {
-          <div (click)="goTo('/admin')">Dashboard</div>
-          <div>Manage Events</div>
-          <div>Manage Users</div>
+          <div (click)="goTo('/admin')">Home</div>
+          <div (click)="goTo('/admin/dashboard')">Dashboard</div>
+          <div (click)="goTo('/admin/manage-events')">Manage Events</div>
+          <div (click)="goTo('/admin/manage-users')">Manage Users</div>
         }
 
         @if (user.role === 'organizer') {
-          <div (click)="goTo('/organizer')">Dashboard</div>
-          <div>Create Event</div>
-          <div>My Events</div>
+       <div (click)="goTo('/organizer')">Home</div>
+          <div (click)="goTo('/organizer/dashboard')">Dashboard</div>
+          <div (click)="goTo('/organizer/create-event')">Create Event</div>
+          <div (click)="goTo('/organizer/my-events')">My Events</div>
         }
-
         @if (user.role === 'student') {
           <div (click)="goTo('/student')">Home</div>
           <div (click)="goTo('/student/dashboard')">My Dashboard</div>
+          <div (click)="goTo('/student/registrations')">My Registrations</div>
           <div>All Events</div>
-          <div>My Registrations</div>
         }
 
         <div class="logout" (click)="logout()">Logout</div>
