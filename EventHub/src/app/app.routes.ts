@@ -24,6 +24,7 @@ import { StudentRegistrations } from './student/student-registrations/student-re
 // GUARDS
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+import { StudentViewEvents } from './student/student-view-events/student-view-events';
 
 export const routes: Routes = [
 
@@ -74,6 +75,12 @@ export const routes: Routes = [
   {
     path: 'student/registrations',
     component: StudentRegistrations,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'student' }
+  },
+  {
+    path: 'student/view-events',
+    component: StudentViewEvents,
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' }
   },

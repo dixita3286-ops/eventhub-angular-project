@@ -1,1 +1,31 @@
-<p>student-registrations works!</p>
+<section class="registrations">
+  <h2>My Registered Events</h2>
+
+  <!-- NO REGISTRATIONS -->
+  <p class="empty" *ngIf="registrations.length === 0">
+    You have not registered for any events yet.
+  </p>
+
+  <!-- REGISTRATION LIST -->
+  <div class="reg-grid" *ngIf="registrations.length > 0">
+    <div class="reg-card" *ngFor="let reg of registrations">
+
+      <h3>{{ reg.event?.title }}</h3>
+
+      <span class="category">{{ reg.event?.category }}</span>
+
+      <p><strong>Date:</strong> {{ reg.event?.date }}</p>
+      <p><strong>Venue:</strong> {{ reg.event?.venue }}</p>
+
+      <p>
+        <strong>Fees:</strong>
+        {{ reg.event?.fees === 0 ? 'Free' : '₹' + reg.event?.fees }}
+      </p>
+
+      <p class="time">
+        Registered on:
+        {{ reg.registeredAt | date:'mediumDate' }}
+      </p>
+    </div>
+  </div>
+</section>

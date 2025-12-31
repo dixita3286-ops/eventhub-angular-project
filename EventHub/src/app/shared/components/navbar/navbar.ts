@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink], // 🔥 REQUIRED for @if & routerLink
+  imports: [CommonModule, RouterLink],
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css']
 })
@@ -30,15 +30,27 @@ export class Navbar {
     this.showProfileMenu = !this.showProfileMenu;
   }
 
+  // 🔥🔥🔥 FINAL FIX 🔥🔥🔥
   goTo(path: string) {
     this.showMenu = false;
     this.showProfileMenu = false;
-    this.router.navigateByUrl(path); // 🔥 latest & clean
+
+    this.router.navigate([path], {
+      queryParams: { reload: Date.now() } // ⭐ FORCE ROUTE RELOAD
+    }).then(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
   }
 
   logout() {
     localStorage.removeItem('user');
     this.user = null;
-    this.router.navigateByUrl('/login');
+
+    this.router.navigate(['/login'], {
+      queryParams: { reload: Date.now() }
+    });
   }
 }
