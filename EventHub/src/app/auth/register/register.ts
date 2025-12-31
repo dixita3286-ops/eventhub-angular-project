@@ -13,17 +13,17 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class Register {
 
-  name = '';
-  email = '';
-  password = '';
-  role = '';
+  name: string = '';
+  email: string = '';
+  password: string = '';
+  role: string = '';
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  register() {
+  register(): void {
     if (!this.name || !this.email || !this.password || !this.role) {
       alert('Please fill all fields');
       return;
