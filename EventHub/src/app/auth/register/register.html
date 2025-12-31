@@ -1,37 +1,51 @@
-<div class="register-container">
-  <div class="register-card">
-    <h2>Create Account</h2>
-    <p class="subtitle">Join EventHub</p>
+<div class="login-container">
+  <div class="login-card">
 
-    <input
-      type="text"
-      placeholder="Full Name"
-      [(ngModel)]="name"
-    />
+    <h2>EventHub</h2>
 
-    <input
-      type="email"
-      placeholder="Email address"
-      [(ngModel)]="email"
-    />
+    <!-- FULL NAME -->
+    <div class="field">
+      <input
+        type="text"
+        placeholder="Full Name"
+        [(ngModel)]="name"
+      />
+    </div>
 
-    <input
-      type="password"
-      placeholder="Password"
-      [(ngModel)]="password"
-    />
+    <!-- EMAIL -->
+    <div class="field">
+      <input
+        type="email"
+        placeholder="Email address"
+        [(ngModel)]="email"
+      />
+    </div>
 
-    <select [(ngModel)]="role">
-      <option value="" disabled selected>Select Role</option>
-      <option value="student">Student</option>
-      <option value="organizer">Organizer</option>
-    </select>
+    <!-- PASSWORD -->
+    <div class="field">
+      <input
+        type="password"
+        placeholder="Password"
+        [(ngModel)]="password"
+      />
+    </div>
 
-    <button type="button" (click)="register()">Register</button>
+    <!-- ROLE -->
+    <div class="field">
+      <select [(ngModel)]="role">
+        <option value="" disabled>Select Role</option>
+        <option value="student">Student</option>
+        <option value="organizer">Organizer</option>
+      </select>
+    </div>
+
+    <!-- REGISTER BUTTON -->
+    <button (click)="register()">Register</button>
 
     <p class="note">
       Already have an account?
-      <a routerLink="/">Login</a>
+      <span class="link" routerLink="/">Login</span>
     </p>
+
   </div>
 </div>

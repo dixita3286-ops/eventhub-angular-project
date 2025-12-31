@@ -15,7 +15,7 @@ export class Login implements OnInit {
 
   email: string = '';
   password: string = '';
-  showPassword: boolean = false;   // ⭐ REQUIRED
+  showPassword: boolean = false;   
 
   constructor(
     private authService: AuthService,
