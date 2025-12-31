@@ -1,29 +1,36 @@
 <div class="login-container">
   <div class="login-card">
+
     <h2>EventHub</h2>
-    <p class="subtitle">College Event Management System</p>
 
-    <input
-      type="email"
-      placeholder="Email address"
-      [(ngModel)]="email"
-    />
+    <!-- EMAIL -->
+    <div class="field">
+      <input
+        type="email"
+        placeholder="Email address"
+        [(ngModel)]="email"
+      />
+    </div>
 
-    <input
-      type="password"
-      placeholder="Password"
-      [(ngModel)]="password"
-    />
+    <!-- PASSWORD -->
+    <div class="field password-field">
+      <input
+        [type]="showPassword ? 'text' : 'password'"
+        placeholder="Password"
+        [(ngModel)]="password"
+      />
+      <span class="toggle" (click)="togglePassword()">
+        {{ showPassword ? 'Hide' : 'Show' }}
+      </span>
+    </div>
 
-    <button type="button" (click)="login()">Login</button>
-
-    <p class="note">
-      Login using Admin / Organizer / Student credentials
-    </p>
+    <!-- LOGIN BUTTON -->
+    <button (click)="login()">Login</button>
 
     <p class="note">
       Don’t have an account?
       <span class="link" (click)="goToRegister()">Register</span>
     </p>
+
   </div>
 </div>
