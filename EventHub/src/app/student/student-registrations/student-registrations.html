@@ -1,31 +1,36 @@
-<section class="registrations">
-  <h2>My Registered Events</h2>
+<section class="page">
 
-  <!-- NO REGISTRATIONS -->
-  <p class="empty" *ngIf="registrations.length === 0">
+  <h2 class="title">My Registered Events</h2>
+
+  <!-- LOADING -->
+  <div class="info" *ngIf="loading">
+    Loading your registrations...
+  </div>
+
+  <!-- NO DATA -->
+  <div class="info" *ngIf="!loading && registrations.length === 0">
     You have not registered for any events yet.
-  </p>
+  </div>
 
-  <!-- REGISTRATION LIST -->
-  <div class="reg-grid" *ngIf="registrations.length > 0">
-    <div class="reg-card" *ngFor="let reg of registrations">
+  <!-- EVENTS -->
+  <div class="grid" *ngIf="!loading && registrations.length > 0">
+    <div class="card" *ngFor="let reg of registrations">
 
-      <h3>{{ reg.event?.title }}</h3>
+      <img
+        *ngIf="reg.eventId?.eventImage"
+        [src]="'http://localhost:5000' + reg.eventId.eventImage"
+        alt="Event Image"
+      />
 
-      <span class="category">{{ reg.event?.category }}</span>
+      <div class="card-body">
+        <h3>{{ reg.eventId?.title }}</h3>
+        <p>{{ reg.eventId?.description }}</p>
+        <p class="date">
+          📅 {{ reg.eventId?.date | date:'mediumDate' }}
+        </p>
+      </div>
 
-      <p><strong>Date:</strong> {{ reg.event?.date }}</p>
-      <p><strong>Venue:</strong> {{ reg.event?.venue }}</p>
-
-      <p>
-        <strong>Fees:</strong>
-        {{ reg.event?.fees === 0 ? 'Free' : '₹' + reg.event?.fees }}
-      </p>
-
-      <p class="time">
-        Registered on:
-        {{ reg.registeredAt | date:'mediumDate' }}
-      </p>
     </div>
   </div>
+
 </section>

@@ -13,8 +13,9 @@
     </p>
 
     <div class="hero-actions">
-      <button class="primary-btn" (click)="exploreEvents()">Explore Events</button>
-      <button class="outline-btn" (click)="studentLogin()">Student Login</button>
+      <button class="outline-btn" (click)="studentLogin()">
+        Student Login
+      </button>
     </div>
   </div>
 
@@ -31,7 +32,7 @@
 <!-- ===== EVENTS SECTION ===== -->
 <section class="events-section">
   <div class="events-header">
-    <h2>Upcoming Events</h2>
+    <h2>View Events</h2>
     <p>Click on an event to view details</p>
   </div>
 
@@ -52,16 +53,17 @@
       >
         <p>{{ event.description }}</p>
 
-        <p><strong>Date:</strong> {{ event.date }}</p>
+        <p><strong>Date:</strong> {{ event.date | date:'mediumDate' }}</p>
         <p><strong>Venue:</strong> {{ event.venue }}</p>
         <p>
           <strong>Fees:</strong>
           {{ event.fees === 0 ? 'Free' : '₹' + event.fees }}
         </p>
 
+        <!-- 🔥 FIXED REGISTER BUTTON -->
         <button
-          class="register-btn"
-          (click)="registerEvent(event)"
+          class="register-btn fancy-btn"
+          (click)="registerEvent(event); $event.stopPropagation()"
         >
           Register
         </button>
