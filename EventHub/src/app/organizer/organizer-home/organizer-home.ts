@@ -1,8 +1,14 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-organizer-home',
   standalone: true,
-  templateUrl: './organizer-home.html'
+  imports: [CommonModule, RouterModule],
+  templateUrl: './organizer-home.html',
+  styleUrls: ['./organizer-home.css']
 })
-export class OrganizerHome {}
+export class OrganizerHome {
+  organizerName = 'Organizer';
+}

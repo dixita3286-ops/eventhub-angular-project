@@ -1,16 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
 
-  private API = 'http://localhost:5000/api/events';
+  private events: any[] = [];
 
-  constructor(private http: HttpClient) {}
+  // 🔴 THIS METHOD WAS MISSING
+  createEvent(event: any) {
+    this.events.push(event);
+  }
 
   getEvents() {
-    return this.http.get<any[]>(this.API);
+    return this.events;
+  }
+
+  registerStudent(id: number) {
+    const e = this.events.find(x => x.id === id);
+    if (e) {
+      e.registeredCount++;
+    }
   }
 }

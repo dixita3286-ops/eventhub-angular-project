@@ -1,2 +1,79 @@
+<div class="dashboard">
 
-<p>organizer-dashboard works!</p>
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Organizer Dashboard</h1>
+    <p>Overview of your events & registrations</p>
+  </div>
+
+  <!-- STATS CARDS -->
+  <div class="stats-grid">
+
+    <div class="stat-card blue">
+      <h3>Total Events</h3>
+      <p>{{ totalEvents }}</p>
+    </div>
+
+    <div class="stat-card yellow">
+      <h3>Pending</h3>
+      <p>{{ pendingEvents }}</p>
+    </div>
+
+    <div class="stat-card green">
+      <h3>Approved</h3>
+      <p>{{ approvedEvents }}</p>
+    </div>
+
+    <div class="stat-card red">
+      <h3>Rejected</h3>
+      <p>{{ rejectedEvents }}</p>
+    </div>
+
+    <div class="stat-card purple full">
+      <h3>Total Registrations</h3>
+      <p>{{ totalRegistrations }}</p>
+    </div>
+
+  </div>
+
+  <!-- RECENT EVENTS -->
+  <div class="recent">
+
+    <h2>Recent Events</h2>
+
+    <div *ngIf="events.length === 0" class="empty">
+      No events created yet.
+    </div>
+
+    <table *ngIf="events.length > 0">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Registrations</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of events | slice:0:5">
+          <td>{{ e.title }}</td>
+          <td>{{ e.date }}</td>
+          <td>
+            <span
+              class="status"
+              [ngClass]="{
+                pending: e.status === 'pending',
+                approved: e.status === 'approved',
+                rejected: e.status === 'rejected'
+              }">
+              {{ e.status }}
+            </span>
+          </td>
+          <td>{{ e.registeredCount }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+</div>

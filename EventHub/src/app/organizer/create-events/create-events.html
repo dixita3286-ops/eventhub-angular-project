@@ -1,1 +1,71 @@
-<p>create-events works!</p>
+<div class="page">
+
+  <div class="header">
+    <h1>Create New Event</h1>
+    <p>Design your event and send it for admin approval</p>
+  </div>
+
+  <div class="form-card">
+
+    <!-- IMAGE UPLOAD -->
+    <div class="image-upload">
+      <label class="image-box">
+        <input type="file" hidden (change)="onImageUpload($event)" />
+        <ng-container *ngIf="!imagePreview">
+          <span>📸 Upload Event Banner</span>
+        </ng-container>
+        <img *ngIf="imagePreview" [src]="imagePreview" />
+      </label>
+    </div>
+
+    <!-- FORM -->
+    <div class="grid">
+
+      <div>
+        <label>Event Title</label>
+        <input type="text" [(ngModel)]="title" placeholder="Enter event title" />
+      </div>
+
+      <div>
+        <label>Date</label>
+        <input type="date" [(ngModel)]="date" />
+      </div>
+
+      <div>
+        <label>Time</label>
+        <input type="time" [(ngModel)]="time" />
+      </div>
+
+      <div>
+        <label>Ticket Price (₹)</label>
+        <input type="number" [(ngModel)]="price" placeholder="Free / Paid" />
+      </div>
+
+      <div>
+        <label>Venue</label>
+        <input type="text" [(ngModel)]="venue" placeholder="Event location" />
+      </div>
+
+      <div>
+        <label>City</label>
+        <input type="text" [(ngModel)]="city" placeholder="City name" />
+      </div>
+
+      <div class="full">
+        <label>Description</label>
+        <textarea
+          rows="4"
+          [(ngModel)]="description"
+          placeholder="Describe your event">
+        </textarea>
+      </div>
+
+    </div>
+
+    <button class="submit" (click)="createEvent()">
+      🚀 Send Event For Review
+    </button>
+
+  </div>
+
+</div>

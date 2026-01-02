@@ -1,1 +1,72 @@
-<p>my-events works!</p>
+<div class="my-events-page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>My Events</h1>
+    <p>Events created by you</p>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty" *ngIf="events.length === 0">
+    <p>No events created yet.</p>
+  </div>
+
+  <!-- EVENTS GRID -->
+  <div class="events-grid" *ngIf="events.length > 0">
+
+    <div class="event-card" *ngFor="let e of events">
+
+      <!-- IMAGE -->
+      <div class="event-image">
+        <img *ngIf="e.image" [src]="e.image" />
+        <div class="no-image" *ngIf="!e.image">
+          No Image
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="event-content">
+
+        <h3>{{ e.title }}</h3>
+
+        <p class="meta">
+          📅 {{ e.date }} &nbsp; | &nbsp; ⏰ {{ e.time || 'N/A' }}
+        </p>
+
+        <p class="location">
+          📍 {{ e.venue || 'Venue not set' }}, {{ e.city || '' }}
+        </p>
+
+        <p class="desc">
+          {{ e.description }}
+        </p>
+
+        <!-- STATUS -->
+        <span
+          class="status"
+          [ngClass]="{
+            pending: e.status === 'pending',
+            approved: e.status === 'approved',
+            rejected: e.status === 'rejected'
+          }">
+          {{ e.status }}
+        </span>
+
+        <!-- FOOTER -->
+        <div class="footer">
+          <span>👥 Registered: <b>{{ e.registeredCount }}</b></span>
+
+          <button
+            *ngIf="e.status === 'approved'"
+            class="edit-btn">
+            Edit Event
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

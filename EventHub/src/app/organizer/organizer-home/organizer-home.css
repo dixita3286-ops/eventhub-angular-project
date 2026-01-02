@@ -1,0 +1,65 @@
+.home-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f4f6ff, #eef1ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.content {
+  width: 100%;
+  max-width: 900px;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 36px;
+  text-align: center;
+  color: #2c2f4a;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.links {
+  display: grid;
+  gap: 25px;
+}
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 32px;
+  background: #ffffff;
+  border-radius: 18px;
+  text-decoration: none;          /* 🔥 underline removed */
+  color: #2c2f4a;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 45px rgba(0,0,0,0.12);
+}
+
+.card h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+
+.card p {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.arrow {
+  font-size: 26px;
+  color: #6c6cff;
+}

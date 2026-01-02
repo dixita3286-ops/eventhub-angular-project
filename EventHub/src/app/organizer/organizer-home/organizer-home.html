@@ -1,1 +1,40 @@
-<p>Organizer Home works!</p>
+<div class="home-page">
+
+  <div class="content">
+
+    <h1>Welcome, {{ organizerName }} 👋</h1>
+    <p class="subtitle">
+      Manage your events, approvals and registrations
+    </p>
+
+    <div class="links">
+
+      <a routerLink="/organizer/create-events" class="card">
+        <div class="text">
+          <h2>Create Event</h2>
+          <p>Create a new event and send it for admin approval</p>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a routerLink="/organizer/my-events" class="card">
+        <div class="text">
+          <h2>My Events</h2>
+          <p>View, edit and track all your events</p>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a routerLink="/organizer/organizer-dashboard" class="card">
+        <div class="text">
+          <h2>Dashboard</h2>
+          <p>View statistics and registrations overview</p>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
