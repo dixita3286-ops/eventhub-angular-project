@@ -1,34 +1,40 @@
-<!-- STUDENT HOME (Hero content preserved) -->
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="navbar-left">
+    <img src="/logo.png">
 
-<section class="hero">
-
-  <div class="hero-left">
-    <h1>
-      Discover & Manage<br />
-      <span>college</span> events
-    </h1>
-
-    <p>
-      EventHub is a college event management platform where students can
-      explore upcoming events, register online, and participate in
-      technical, cultural, and sports activities happening across campus.
-    </p>
-
-    <div class="hero-actions">
-      <button class="primary-btn">Explore Events</button>
-      <!-- ❌ onclick removed (Angular handles routing) -->
-      <button class="outline-btn">Student Home</button>
-    </div>
   </div>
 
-  <div class="hero-right">
-    <div class="grid">
-      <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30" />
-      <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3" />
-      <img src="https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac" />
-      <img src="https://images.unsplash.com/photo-1519671482749-fd09be7ccebf" />
+  <div class="navbar-right">
+    <span class="home-btn">Home</span>
+    <button class="hamburger" (click)="toggleMenu()">☰</button>
+  </div>
+</div>
+
+<!-- SIDE MENU -->
+<div class="side-menu" [class.show]="showMenu">
+  <button class="close-btn" (click)="closeMenu()">✕</button>
+
+  <a routerLink="/student/events" (click)="closeMenu()">View Events</a>
+  <a routerLink="/student/registrations" (click)="closeMenu()">My Registrations</a>
+  <a (click)="logout()">Logout</a>
+</div>
+
+<!-- BANNER -->
+<div class="banner"></div>
+
+<!-- EVENTS -->
+<div class="events-container">
+  <h3>Step Into the World of Opportunities & Celebrations</h3>
+
+  <div class="event-grid">
+    <div class="event-card" *ngFor="let cat of categories">
+      <img [src]="cat.image" [alt]="cat.name">
+      <h4>{{ cat.name }}</h4>
+
+      <button class="btn" (click)="goToCategory(cat.name)">
+        View Events
+      </button>
     </div>
   </div>
-
-</section>
-
+</div>
