@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -18,6 +19,19 @@ export class Navbar {
   showProfileMenu = false;
 
   constructor() {
+    this.loadUser();
+
+    // 🔥 reload user on every navigation
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadUser();
+        this.showMenu = false;
+        this.showProfileMenu = false;
+      });
+  }
+
+  loadUser() {
     const storedUser = localStorage.getItem('user');
     this.user = storedUser ? JSON.parse(storedUser) : null;
   }
@@ -30,18 +44,12 @@ export class Navbar {
     this.showProfileMenu = !this.showProfileMenu;
   }
 
-  // 🔥🔥🔥 FINAL FIX 🔥🔥🔥
   goTo(path: string) {
     this.showMenu = false;
     this.showProfileMenu = false;
 
-    this.router.navigate([path], {
-      queryParams: { reload: Date.now() } // ⭐ FORCE ROUTE RELOAD
-    }).then(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+    this.router.navigate([path]).then(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
@@ -49,8 +57,6 @@ export class Navbar {
     localStorage.removeItem('user');
     this.user = null;
 
-    this.router.navigate(['/login'], {
-      queryParams: { reload: Date.now() }
-    });
+    this.router.navigate(['/login']);
   }
 }
