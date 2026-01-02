@@ -1,0 +1,34 @@
+<div class="main">
+
+  <!-- 🔥 LOADING STATE -->
+  <div class="event-card skeleton" *ngIf="loading">
+    <div class="img"></div>
+    <div class="line title"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+    <div class="line"></div>
+  </div>
+
+  <!-- 🔥 EVENT DATA -->
+  <div class="event-card" *ngIf="!loading && event">
+    <img [src]="'http://localhost:5000' + event.eventImage" />
+
+    <h2>{{ event.title }}</h2>
+
+    <div class="event-info">
+      <p><strong>Category:</strong> {{ event.category }}</p>
+      <p><strong>Date:</strong> {{ event.date | date }}</p>
+      <p><strong>Venue:</strong> {{ event.venue }}</p>
+      <p><strong>Registration Fees:</strong> ₹{{ event.registrationFees }}</p>
+      <p>{{ event.description }}</p>
+    </div>
+
+    <button
+      *ngIf="event.eventFile"
+      class="download-btn"
+      (click)="downloadFile(event.eventFile)">
+      Download Event File
+    </button>
+  </div>
+
+</div>

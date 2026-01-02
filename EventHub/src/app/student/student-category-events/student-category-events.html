@@ -1,0 +1,59 @@
+<div class="main">
+
+  <h1>
+    <ng-container *ngIf="category$ | async as category">
+      {{ category ? category + ' Events' : 'All Events' }}
+    </ng-container>
+  </h1>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search..."
+      (input)="onSearch($any($event.target).value)"
+    >
+
+    <select (change)="onSort($any($event.target).value)">
+      <option value="date_asc">Date Ascending</option>
+      <option value="date_desc">Date Descending</option>
+    </select>
+  </div>
+
+  <!-- EVENTS -->
+  <ng-container *ngIf="events$ | async as events">
+
+    <div class="event-grid">
+      <div class="event-card" *ngFor="let e of events">
+
+        <img [src]="'http://localhost:5000' + e.eventImage">
+
+        <div class="event-info">
+          <h4>{{ e.title }}</h4>
+          <p><strong>Date:</strong> {{ e.date | date }}</p>
+          <p><strong>Venue:</strong> {{ e.venue }}</p>
+        </div>
+
+        <div class="event-actions">
+          <a (click)="viewDetails(e._id)">View Details</a>
+          <span>|</span>
+
+          <span class="registered" *ngIf="registeredIds.has(e._id)">
+            Registered
+          </span>
+
+          <a *ngIf="!registeredIds.has(e._id)" (click)="register(e._id)">
+            Register
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <p *ngIf="events.length === 0" class="no-data">
+      No events found
+    </p>
+
+  </ng-container>
+
+</div>

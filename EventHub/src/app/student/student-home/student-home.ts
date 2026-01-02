@@ -11,9 +11,7 @@ import { Router } from '@angular/router';
 })
 export class StudentHome {
 
-  showMenu = false;
-
-  categories = [
+   categories = [
     { name: 'Workshop', image: '/career_guidance.png' },
     { name: 'Seminar', image: '/ai_seminar.png' },
     { name: 'Cultural', image: '/cultural_fest.png' },
@@ -24,22 +22,11 @@ export class StudentHome {
 
   constructor(private router: Router) {}
 
-  toggleMenu() {
-    this.showMenu = !this.showMenu;
-  }
-
-  closeMenu() {
-    this.showMenu = false;
-  }
-
   goToCategory(category: string) {
-    this.router.navigate(['/student/category-events'], {
-      queryParams: { category }
-    });
-  }
-
-  logout() {
-    localStorage.clear();
-    this.router.navigate(['/login']);
+    console.log('CLICKED:', category); // 🔥 test
+    this.router.navigate(
+      ['/student/student-category-events'],
+      { queryParams: { category } }
+    );
   }
 }
