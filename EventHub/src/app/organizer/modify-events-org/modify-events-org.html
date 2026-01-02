@@ -1,0 +1,37 @@
+<div class="main">
+
+  <h2>Modify Event</h2>
+
+  <div *ngIf="message" class="message">{{ message }}</div>
+
+  <form (ngSubmit)="updateEvent()">
+
+    <label>Event Title</label>
+    <input type="text" [(ngModel)]="title" name="title" required>
+
+    <label>Description</label>
+    <textarea rows="4"
+              [(ngModel)]="description"
+              name="description"
+              required></textarea>
+
+    <label>Category</label>
+    <select [(ngModel)]="category" name="category">
+      <option value="Workshop">Workshop</option>
+      <option value="Seminar">Seminar</option>
+      <option value="Cultural">Cultural</option>
+      <option value="Sports">Sports</option>
+      <option value="Social">Social</option>
+      <option value="Exhibition">Exhibition</option>
+    </select>
+
+    <label>Date</label>
+    <input type="date" [(ngModel)]="date" name="date" required>
+
+    <label>Venue</label>
+    <input type="text" [(ngModel)]="venue" name="venue" required>
+
+    <button type="submit">Update Event</button>
+
+  </form>
+</div>

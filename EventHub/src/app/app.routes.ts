@@ -1,30 +1,35 @@
 import { Routes } from '@angular/router';
 
+/* ===== PUBLIC ===== */
 import { Landing } from './public/landing/landing';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
 
-// ADMIN
+/* ===== ADMIN ===== */
 import { AdminHome } from './admin/admin-home/admin-home';
 import { AdminDashboard } from './admin/admin-dashboard/admin-dashboard';
 import { ManageEvents } from './admin/manage-events/manage-events';
 import { ManageUsers } from './admin/manage-users/manage-users';
 
-// ORGANIZER
+/* ===== ORGANIZER ===== */
 import { OrganizerHome } from './organizer/organizer-home/organizer-home';
-import { OrganizerDashboard } from './organizer/organizer-dashboard/organizer-dashboard';
-import { CreateEvents } from './organizer/create-events/create-events';
-import { MyEvents } from './organizer/my-events/my-events';
 
-// STUDENT
+import { CreateEvent } from './organizer/create-event/create-event';
+import { MyEvent } from './organizer/my-event/my-event';
+import { CategoryEvent } from './organizer/category-event/category-event';
+import { EventDetails } from './organizer/event-details/event-details';
+import { ModifyEventsOrg } from './organizer/modify-events-org/modify-events-org';
+import { RegisteredStudent } from './organizer/registered-student/registered-student';
+
+/* ===== STUDENT ===== */
 import { StudentHome } from './student/student-home/student-home';
 import { StudentDashboard } from './student/student-dashboard/student-dashboard';
 import { StudentRegistrations } from './student/student-registrations/student-registrations';
+import { StudentViewEvents } from './student/student-view-events/student-view-events';
 
-// GUARDS
+/* ===== GUARDS ===== */
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
-import { StudentViewEvents } from './student/student-view-events/student-view-events';
 
 export const routes: Routes = [
 
@@ -93,21 +98,42 @@ export const routes: Routes = [
     data: { role: 'organizer' }
   },
   {
-    path: 'organizer/dashboard',
-    component: OrganizerDashboard,
-    canActivate: [authGuard, roleGuard],
-    data: { role: 'organizer' }
-  },
-  {
     path: 'organizer/create-event',
-    component: CreateEvents,
+    component: CreateEvent,
     canActivate: [authGuard, roleGuard],
     data: { role: 'organizer' }
   },
   {
-    path: 'organizer/my-events',
-    component: MyEvents,
+    path: 'organizer/my-event',
+    component: MyEvent,
     canActivate: [authGuard, roleGuard],
     data: { role: 'organizer' }
-  }
+  },
+  {
+    path: 'organizer/category-event',
+    component: CategoryEvent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'organizer' }
+  },
+  {
+    path: 'organizer/event-details/:id',
+    component: EventDetails,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'organizer' }
+  },
+  {
+    path: 'organizer/modify-events-org/:id',
+    component: ModifyEventsOrg,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'organizer' }
+  },
+  {
+    path: 'organizer/registered-student/:eventId',
+    component: RegisteredStudent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'organizer' }
+  },
+
+  /* ===== FALLBACK ===== */
+  { path: '**', redirectTo: '' }
 ];

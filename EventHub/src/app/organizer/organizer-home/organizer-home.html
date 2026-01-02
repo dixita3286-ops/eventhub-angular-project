@@ -1,40 +1,65 @@
-<div class="home-page">
+<!-- NAVBAR -->
+<div class="navbar">
 
-  <div class="content">
+  <div class="navbar-left">
+   <img src="/logo.png">
+  </div>
 
-    <h1>Welcome, {{ organizerName }} 👋</h1>
-    <p class="subtitle">
-      Manage your events, approvals and registrations
-    </p>
+  <div class="navbar-right">
+    <a routerLink="/organizer" class="active">Home</a>
 
-    <div class="links">
+    <button id="hamburgerBtn" (click)="toggleMenu()">
+      <svg width="22" height="16">
+        <rect width="22" height="2.6" fill="#ffffff"></rect>
+        <rect y="6.7" width="22" height="2.6" fill="#ffffff"></rect>
+        <rect y="13.4" width="22" height="2.6" fill="#ffffff"></rect>
+      </svg>
+    </button>
+  </div>
+</div>
 
-      <a routerLink="/organizer/create-events" class="card">
-        <div class="text">
-          <h2>Create Event</h2>
-          <p>Create a new event and send it for admin approval</p>
-        </div>
-        <span class="arrow">→</span>
-      </a>
+<!-- SLIDE MENU -->
+<div id="sideMenu" [class.show]="menuOpen">
 
-      <a routerLink="/organizer/my-events" class="card">
-        <div class="text">
-          <h2>My Events</h2>
-          <p>View, edit and track all your events</p>
-        </div>
-        <span class="arrow">→</span>
-      </a>
+  <div class="menu-header">
+    <button class="close-btn" (click)="closeMenu()">
+      <svg width="28" height="28">
+        <line x1="4" y1="4" x2="24" y2="24" stroke="#fff" stroke-width="3"/>
+        <line x1="24" y1="4" x2="4" y2="24" stroke="#fff" stroke-width="3"/>
+      </svg>
+    </button>
+  </div>
 
-      <a routerLink="/organizer/organizer-dashboard" class="card">
-        <div class="text">
-          <h2>Dashboard</h2>
-          <p>View statistics and registrations overview</p>
-        </div>
-        <span class="arrow">→</span>
-      </a>
+  <a routerLink="/organizer/my-event" (click)="closeMenu()">My Events</a>
+  <a routerLink="/organizer/dashboard" (click)="closeMenu()">Dashboard</a>
+  <a routerLink="/login" (click)="closeMenu()">Logout</a>
+</div>
 
+<!-- BANNER -->
+<div class="banner">
+  Welcome, {{ organizerName }}
+</div>
+
+<!-- CATEGORY SECTION -->
+<div class="events-container">
+  <h3>Step Into the World of Opportunities & Celebrations</h3>
+
+  <div class="event-grid">
+
+    <div class="event-card" *ngFor="let c of categories">
+      <img [src]="c.image" [alt]="c.name">
+
+      <h4>{{ c.name }}</h4>
+
+      <div class="card-footer">
+        <a
+          class="btn"
+          [routerLink]="['/organizer/category-event']"
+          [queryParams]="{ category: c.name }">
+          View Events
+        </a>
+      </div>
     </div>
 
   </div>
-
 </div>

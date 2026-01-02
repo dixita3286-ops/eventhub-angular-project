@@ -1,0 +1,26 @@
+<div class="main" *ngIf="event">
+
+  <div class="event-card">
+
+    <img [src]="event.image" alt="Event Image">
+
+    <h2>{{ event.title }}</h2>
+
+    <div class="event-info">
+      <p><strong>Category:</strong> {{ event.category }}</p>
+      <p><strong>Date:</strong> {{ event.date }}</p>
+      <p><strong>Venue:</strong> {{ event.venue }}</p>
+      <p><strong>Registration Fees:</strong> ₹{{ event.registrationFees }}</p>
+      <p>{{ event.description }}</p>
+    </div>
+
+    <button
+      class="download-btn"
+      *ngIf="event.file"
+      (click)="downloadFile()">
+      Download Event File
+    </button>
+
+  </div>
+
+</div>

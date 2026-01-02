@@ -1,0 +1,98 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #0d0d0d;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+/* CENTER LAYOUT */
+.main {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+}
+
+/* FORM CARD */
+.form-box {
+  width: 100%;
+  max-width: 900px;   /* 🔥 THIS FIXES NARROW ISSUE */
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+  padding: 45px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+  text-align: center;
+  color: #ffb300;
+  margin-bottom: 30px;
+  font-size: 28px;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #ffb300;
+  font-weight: 600;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  font-size: 15px;
+}
+
+textarea {
+  resize: none;
+}
+
+select option {
+  background: #000;
+  color: #fff;
+}
+
+/* FILE INPUT FIX */
+input[type="file"] {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* BUTTON */
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  background: linear-gradient(135deg, #ffb300, #ff7b00);
+  border: none;
+  border-radius: 14px;
+  color: #111;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.95;
+}
+
+/* MESSAGE */
+.message {
+  text-align: center;
+  margin-bottom: 18px;
+  color: #ffcc00;
+  font-weight: 600;
+}

@@ -1,0 +1,56 @@
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="header-bar">
+    <h1>{{ activeTab === 'my' ? 'My Events' : 'All Events' }}</h1>
+    <button class="add-btn" (click)="goCreate()">+ Create Event</button>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+
+    <select [(ngModel)]="activeTab" (change)="applyFilters()">
+      <option value="my">My Events</option>
+      <option value="all">All Events</option>
+    </select>
+
+    <div class="status-inline" *ngIf="activeTab === 'my'">
+      <button
+        *ngFor="let s of statusList"
+        [class.active]="status === s"
+        (click)="status = s; applyFilters()">
+        {{ s | titlecase }}
+      </button>
+    </div>
+
+  </div>
+
+  <!-- EVENT LIST -->
+  <div class="event-list">
+
+    <div class="event-card" *ngFor="let e of filteredEvents">
+
+      <div class="card-info">
+        <h3>{{ e.title }}</h3>
+        <p><strong>Date:</strong> {{ e.date }}</p>
+        <p><strong>Venue:</strong> {{ e.venue }}</p>
+        <span class="badge" [class]="e.status">
+          {{ e.status | titlecase }}
+        </span>
+      </div>
+
+      <div class="card-actions">
+        <button class="edit-btn" (click)="editEvent(e.id)">
+          Edit
+        </button>
+      </div>
+
+    </div>
+
+    <p class="empty" *ngIf="filteredEvents.length === 0">
+      No events found.
+    </p>
+
+  </div>
+
+</div>

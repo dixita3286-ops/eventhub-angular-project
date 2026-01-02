@@ -44,9 +44,8 @@
 
         @if (user.role === 'organizer') {
        <div (click)="goTo('/organizer')">Home</div>
-          <div (click)="goTo('/organizer/dashboard')">Dashboard</div>
           <div (click)="goTo('/organizer/create-event')">Create Event</div>
-          <div (click)="goTo('/organizer/my-events')">My Events</div>
+          <div (click)="goTo('/organizer/my-event')">My Events</div>
         }
         @if (user.role === 'student') {
           <div (click)="goTo('/student')">Home</div>

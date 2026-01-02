@@ -1,0 +1,75 @@
+<div class="main">
+
+  <!-- PAGE HEADING -->
+  <h1>{{ category || 'All' }} Events</h1>
+
+  <!-- FILTER SECTION -->
+  <div class="filters">
+
+    <input
+      type="text"
+      placeholder="Search by title, venue or description..."
+      [(ngModel)]="search"
+      (input)="applyFilters()"
+    />
+
+    <input
+      type="date"
+      [(ngModel)]="date"
+      (change)="applyFilters()"
+    />
+
+  </div>
+
+  <!-- EVENT LIST -->
+  <div class="event-grid">
+
+    <!-- EVENT CARD -->
+    <div
+      class="event-card"
+      *ngFor="let event of filteredEvents"
+    >
+
+      <!-- EVENT IMAGE -->
+      <img
+        [src]="event.image || 'assets/default-event.jpg'"
+        alt="Event Image"
+      />
+
+      <!-- EVENT INFO -->
+      <div class="event-info">
+        <h4>{{ event.title }}</h4>
+
+        <p>
+          <strong>Date:</strong>
+          {{ event.date }}
+        </p>
+
+        <p>
+          <strong>Venue:</strong>
+          {{ event.venue }}
+        </p>
+      </div>
+
+      <!-- CARD FOOTER -->
+      <div class="card-footer">
+        <a
+          [routerLink]="['/event-details', event.id]"
+        >
+          View Details
+        </a>
+      </div>
+
+    </div>
+
+    <!-- NO EVENTS FOUND -->
+    <div
+      class="no-events"
+      *ngIf="filteredEvents.length === 0"
+    >
+      No events found for selected filters.
+    </div>
+
+  </div>
+
+</div>

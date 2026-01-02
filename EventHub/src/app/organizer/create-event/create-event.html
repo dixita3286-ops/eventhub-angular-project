@@ -1,0 +1,64 @@
+<div class="main">
+  <div class="form-box">
+
+    <h1>Create New Event</h1>
+
+    <div *ngIf="message" class="message">{{ message }}</div>
+
+    <form (ngSubmit)="createEvent()">
+
+      <div class="form-group">
+        <label>Event Title</label>
+        <input type="text" [(ngModel)]="title" name="title" required>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea rows="4" [(ngModel)]="description" name="description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select [(ngModel)]="category" name="category" required>
+          <option value="">Select Category</option>
+          <option>Workshop</option>
+          <option>Seminar</option>
+          <option>Cultural</option>
+          <option>Sports</option>
+          <option>Social</option>
+          <option>Exhibition</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Event Date</label>
+        <input type="date" [(ngModel)]="date" name="date" required>
+      </div>
+
+      <div class="form-group">
+        <label>Venue</label>
+        <input type="text" [(ngModel)]="venue" name="venue" required>
+      </div>
+
+      <div class="form-group">
+        <label>Registration Fees</label>
+        <input type="number" [(ngModel)]="registrationFees"
+               name="fees" min="0" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label>Upload Event File</label>
+        <input type="file" (change)="onFileChange($event,'file')">
+      </div>
+
+      <div class="form-group">
+        <label>Upload Event Image</label>
+        <input type="file" accept="image/*"
+               (change)="onFileChange($event,'image')">
+      </div>
+
+      <button type="submit">Create Event</button>
+
+    </form>
+  </div>
+</div>
