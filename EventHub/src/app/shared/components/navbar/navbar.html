@@ -26,6 +26,7 @@
 
   <!-- LOGGED IN -->
   <ng-container *ngIf="user; else guest">
+
     <ng-container *ngIf="user.role === 'admin'">
       <a (click)="goTo('/admin')">Home</a>
       <a (click)="goTo('/admin/dashboard')">Dashboard</a>

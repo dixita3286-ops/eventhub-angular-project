@@ -3,7 +3,7 @@ app-student-home {
   display: block;
   min-height: 100vh;
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Times New Roman', serif;
   background: radial-gradient(1200px circle at top, #141414, #050505);
   color: #fff;
   overflow-x: hidden;

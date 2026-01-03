@@ -31,19 +31,26 @@ export class StudentCategoryEvents implements OnInit {
       map(params => params['category'] || '')
     );
 
-    /* REGISTERED EVENTS */
-    const userStr = localStorage.getItem('user');
+    /* 🔥 REGISTERED EVENTS (ONLY IF LOGGED IN) */
+    const userStr = sessionStorage.getItem('user');
+
     if (userStr) {
       const user = JSON.parse(userStr);
+
       this.http
         .get<any[]>(`http://localhost:5000/api/registrations/student/${user._id}`)
         .subscribe(data => {
+          this.registeredIds.clear(); // safety
           data.forEach(r => {
             if (r.eventId?._id) {
               this.registeredIds.add(r.eventId._id);
             }
           });
         });
+
+    } else {
+      // 🔥 NOT LOGGED IN → show NOTHING as registered
+      this.registeredIds.clear();
     }
 
     /* EVENTS */
@@ -86,7 +93,7 @@ export class StudentCategoryEvents implements OnInit {
   /* REGISTER */
   handleRegister(eventId: string) {
 
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
 
     // 🔴 NOT LOGGED IN
     if (!userStr) {
