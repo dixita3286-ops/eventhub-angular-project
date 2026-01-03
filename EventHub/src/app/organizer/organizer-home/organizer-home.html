@@ -1,64 +1,25 @@
-<!-- NAVBAR -->
-<div class="navbar">
-
-  <div class="navbar-left">
-   <img src="/logo.png">
-  </div>
-
-  <div class="navbar-right">
-    <a routerLink="/organizer" class="active">Home</a>
-
-    <button id="hamburgerBtn" (click)="toggleMenu()">
-      <svg width="22" height="16">
-        <rect width="22" height="2.6" fill="#ffffff"></rect>
-        <rect y="6.7" width="22" height="2.6" fill="#ffffff"></rect>
-        <rect y="13.4" width="22" height="2.6" fill="#ffffff"></rect>
-      </svg>
-    </button>
-  </div>
-</div>
-
-<!-- SLIDE MENU -->
-<div id="sideMenu" [class.show]="menuOpen">
-
-  <div class="menu-header">
-    <button class="close-btn" (click)="closeMenu()">
-      <svg width="28" height="28">
-        <line x1="4" y1="4" x2="24" y2="24" stroke="#fff" stroke-width="3"/>
-        <line x1="24" y1="4" x2="4" y2="24" stroke="#fff" stroke-width="3"/>
-      </svg>
-    </button>
-  </div>
-
-  <a routerLink="/organizer/my-event" (click)="closeMenu()">My Events</a>
-  <a routerLink="/organizer/dashboard" (click)="closeMenu()">Dashboard</a>
-  <a routerLink="/login" (click)="closeMenu()">Logout</a>
-</div>
-
 <!-- BANNER -->
-<div class="banner">
-  Welcome, {{ organizerName }}
-</div>
+<div class="banner"></div>
 
-<!-- CATEGORY SECTION -->
+<!-- EVENTS -->
 <div class="events-container">
   <h3>Step Into the World of Opportunities & Celebrations</h3>
 
   <div class="event-grid">
 
-    <div class="event-card" *ngFor="let c of categories">
-      <img [src]="c.image" [alt]="c.name">
+    <div class="event-card" *ngFor="let cat of categories">
 
-      <h4>{{ c.name }}</h4>
+      <img [src]="cat.image" [alt]="cat.name" />
 
-      <div class="card-footer">
-        <a
-          class="btn"
-          [routerLink]="['/organizer/category-event']"
-          [queryParams]="{ category: c.name }">
-          View Events
-        </a>
-      </div>
+      <h4>{{ cat.name }}</h4>
+
+      <button
+        type="button"
+        class="btn"
+        (click)="goToCategory(cat.name)">
+        View Events
+      </button>
+
     </div>
 
   </div>

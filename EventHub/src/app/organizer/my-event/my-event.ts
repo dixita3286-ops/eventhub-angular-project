@@ -16,21 +16,11 @@ export class MyEvent {
 
   constructor(private router: Router) {}
 
-  // dropdown tab
   activeTab: 'my' | 'all' = 'my';
-
-  // status filter
   status: EventStatus = 'all';
 
-  // ✅ STRICT typed list (ERROR fix)
-  statusList: EventStatus[] = [
-    'all',
-    'approved',
-    'pending',
-    'rejected'
-  ];
+  statusList: EventStatus[] = ['all', 'approved', 'pending', 'rejected'];
 
-  // sample events (later API thi aavse)
   events = [
     {
       id: 1,
@@ -68,9 +58,8 @@ export class MyEvent {
     this.router.navigate(['/organizer/create-event']);
   }
 
+  // ✅ FIXED REDIRECT
   editEvent(id: number) {
-    this.router.navigate(['/organizer/modify-events-org'], {
-      queryParams: { id }
-    });
+    this.router.navigate(['/organizer/modify-events-org', id]);
   }
 }

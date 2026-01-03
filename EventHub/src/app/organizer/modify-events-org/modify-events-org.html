@@ -1,37 +1,27 @@
-<div class="main">
+<div class="modify-container">
 
   <h2>Modify Event</h2>
 
-  <div *ngIf="message" class="message">{{ message }}</div>
+  <label>Event Title</label>
+  <input [(ngModel)]="event.title">
 
-  <form (ngSubmit)="updateEvent()">
+  <label>Description</label>
+  <textarea [(ngModel)]="event.description"></textarea>
 
-    <label>Event Title</label>
-    <input type="text" [(ngModel)]="title" name="title" required>
+  <label>Category</label>
+  <select [(ngModel)]="event.category">
+    <option>Workshop</option>
+    <option>Seminar</option>
+    <option>Cultural</option>
+    <option>Sports</option>
+  </select>
 
-    <label>Description</label>
-    <textarea rows="4"
-              [(ngModel)]="description"
-              name="description"
-              required></textarea>
+  <label>Date</label>
+  <input type="date" [(ngModel)]="event.date">
 
-    <label>Category</label>
-    <select [(ngModel)]="category" name="category">
-      <option value="Workshop">Workshop</option>
-      <option value="Seminar">Seminar</option>
-      <option value="Cultural">Cultural</option>
-      <option value="Sports">Sports</option>
-      <option value="Social">Social</option>
-      <option value="Exhibition">Exhibition</option>
-    </select>
+  <label>Venue</label>
+  <input [(ngModel)]="event.venue">
 
-    <label>Date</label>
-    <input type="date" [(ngModel)]="date" name="date" required>
+  <button (click)="updateEvent()">Update Event</button>
 
-    <label>Venue</label>
-    <input type="text" [(ngModel)]="venue" name="venue" required>
-
-    <button type="submit">Update Event</button>
-
-  </form>
 </div>

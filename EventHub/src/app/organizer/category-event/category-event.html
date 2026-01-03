@@ -1,75 +1,56 @@
 <div class="main">
 
-  <!-- PAGE HEADING -->
-  <h1>{{ category || 'All' }} Events</h1>
+  <!-- PAGE TITLE -->
+  <h1>
+    <ng-container *ngIf="category$ | async as category">
+      {{ category ? category + ' Events' : 'All Events' }}
+    </ng-container>
+  </h1>
 
-  <!-- FILTER SECTION -->
+  <!-- FILTERS -->
   <div class="filters">
-
     <input
       type="text"
-      placeholder="Search by title, venue or description..."
-      [(ngModel)]="search"
-      (input)="applyFilters()"
-    />
-
-    <input
-      type="date"
-      [(ngModel)]="date"
-      (change)="applyFilters()"
-    />
-
-  </div>
-
-  <!-- EVENT LIST -->
-  <div class="event-grid">
-
-    <!-- EVENT CARD -->
-    <div
-      class="event-card"
-      *ngFor="let event of filteredEvents"
+      placeholder="Search..."
+      (input)="onSearch($any($event.target).value)"
     >
 
-      <!-- EVENT IMAGE -->
-      <img
-        [src]="event.image || 'assets/default-event.jpg'"
-        alt="Event Image"
-      />
+    <select (change)="onSort($any($event.target).value)">
+      <option value="date_asc">Date Ascending</option>
+      <option value="date_desc">Date Descending</option>
+    </select>
+  </div>
 
-      <!-- EVENT INFO -->
-      <div class="event-info">
-        <h4>{{ event.title }}</h4>
+  <!-- EVENTS -->
+  <ng-container *ngIf="events$ | async as events">
 
-        <p>
-          <strong>Date:</strong>
-          {{ event.date }}
-        </p>
+    <div class="event-grid">
 
-        <p>
-          <strong>Venue:</strong>
-          {{ event.venue }}
-        </p>
-      </div>
+      <div class="event-card" *ngFor="let e of events">
 
-      <!-- CARD FOOTER -->
-      <div class="card-footer">
-        <a
-          [routerLink]="['/event-details', event.id]"
-        >
-          View Details
-        </a>
+        <!-- IMAGE (PUBLIC FOLDER FROM BACKEND) -->
+        <img [src]="'http://localhost:5000' + e.eventImage">
+
+        <div class="event-info">
+          <h4>{{ e.title }}</h4>
+          <p><strong>Date:</strong> {{ e.date | date }}</p>
+          <p><strong>Venue:</strong> {{ e.venue }}</p>
+        </div>
+
+        <div class="event-actions">
+          <a (click)="viewDetails(e._id)">View Details</a>
+          <span>|</span>
+          <a (click)="modifyEvent(e._id)">Modify</a>
+        </div>
+
       </div>
 
     </div>
 
-    <!-- NO EVENTS FOUND -->
-    <div
-      class="no-events"
-      *ngIf="filteredEvents.length === 0"
-    >
-      No events found for selected filters.
-    </div>
+    <p *ngIf="events.length === 0" class="no-data">
+      No events found
+    </p>
 
-  </div>
+  </ng-container>
 
 </div>

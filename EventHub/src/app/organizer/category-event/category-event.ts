@@ -1,107 +1,71 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-category-event',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule],
   templateUrl: './category-event.html',
-  styleUrl: './category-event.css',
+  styleUrls: ['./category-event.css']
 })
 export class CategoryEvent implements OnInit {
 
-  // filters
-  category: string = '';
-  search: string = '';
-  date: string = '';
-
-  // event lists
-  events: any[] = [];
-  filteredEvents: any[] = [];
-
-  // extra info
-  totalApprovedEvents = 0;
+  events$!: Observable<any[]>;
+  category$!: Observable<string>;
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
 
-    // 🔹 sample data (PHP DB ni jagyae)
-    this.events = [
-      {
-        id: 1,
-        title: 'Angular Workshop',
-        category: 'Workshop',
-        date: '2026-01-10',
-        venue: 'Auditorium',
-        description: 'Angular hands-on workshop',
-        status: 'approved',
-        image: 'assets/default-event.jpg'
-      },
-      {
-        id: 2,
-        title: 'Tech Seminar',
-        category: 'Seminar',
-        date: '2026-01-15',
-        venue: 'Hall A',
-        description: 'Latest tech trends',
-        status: 'approved',
-        image: 'assets/default-event.jpg'
-      }
-    ];
+    /* CATEGORY NAME */
+    this.category$ = this.route.queryParams.pipe(
+      map(params => params['category'] || '')
+    );
 
-    // only approved events count
-    this.totalApprovedEvents =
-      this.events.filter(e => e.status === 'approved').length;
-
-    // 🔹 URL thi category (?category=Workshop)
-    this.route.queryParams.subscribe(params => {
-      this.category = params['category'] || '';
-      this.applyFilters();
-    });
-
-    // initial load
-    this.applyFilters();
+    /* EVENTS LIST */
+    this.events$ = this.route.queryParams.pipe(
+      switchMap(params =>
+        this.http.get<any[]>(
+          'http://localhost:5000/api/events',
+          {
+            params: {
+              category: params['category'] || '',
+              search: params['search'] || '',
+              sort: params['sort'] || 'date_asc'
+            }
+          }
+        )
+      )
+    );
   }
 
-  applyFilters(): void {
-    this.filteredEvents = this.events.filter(event => {
-
-      const matchCategory =
-        !this.category || event.category === this.category;
-
-      const matchSearch =
-        !this.search ||
-        event.title.toLowerCase().includes(this.search.toLowerCase()) ||
-        event.venue.toLowerCase().includes(this.search.toLowerCase()) ||
-        event.description.toLowerCase().includes(this.search.toLowerCase());
-
-      const matchDate =
-        !this.date || event.date === this.date;
-
-      return (
-        event.status === 'approved' &&
-        matchCategory &&
-        matchSearch &&
-        matchDate
-      );
+  onSearch(value: string) {
+    this.router.navigate([], {
+      queryParams: { search: value },
+      queryParamsHandling: 'merge'
     });
   }
 
-  // 🔹 clear all filters
-  clearFilters(): void {
-    this.search = '';
-    this.date = '';
-    this.applyFilters();
+  onSort(value: string) {
+    this.router.navigate([], {
+      queryParams: { sort: value },
+      queryParamsHandling: 'merge'
+    });
   }
 
-  // 🔹 navigate to event details page
-  viewDetails(eventId: number): void {
-    this.router.navigate(['/event-details', eventId]);
+  viewDetails(id: string) {
+    this.router.navigate(['/organizer/event-details', id]);
   }
+
+  modifyEvent(id: string) {
+    this.router.navigate(['/organizer/modify-events-org', id]);
+  }
+
 }
