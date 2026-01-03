@@ -1,56 +1,51 @@
 <div class="main">
 
   <!-- HEADER -->
-  <div class="header-bar">
-    <h1>{{ activeTab === 'my' ? 'My Events' : 'All Events' }}</h1>
-    <button class="add-btn" (click)="goCreate()">+ Create Event</button>
+  <div class="top-bar">
+    <h1>My Events</h1>
+    <button class="create-btn" (click)="createEvent()">+ Create Event</button>
   </div>
 
-  <!-- FILTER BAR -->
-  <div class="filter-bar">
-
-    <select [(ngModel)]="activeTab" (change)="applyFilters()">
-      <option value="my">My Events</option>
-      <option value="all">All Events</option>
-    </select>
-
-    <div class="status-inline" *ngIf="activeTab === 'my'">
-      <button
-        *ngFor="let s of statusList"
-        [class.active]="status === s"
-        (click)="status = s; applyFilters()">
-        {{ s | titlecase }}
-      </button>
-    </div>
-
+  <!-- FILTERS -->
+  <div class="filters">
+    <button (click)="setStatus('all')" [class.active]="status==='all'">All</button>
+    <button (click)="setStatus('approved')" [class.active]="status==='approved'">Approved</button>
+    <button (click)="setStatus('pending')" [class.active]="status==='pending'">Pending</button>
+    <button (click)="setStatus('rejected')" [class.active]="status==='rejected'">Rejected</button>
   </div>
 
-  <!-- EVENT LIST -->
-  <div class="event-list">
+  <!-- EVENTS GRID -->
+  <div class="event-grid">
 
     <div class="event-card" *ngFor="let e of filteredEvents">
 
-      <div class="card-info">
+      <!-- IMAGE -->
+      <img
+        [src]="'http://localhost:5000' + e.eventImage"
+        alt="event image"
+      />
+
+      <!-- INFO -->
+      <div class="info">
         <h3>{{ e.title }}</h3>
-        <p><strong>Date:</strong> {{ e.date }}</p>
-        <p><strong>Venue:</strong> {{ e.venue }}</p>
-        <span class="badge" [class]="e.status">
-          {{ e.status | titlecase }}
-        </span>
+        <p><b>Category:</b> {{ e.category }}</p>
+        <p><b>Date:</b> {{ e.date | date }}</p>
+        <p><b>Venue:</b> {{ e.venue }}</p>
       </div>
 
-      <div class="card-actions">
-        <button class="edit-btn" (click)="editEvent(e.id)">
-          Edit
-        </button>
+      <!-- ACTIONS -->
+      <div class="actions">
+        <a (click)="modify(e._id)">Modify</a>
+        <a (click)="viewDetails(e._id)">View Details</a>
+        <a (click)="viewRegistrations(e._id)">View Registrations</a>
       </div>
 
     </div>
 
-    <p class="empty" *ngIf="filteredEvents.length === 0">
-      No events found.
-    </p>
-
   </div>
+
+  <p class="no-data" *ngIf="filteredEvents.length === 0">
+    No events found
+  </p>
 
 </div>

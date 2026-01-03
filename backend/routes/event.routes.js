@@ -18,11 +18,25 @@ router.post('/', async (req, res) => {
 });
 
 /* =====================================================
+   GET EVENTS FOR ORGANIZER (My Events)
+   GET /api/events/organizer/:organizerId
+===================================================== */
+router.get('/organizer/:organizerId', async (req, res) => {
+  try {
+    const events = await Event.find({
+      createdBy: req.params.organizerId
+    }).sort({ date: -1 });
+
+    res.json(events);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching organizer events' });
+  }
+});
+
+/* =====================================================
    GET EVENTS WITH FILTERS (Student / Public)
    GET /api/events
-   ?category=
-   ?search=
-   ?sort=date_asc | date_desc
 ===================================================== */
 router.get('/', async (req, res) => {
   try {

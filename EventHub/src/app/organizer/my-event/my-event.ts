@@ -1,65 +1,86 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
-type EventStatus = 'all' | 'approved' | 'pending' | 'rejected';
+type Status = 'approved' | 'pending' | 'rejected' | 'all';
 
 @Component({
   selector: 'app-my-event',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    HttpClientModule   // ✅ VERY IMPORTANT
+  ],
   templateUrl: './my-event.html',
-  styleUrl: './my-event.css',
+  styleUrls: ['./my-event.css']
 })
-export class MyEvent {
+export class MyEvent implements OnInit {
 
-  constructor(private router: Router) {}
+  events: any[] = [];
+  filteredEvents: any[] = [];
 
-  activeTab: 'my' | 'all' = 'my';
-  status: EventStatus = 'all';
+  status: Status = 'all';
 
-  statusList: EventStatus[] = ['all', 'approved', 'pending', 'rejected'];
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
-  events = [
-    {
-      id: 1,
-      title: 'Angular Workshop',
-      date: '2026-01-10',
-      venue: 'Auditorium',
-      status: 'approved' as EventStatus
-    },
-    {
-      id: 2,
-      title: 'Tech Seminar',
-      date: '2026-01-15',
-      venue: 'Hall A',
-      status: 'pending' as EventStatus
-    },
-    {
-      id: 3,
-      title: 'Cultural Fest',
-      date: '2026-02-01',
-      venue: 'Open Ground',
-      status: 'rejected' as EventStatus
+  ngOnInit(): void {
+
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      console.error('User not found in localStorage');
+      return;
     }
-  ];
 
-  filteredEvents = [...this.events];
+    const user = JSON.parse(userStr);
 
-  applyFilters() {
-    this.filteredEvents = this.events.filter(e => {
-      if (this.status === 'all') return true;
-      return e.status === this.status;
-    });
+    console.log('Organizer ID:', user._id);
+
+    this.http
+      .get<any[]>(`http://localhost:5000/api/events/organizer/${user._id}`)
+      .subscribe({
+        next: (res) => {
+          console.log('Events API response:', res);
+          this.events = res || [];
+          this.applyFilter();
+        },
+        error: (err) => {
+          console.error('API Error:', err);
+        }
+      });
   }
 
-  goCreate() {
+  applyFilter() {
+    if (this.status === 'all') {
+      this.filteredEvents = [...this.events];
+    } else {
+      this.filteredEvents = this.events.filter(
+        e => e.status === this.status
+      );
+    }
+  }
+
+  setStatus(s: Status) {
+    this.status = s;
+    this.applyFilter();
+  }
+
+  createEvent() {
     this.router.navigate(['/organizer/create-event']);
   }
 
-  // ✅ FIXED REDIRECT
-  editEvent(id: number) {
+  modify(id: string) {
     this.router.navigate(['/organizer/modify-events-org', id]);
+  }
+
+  viewDetails(id: string) {
+    this.router.navigate(['/organizer/event-details', id]);
+  }
+
+  viewRegistrations(id: string) {
+    this.router.navigate(['/organizer/registered-student', id]);
   }
 }
