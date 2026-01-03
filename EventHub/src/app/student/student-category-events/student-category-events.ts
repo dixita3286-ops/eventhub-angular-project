@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, switchMap } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-student-category-events',
@@ -25,12 +26,12 @@ export class StudentCategoryEvents implements OnInit {
 
   ngOnInit(): void {
 
-    // 🔹 CATEGORY ONLY (NO MUTATION)
+    /* CATEGORY */
     this.category$ = this.route.queryParams.pipe(
       map(params => params['category'] || '')
     );
 
-    // 🔹 REGISTERED EVENTS
+    /* REGISTERED EVENTS */
     const userStr = localStorage.getItem('user');
     if (userStr) {
       const user = JSON.parse(userStr);
@@ -45,7 +46,7 @@ export class StudentCategoryEvents implements OnInit {
         });
     }
 
-    // 🔹 EVENTS (PURE STREAM)
+    /* EVENTS */
     this.events$ = this.route.queryParams.pipe(
       switchMap(params =>
         this.http.get<any[]>(
@@ -62,6 +63,7 @@ export class StudentCategoryEvents implements OnInit {
     );
   }
 
+  /* FILTERS */
   onSearch(value: string) {
     this.router.navigate([], {
       queryParams: { search: value },
@@ -76,13 +78,56 @@ export class StudentCategoryEvents implements OnInit {
     });
   }
 
+  /* DETAILS */
   viewDetails(id: string) {
     this.router.navigate(['/student/event-details', id]);
   }
 
-  register(id: string) {
-    this.router.navigate(['/student/payment'], {
-      queryParams: { event_id: id }
+  /* REGISTER */
+  handleRegister(eventId: string) {
+
+    const userStr = localStorage.getItem('user');
+
+    // 🔴 NOT LOGGED IN
+    if (!userStr) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please login to register',
+        showCancelButton: true,
+        confirmButtonText: 'Login'
+      }).then(res => {
+        if (res.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+      });
+      return;
+    }
+
+    // 🟢 PAYMENT METHOD
+    Swal.fire({
+      title: 'Select Payment Method',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'UPI',
+      cancelButtonText: 'Card',
+      reverseButtons: true
+    }).then(res => {
+
+      if (res.isConfirmed) {
+        this.router.navigate(
+          ['/student/payment', eventId],
+          { queryParams: { method: 'upi' } }
+        );
+      }
+
+      if (res.dismiss === Swal.DismissReason.cancel) {
+        this.router.navigate(
+          ['/student/payment', eventId],
+          { queryParams: { method: 'card' } }
+        );
+      }
+
     });
   }
 }

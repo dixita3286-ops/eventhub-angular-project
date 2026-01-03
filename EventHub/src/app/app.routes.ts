@@ -27,10 +27,12 @@ import { StudentRegistrations } from './student/student-registrations/student-re
 import { StudentCategoryEvents } from './student/student-category-events/student-category-events';
 import { StudentEventDetails } from './student/student-event-details/student-event-details';
 import { StudentViewEvents } from './student/student-view-events/student-view-events';
+import { StudentPayment } from './student/student-payment/student-payment';
 
 /* ===== GUARDS ===== */
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
+
 
 export const routes: Routes = [
 
@@ -91,12 +93,20 @@ export const routes: Routes = [
       .then(m => m.StudentCategoryEvents)
   },
   {
-    path: 'student/event-details/:id',     // 🔥 FIXED
-    component: StudentEventDetails,        // 🔥 FIXED
+    path: 'student/event-details/:id',     
+    component: StudentEventDetails,        
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' },
     runGuardsAndResolvers: 'always'   
   },
+  {
+    path: 'student/payment/:id',     
+    component: StudentPayment,        
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'student' },
+    runGuardsAndResolvers: 'always'   
+  },
+
   /* ===== ORGANIZER ===== */
   {
     path: 'organizer',

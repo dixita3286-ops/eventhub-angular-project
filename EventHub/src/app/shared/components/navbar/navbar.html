@@ -1,61 +1,56 @@
+<!-- ================= NAVBAR ================= -->
 <nav class="navbar">
-
-  <!-- LEFT -->
-  <div class="left">
-    <span class="logo" routerLink="/">EventHub</span>
+  <div class="navbar-left">
+    <img src="http://localhost:5000/Public/logo.png" alt="EventHub" />
   </div>
 
-  <!-- RIGHT -->
-  <div class="right">
-
-    <!-- SEARCH -->
-    <div class="search-box">
-      <input type="text" placeholder="Search events..." />
-      <span class="search-icon">🔍</span>
-    </div>
-
-    <!-- MENU ICON (RIGHT SIDE) -->
-    @if (user) {
-      <span class="menu-icon" (click)="toggleMenu()">☰</span>
-    }
-
-    <!-- NOT LOGGED IN -->
-    @if (!user) {
-      <div class="profile" (click)="toggleProfile()">👤</div>
-
-      @if (showProfileMenu) {
-        <div class="dropdown">
-          <div (click)="goTo('/login')">Login</div>
-          <div (click)="goTo('/register')">Sign Up</div>
-        </div>
-      }
-    }
-
-    <!-- LOGGED IN -->
-    @if (user && showMenu) {
-      <div class="menu-dropdown">
-
-        @if (user.role === 'admin') {
-          <div (click)="goTo('/admin')">Home</div>
-          <div (click)="goTo('/admin/dashboard')">Dashboard</div>
-          <div (click)="goTo('/admin/manage-events')">Manage Events</div>
-          <div (click)="goTo('/admin/manage-users')">Manage Users</div>
-        }
-
-        @if (user.role === 'organizer') {
-       <div (click)="goTo('/organizer')">Home</div>
-          <div (click)="goTo('/organizer/create-event')">Create Event</div>
-          <div (click)="goTo('/organizer/my-event')">My Events</div>
-        }
-        @if (user.role === 'student') {
-          <div (click)="goTo('/student')">Home</div>
-          <div (click)="goTo('/student/registrations')">My Registrations</div>
-          <div (click)="goTo('/student/view-events')">View Events</div>
-        }
-
-        <div class="logout" (click)="logout()">Logout</div>
-      </div>
-    }
-
+  <div class="navbar-right">
+    <!-- Hamburger (always visible) -->
+    <button id="hamburgerBtn" (click)="toggleMenu()">☰</button>
   </div>
 </nav>
+
+<!-- ================= OVERLAY ================= -->
+<div
+  class="overlay"
+  [class.show]="showMenu"
+  (click)="closeMenu()">
+</div>
+
+<!-- ================= SIDE MENU ================= -->
+<div id="sideMenu" [class.show]="showMenu">
+  <div class="menu-header">
+    <span>Menu</span>
+    <button class="close-btn" (click)="closeMenu()">✕</button>
+  </div>
+
+  <!-- LOGGED IN -->
+  <ng-container *ngIf="user; else guest">
+    <ng-container *ngIf="user.role === 'admin'">
+      <a (click)="goTo('/admin')">Home</a>
+      <a (click)="goTo('/admin/dashboard')">Dashboard</a>
+      <a (click)="goTo('/admin/manage-events')">Manage Events</a>
+      <a (click)="goTo('/admin/manage-users')">Manage Users</a>
+    </ng-container>
+
+    <ng-container *ngIf="user.role === 'organizer'">
+      <a (click)="goTo('/organizer')">Home</a>
+      <a (click)="goTo('/organizer/create-event')">Create Event</a>
+      <a (click)="goTo('/organizer/my-event')">My Events</a>
+    </ng-container>
+
+    <ng-container *ngIf="user.role === 'student'">
+      <a (click)="goTo('/student')">Home</a>
+      <a (click)="goTo('/student/view-events')">View Events</a>
+      <a (click)="goTo('/student/registrations')">My Registrations</a>
+    </ng-container>
+
+    <a class="logout" (click)="logout()">Logout</a>
+  </ng-container>
+
+  <!-- NOT LOGGED IN -->
+  <ng-template #guest>
+    <a routerLink="/login" (click)="closeMenu()">Login</a>
+    <a routerLink="/register" (click)="closeMenu()">Register</a>
+  </ng-template>
+</div>

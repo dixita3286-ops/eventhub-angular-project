@@ -1,131 +1,147 @@
-/* RESET */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Parisienne&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* CONTAINER */
-.login-container {
+.signup-page {
+  font-family: 'Poppins', sans-serif;
+  background: #0d0d0d;
   min-height: 100vh;
-  background: radial-gradient(circle at top left, #6a4500, #000);
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
   position: relative;
   overflow: hidden;
 }
 
-/* GLOW */
-.login-container::before,
-.login-container::after {
+/* BACKGROUND GLOW */
+.signup-page::before,
+.signup-page::after {
   content: "";
   position: absolute;
-  width: 360px;
-  height: 360px;
+  width: 380px;
+  height: 380px;
   border-radius: 50%;
-  filter: blur(120px);
+  filter: blur(100px);
   opacity: 0.35;
-  pointer-events: none;
+  animation: float 8s infinite alternate ease-in-out;
 }
 
-.login-container::before {
+.signup-page::before {
   background: #ff9900;
   top: -80px;
-  left: -80px;
+  left: -50px;
 }
 
-.login-container::after {
+.signup-page::after {
   background: #ff5500;
   bottom: -80px;
-  right: -80px;
+  right: -50px;
 }
 
-/* CARD */
-.login-card {
-  width: 420px;
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(14px);
-  padding: 45px 40px;
-  border-radius: 22px;
+@keyframes float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(40px); }
+}
+
+/* SIGNUP BOX */
+.signup-box {
+  width: 400px;
+  background: rgba(255,255,255,0.06);
+  padding: 25px 25px;
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
   text-align: center;
+  margin-top: 60px;
+  animation: fadeIn 0.6s ease;
   position: relative;
   z-index: 10;
-  box-shadow: 0 30px 70px rgba(0,0,0,0.7);
 }
 
-/* TITLE */
-.login-card h2 {
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.signup-page::before,
+.signup-page::after {
+  pointer-events: none;   /* 🔥 THIS LINE FIXES EVERYTHING */
+}
+
+/* HEADING */
+.signup-box h2 {
+  font-family: 'Parisienne', cursive;
   font-size: 42px;
   color: #ffbb55;
-  margin-bottom: 30px;
-  text-shadow: 0 0 14px rgba(255,170,70,0.7);
+  margin-bottom: 25px;
+  text-shadow: 0 0 10px rgba(255,170,70,0.5);
 }
 
-/* FIELD */
-.field {
-  margin-bottom: 26px;
-}
-
-/* INPUT & SELECT */
-.login-card input,
-.login-card select {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 14px;
-  border: none;
-  background: rgba(255,255,255,0.2);
-  color: #fff;
+/* INPUTS */
+label {
+  display: block;
+  text-align: left;
+  color: #ddd;
+  margin-bottom: 6px;
   font-size: 14px;
 }
 
-.login-card input::placeholder {
-  color: #ddd;
+input,
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  font-size: 14px;
 }
 
-.login-card select option {
-  color: #000;
+select option {
+  background: #000;
+  color: #fff;
 }
 
-.login-card input:focus,
-.login-card select:focus {
+input:focus,
+select:focus {
   outline: none;
-  box-shadow: 0 0 12px rgba(255,153,0,0.9);
+  background: rgba(255,255,255,0.22);
+  box-shadow: 0 0 8px #ff9900;
 }
 
 /* BUTTON */
-.login-card button {
+button {
   width: 100%;
-  padding: 14px;
-  margin-top: 10px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ff9900, #ff7700);
+  padding: 12px;
+  border-radius: 10px;
+  background: #ff9900;
   border: none;
   color: #000;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-.login-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(255,140,0,0.7);
+button:hover {
+  background: #ff7700;
 }
 
-/* TEXT */
-.note {
-  margin-top: 22px;
-  font-size: 13px;
-  color: #ddd;
-}
-
-.link {
+/* LOGIN LINK */
+.login-link {
+  margin-top: 14px;
+  display: block;
   color: #ffcc66;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 
-.link:hover {
+.login-link:hover {
   text-decoration: underline;
 }

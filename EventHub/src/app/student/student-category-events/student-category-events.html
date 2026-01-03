@@ -1,3 +1,6 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
 <div class="main">
 
   <h1>
@@ -24,6 +27,7 @@
   <ng-container *ngIf="events$ | async as events">
 
     <div class="event-grid">
+
       <div class="event-card" *ngFor="let e of events">
 
         <img [src]="'http://localhost:5000' + e.eventImage">
@@ -35,19 +39,32 @@
         </div>
 
         <div class="event-actions">
-          <a (click)="viewDetails(e._id)">View Details</a>
+
+          <!-- DETAILS -->
+          <button class="link-btn" (click)="viewDetails(e._id)">
+            View Details
+          </button>
+
           <span>|</span>
 
+          <!-- REGISTERED -->
           <span class="registered" *ngIf="registeredIds.has(e._id)">
             Registered
           </span>
 
-          <a *ngIf="!registeredIds.has(e._id)" (click)="register(e._id)">
+          <!-- REGISTER -->
+          <button
+            class="link-btn"
+            *ngIf="!registeredIds.has(e._id)"
+            (click)="handleRegister(e._id)"
+          >
             Register
-          </a>
+          </button>
+
         </div>
 
       </div>
+
     </div>
 
     <p *ngIf="events.length === 0" class="no-data">

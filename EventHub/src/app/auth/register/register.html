@@ -1,51 +1,49 @@
-<div class="login-container">
-  <div class="login-card">
+<div class="signup-page">
 
-    <h2>EventHub</h2>
+
+
+  <!-- SIGNUP CARD -->
+  <div class="signup-box">
+    <h2>User Signup</h2>
 
     <!-- FULL NAME -->
-    <div class="field">
-      <input
-        type="text"
-        placeholder="Full Name"
-        [(ngModel)]="name"
-      />
-    </div>
+    <label>Full Name</label>
+    <input
+      type="text"
+      placeholder="Enter your name"
+      [(ngModel)]="name"
+    />
 
     <!-- EMAIL -->
-    <div class="field">
-      <input
-        type="email"
-        placeholder="Email address"
-        [(ngModel)]="email"
-      />
-    </div>
+    <label>Email</label>
+    <input
+      type="email"
+      placeholder="Enter your email"
+      [(ngModel)]="email"
+    />
 
     <!-- PASSWORD -->
-    <div class="field">
-      <input
-        type="password"
-        placeholder="Password"
-        [(ngModel)]="password"
-      />
-    </div>
+    <label>Password</label>
+    <input
+      type="password"
+      placeholder="Enter your password"
+      [(ngModel)]="password"
+    />
 
     <!-- ROLE -->
-    <div class="field">
-      <select [(ngModel)]="role">
-        <option value="" disabled>Select Role</option>
-        <option value="student">Student</option>
-        <option value="organizer">Organizer</option>
-      </select>
-    </div>
+    <label>Select Role</label>
+    <select [(ngModel)]="role">
+      <option value="" disabled selected>-- Select Role --</option>
+      <option value="student">Student</option>
+      <option value="organizer">Organizer</option>
+    </select>
 
-    <!-- REGISTER BUTTON -->
-    <button (click)="register()">Register</button>
+    <button (click)="register()">Sign Up</button>
 
-    <p class="note">
-      Already have an account?
-      <span class="link" routerLink="/">Login</span>
-    </p>
+    <a class="login-link" (click)="goToLogin()">
+  Already have an account? Login
+</a>
 
   </div>
+
 </div>

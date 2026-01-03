@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-student-view-events',
@@ -21,7 +22,10 @@ export class StudentViewEvents implements OnInit {
   showMenu = false;
   typingTimer: any;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadEvents();
@@ -50,41 +54,55 @@ export class StudentViewEvents implements OnInit {
     }, 300);
   }
 
-  /* ================= REGISTER EVENT ================= */
+  /* ================= REGISTER EVENT (PAYMENT FLOW) ================= */
   registerEvent(eventId: string) {
+
     const userStr = localStorage.getItem('user');
 
+    // 🔴 NOT LOGGED IN
     if (!userStr) {
-      alert('Please login first');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please login to register',
+        showCancelButton: true,
+        confirmButtonText: 'Login'
+      }).then(res => {
+        if (res.isConfirmed) {
+          this.router.navigate(['/login']);
+        }
+      });
       return;
     }
 
-    const user = JSON.parse(userStr);
+    // 🟢 PAYMENT SELECTION
+    Swal.fire({
+      title: 'Select Payment Method',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'UPI',
+      cancelButtonText: 'Card',
+      reverseButtons: true
+    }).then(res => {
 
-    fetch('http://localhost:5000/api/registrations', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        eventId: eventId,
-        userId: user._id
-      })
-    })
-      .then(res => {
-        if (res.status === 409) {
-          throw new Error('Already registered');
-        }
-        return res.json();
-      })
-      .then(() => {
-        alert('🎉 Registered successfully!');
-      })
-      .catch(err => {
-        alert(err.message || 'Registration failed');
-      });
+      if (res.isConfirmed) {
+        this.router.navigate(
+          ['/student/payment', eventId],
+          { queryParams: { method: 'upi' } }
+        );
+      }
+
+      if (res.dismiss === Swal.DismissReason.cancel) {
+        this.router.navigate(
+          ['/student/payment', eventId],
+          { queryParams: { method: 'card' } }
+        );
+      }
+
+    });
   }
 
+  /* ================= MENU ================= */
   toggleMenu() {
     this.showMenu = !this.showMenu;
   }

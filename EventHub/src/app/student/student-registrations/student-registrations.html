@@ -1,6 +1,10 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
+
 <section class="page">
 
-  <h2 class="title">My Registered Events</h2>
+  <h1>My Registered Events</h1>
 
   <!-- LOADING -->
   <div class="info" *ngIf="loading">
@@ -23,11 +27,11 @@
       />
 
       <div class="card-body">
-        <h3>{{ reg.eventId?.title }}</h3>
-        <p>{{ reg.eventId?.description }}</p>
-        <p class="date">
-          📅 {{ reg.eventId?.date | date:'mediumDate' }}
-        </p>
+        <h3> {{ reg.eventId?.title }}</h3>
+        <p> Description : {{ reg.eventId?.description }}</p>
+        <p> Category : {{ reg.eventId?.category }}</p>
+        <p class="date">{{ reg.eventId?.date | date:'mediumDate' }}</p>
+        <p> Venue : {{ reg.eventId?.venue }}</p>
       </div>
 
     </div>

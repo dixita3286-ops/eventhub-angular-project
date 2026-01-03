@@ -1,114 +1,39 @@
+/* ================= RESET ================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: black;
 }
 
-body {
-  font-family: 'Poppins', sans-serif;
+/* ================= ANGULAR PAGE BACKGROUND ================= */
+:host {
+  display: block;
+  min-height: 100vh;
+  width: 100%;
   background: #0d0d0d;
   color: #fff;
 }
 
-/* ================= NAVBAR ================= */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: #000;
-  padding: 12px 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2000;
-  border-bottom: 2px solid #ff9900;
-  box-shadow: 0 3px 20px rgba(255,153,0,0.3);
-}
-
-.navbar-left img {
-  height: 40px;
-  border-radius: 6px;
-}
-
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.navbar a {
-  color: #fff;
-  text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 5px;
-}
-
-.navbar a:hover,
-.navbar a.active {
-  background: rgba(255,255,255,0.2);
-}
-
-#hamburgerBtn {
-  background: #000;
-  border: 1px solid rgba(255,255,255,0.2);
-  padding: 8px;
-  border-radius: 8px;
-  cursor: pointer;
-  color: #fff;
-}
-
-/* ================= SIDE MENU ================= */
-#sideMenu {
-  position: fixed;
-  top: 0;
-  right: -300px;
-  width: 300px;
-  height: 100vh;
-  background: rgba(0,0,0,0.97);
-  z-index: 3000;
-  box-shadow: -5px 0 20px rgba(0,0,0,0.4);
-  transition: right 0.35s ease-in-out;
-}
-
-#sideMenu.show {
-  right: 0;
-}
-
-#sideMenu a {
-  display: block;
-  padding: 15px 22px;
-  font-size: 17px;
-  color: #fff;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  text-decoration: none;
-}
-
-#sideMenu .close {
-  background: none;
-  border: none;
-  color: #fff;
-  font-size: 22px;
-  padding: 15px;
-  cursor: pointer;
-}
 
 /* ================= MAIN ================= */
 .main {
-  padding: 70px 90px 90px;
+  width: 100%;
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 90px 60px 90px;
+  background: transparent;
 }
 
-
+/* ================= TITLE ================= */
 h1 {
-  margin-top: 0;
   text-align: center;
   font-family: 'Parisienne', cursive;
   font-size: 48px;
   color: #ffcc66;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   text-shadow:
-    0 0 6px rgba(255,204,102,0.7),
-    0 0 12px rgba(255,153,0,0.6);
+    0 0 8px rgba(255,204,102,0.8),
+    0 0 18px rgba(255,153,0,0.8);
 }
 
 /* ================= FILTERS ================= */
@@ -117,15 +42,15 @@ h1 {
   justify-content: center;
   gap: 15px;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .filters input,
 .filters select {
-  padding: 10px 14px;
-  background: #000;
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.08);
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   color: #fff;
   font-size: 14px;
 }
@@ -133,60 +58,104 @@ h1 {
 /* ================= EVENTS GRID ================= */
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 26px;
+  width: 100%;
 }
 
-/* ================= EVENT CARD ================= */
+/* ================= EVENT CARD (BIG + PREMIUM) ================= */
 .event-card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 18px;
+  position: relative;
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.02)
+  );
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.55);
+  transition: all 0.35s ease;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.45);
-  transition: 0.25s ease;
 }
 
+/* SHINE LAYER */
+.event-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,200,100,0.55),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 0;
+}
+
+/* HOVER EFFECT */
 .event-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+  transform: translateY(-8px) scale(1.04);
+  box-shadow:
+    0 0 25px rgba(255,153,0,0.35),
+    0 0 55px rgba(255,153,0,0.25),
+    0 25px 60px rgba(0,0,0,0.7);
 }
 
-/* IMAGE (same as PHP page) */
+.event-card:hover::before {
+  opacity: 1;
+}
+
+/* ================= IMAGE ================= */
 .event-img-wrapper img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  height: 180px;
   object-fit: cover;
-  display: block;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
 }
 
 /* ================= INFO ================= */
 .event-info {
-  padding: 16px 18px;
+  position: relative;
+  z-index: 1;
 }
 
 .event-info h3 {
-  color: #ff9900;
+  font-size: 17px;
+  color: #ffcc66;
   margin-bottom: 8px;
+  line-height: 1.3;
 }
 
 .event-info p {
+  font-size: 13px;
   color: #ddd;
-  margin: 4px 0;
+  margin: 3px 0;
 }
 
 /* ================= ACTIONS ================= */
 .event-actions {
-  padding: 12px 18px;
-  background: rgba(255,255,255,0.02);
-  border-top: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  font-size: 13px;
 }
 
 .event-actions a {
-  color: #ff8c00;
+  color: #ff9900;
   font-weight: 700;
   text-decoration: none;
+}
+
+.event-actions span {
+  color: #aaa;
 }
 
 /* ================= EMPTY ================= */
@@ -194,4 +163,62 @@ h1 {
   grid-column: 1 / -1;
   text-align: center;
   color: #aaa;
+  margin-top: 40px;
 }
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1500px) {
+  .event-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .event-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .event-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 36px;
+  }
+
+  .main {
+    padding: 90px 20px 60px;
+  }
+
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= FIX SELECT DROPDOWN VISIBILITY ================= */
+
+/* dropdown box */
+.filters select {
+  background-color: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* dropdown options */
+.filters select option {
+  background-color: #111 !important;
+  color: #fff !important;
+  padding: 10px;
+}
+
+/* when option is hovered / selected */
+.filters select option:hover,
+.filters select option:checked {
+  background-color: #ff9900 !important;
+  color: #000 !important;
+}
+

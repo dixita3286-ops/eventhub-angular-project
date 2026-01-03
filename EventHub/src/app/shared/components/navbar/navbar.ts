@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
 
@@ -16,47 +16,40 @@ export class Navbar {
 
   user: any = null;
   showMenu = false;
-  showProfileMenu = false;
 
   constructor() {
     this.loadUser();
 
-    // 🔥 reload user on every navigation
     this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => {
         this.loadUser();
-        this.showMenu = false;
-        this.showProfileMenu = false;
+        this.closeMenu();
       });
   }
 
   loadUser() {
-    const storedUser = localStorage.getItem('user');
-    this.user = storedUser ? JSON.parse(storedUser) : null;
+    const u = localStorage.getItem('user');
+    this.user = u ? JSON.parse(u) : null;
   }
 
   toggleMenu() {
     this.showMenu = !this.showMenu;
   }
 
-  toggleProfile() {
-    this.showProfileMenu = !this.showProfileMenu;
+  closeMenu() {
+    this.showMenu = false;
   }
 
   goTo(path: string) {
-    this.showMenu = false;
-    this.showProfileMenu = false;
-
-    this.router.navigate([path]).then(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+    this.closeMenu();
+    this.router.navigate([path]);
   }
 
   logout() {
     localStorage.removeItem('user');
     this.user = null;
-
+    this.closeMenu();
     this.router.navigate(['/login']);
   }
 }

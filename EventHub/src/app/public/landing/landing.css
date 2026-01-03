@@ -1,31 +1,42 @@
+/* ================= RESET ================= */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: white;
 }
 
-body {
-  font-family: 'Poppins', Arial, sans-serif;
-  background: radial-gradient(circle at top, #0f172a, #000);
+/* ================= PAGE BASE ================= */
+:host {
+  display: block;
+  min-height: 100vh;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  background: #111;
   color: #fff;
 }
 
 /* ================= BANNER ================= */
 .banner {
-  height: 550px;
-  background: url('/bg10.jpg') center center / cover no-repeat;
+  width: 100%;
+  height: 600px;
+  background: url('/bg10.jpg') no-repeat center center;
+  background-size: cover;
 }
-
-/* ================= EVENTS ================= */
+/* ================= EVENTS SECTION ================= */
 .events-container {
-  padding: 80px 50px;
+  padding-top: 40px;     /* pehla 90px htu */
+  padding-bottom: 60px;
+  font-family: 'Times New Roman', Times, serif;
   text-align: center;
+  background:
+    radial-gradient(circle at top, #0f172a, #000);
 }
 
+/* premium heading */
 .events-container h3 {
-  margin-bottom: 50px;
-  font-size: 30px;
+  margin-bottom: 55px;
+  font-size: 32px;
   font-weight: 800;
   background: linear-gradient(90deg, #ff9900, #ff5f00);
   -webkit-background-clip: text;
@@ -36,22 +47,25 @@ body {
 .event-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 35px;
+  gap: 36px;
 }
 
-/* ================= PREMIUM CARD ================= */
+/* ================= GLASSY CARD ================= */
 .event-card {
-  background: rgba(255,255,255,0.09);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
   border-radius: 22px;
-  padding-bottom: 22px;
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.15);
-  transition: 0.4s ease;
-  position: relative;
+  border: 1px solid rgba(255,255,255,0.18);
   overflow: hidden;
+  padding-bottom: 26px;
+
+  position: relative;
+  transition: 0.45s ease;
 }
 
-/* 🔥 OVERLAY (CLICK SAFE) */
+/* golden light sweep */
 .event-card::before {
   content: '';
   position: absolute;
@@ -59,12 +73,12 @@ body {
   background: linear-gradient(
     130deg,
     transparent,
-    rgba(255,153,0,0.3),
+    rgba(255,153,0,0.35),
     transparent
   );
   opacity: 0;
-  transition: 0.4s;
-  pointer-events: none;   /* 🔥 IMPORTANT FIX */
+  transition: 0.45s;
+  pointer-events: none;
 }
 
 .event-card:hover::before {
@@ -72,13 +86,13 @@ body {
 }
 
 .event-card:hover {
-  transform: translateY(-16px) scale(1.04);
+  transform: translateY(-16px) scale(1.05);
   box-shadow:
-    0 0 40px rgba(255,153,0,0.45),
+    0 0 45px rgba(255,153,0,0.45),
     0 0 120px rgba(255,153,0,0.25);
 }
 
-/* ================= CARD IMAGE ================= */
+/* ================= IMAGE ================= */
 .event-card img {
   width: 100%;
   height: 220px;
@@ -88,40 +102,56 @@ body {
 }
 
 .event-card:hover img {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
 /* ================= TITLE ================= */
 .event-card h4 {
-  margin: 22px 0 16px;
-  font-size: 20px;
+  margin: 22px 0 18px;
+  font-size: 21px;
   font-weight: 700;
+  color: #fff;
   position: relative;
   z-index: 2;
 }
 
-/* ================= BUTTON (CLICK FIXED) ================= */
+/* ================= BUTTON ================= */
 .btn {
   position: relative;
-  z-index: 5;               /* 🔥 ABOVE OVERLAY */
-  pointer-events: auto;     /* 🔥 CLICK ENABLED */
+  z-index: 5;
+  pointer-events: auto;
 
   background: linear-gradient(135deg, #ff9900, #ff5f00);
   color: #000;
-  border: none;
-  padding: 12px 26px;
+
+  padding: 12px 30px;
   border-radius: 999px;
+  font-size: 14px;
   font-weight: 800;
+  border: none;
   cursor: pointer;
+
   box-shadow:
     0 0 18px rgba(255,153,0,0.7),
-    0 0 50px rgba(255,153,0,0.45);
-  transition: 0.3s ease;
+    0 0 55px rgba(255,153,0,0.45);
+
+  transition: 0.35s ease;
 }
 
 .btn:hover {
   transform: scale(1.12);
   box-shadow:
-    0 0 30px rgba(255,153,0,0.95),
-    0 0 90px rgba(255,153,0,0.7);
+    0 0 32px rgba(255,153,0,0.95),
+    0 0 95px rgba(255,153,0,0.7);
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .events-container {
+    padding: 60px 25px;
+  }
+
+  .events-container h3 {
+    font-size: 26px;
+  }
 }

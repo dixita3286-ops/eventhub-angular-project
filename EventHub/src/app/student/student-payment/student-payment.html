@@ -1,0 +1,56 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"> 
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
+<div class="payment-container">
+
+  <h2>Secure Payment</h2>
+  <p class="sub">Complete your registration</p>
+
+  <!-- ================= UPI ================= -->
+  <div class="payment-box" *ngIf="method === 'upi'">
+    <h3>UPI Payment</h3>
+
+    <input
+      type="text"
+      placeholder="example@upi"
+      [(ngModel)]="upiId"
+    >
+
+    <small class="hint">Accepted: Google Pay, PhonePe, Paytm</small>
+
+    <button class="pay-btn" (click)="payNow()">Pay ₹499</button>
+  </div>
+
+  <!-- ================= CARD ================= -->
+  <div class="payment-box" *ngIf="method === 'card'">
+    <h3>Card Payment</h3>
+
+    <input
+      type="text"
+      maxlength="16"
+      placeholder="Card Number (16 digits)"
+      [(ngModel)]="cardNumber"
+    >
+
+    <div class="row">
+      <input
+        type="text"
+        placeholder="MM/YY"
+        maxlength="5"
+        [(ngModel)]="expiry"
+      >
+
+      <input
+        type="password"
+        maxlength="3"
+        placeholder="CVV"
+        [(ngModel)]="cvv"
+      >
+    </div>
+
+    <button class="pay-btn" (click)="payNow()">Pay ₹499</button>
+  </div>
+
+  <button class="cancel-btn" (click)="cancelPayment()">Cancel</button>
+
+</div>

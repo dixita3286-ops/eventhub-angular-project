@@ -11,7 +11,11 @@
 
   <!-- 🔥 EVENT DATA -->
   <div class="event-card" *ngIf="!loading && event">
-    <img [src]="'http://localhost:5000' + event.eventImage" />
+
+    <img
+      [src]="'http://localhost:5000' + event.eventImage"
+      alt="Event Image"
+    />
 
     <h2>{{ event.title }}</h2>
 
@@ -19,8 +23,8 @@
       <p><strong>Category:</strong> {{ event.category }}</p>
       <p><strong>Date:</strong> {{ event.date | date }}</p>
       <p><strong>Venue:</strong> {{ event.venue }}</p>
-      <p><strong>Registration Fees:</strong> ₹{{ event.registrationFees }}</p>
-      <p>{{ event.description }}</p>
+      <p><strong>Registration Fees:</strong> ₹{{ event.registrationFee }}</p>
+      <p class="desc">{{ event.description }}</p>
     </div>
 
     <button
@@ -29,6 +33,7 @@
       (click)="downloadFile(event.eventFile)">
       Download Event File
     </button>
+
   </div>
 
 </div>

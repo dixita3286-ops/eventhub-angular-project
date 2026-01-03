@@ -10,40 +10,31 @@ const registrationRoutes = require('./routes/registrationRoutes');
 const app = express();
 
 /* ================= MIDDLEWARE ================= */
-
-/* 🔥 CORS FIX (VERY IMPORTANT FOR IMAGES) */
 app.use(cors({
   origin: 'http://localhost:4200',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
 app.use(express.json());
 
 /* ================= STATIC FILES =================
-   Images:  http://localhost:5000/Public/xxx.png
-   Files:   http://localhost:5000/files/xxx.pdf
+   Images: http://localhost:5000/public/xxx.png
 ================================================ */
 
-/* 🔥 STATIC IMAGES WITH HEADERS (CORB FIX) */
+/* ✅ CORRECT STATIC IMAGES PATH */
 app.use(
-  '/Public',
-  express.static(path.join(__dirname, '../public'), {
-    setHeaders: (res, filePath) => {
+  '/public',
+  express.static(path.join(__dirname, '../EventHub/public'), {
+    setHeaders: res => {
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
     }
   })
 );
 
-/* FILE DOWNLOADS (unchanged) */
-app.use('/files', express.static(path.join(__dirname, '../EventHub/files')));
-
 /* ================= DATABASE ================= */
 mongoose
-  .connect(
-    'mongodb+srv://dixita_1704:dixita1704@cluster0.syxxncf.mongodb.net/EventHub'
-  )
+  .connect('mongodb+srv://dixita_1704:dixita1704@cluster0.syxxncf.mongodb.net/EventHub')
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB error:', err));
 

@@ -13,10 +13,10 @@ import { AuthService } from '../../core/services/auth.service';
 })
 export class Register {
 
-  name: string = '';
-  email: string = '';
-  password: string = '';
-  role: string = '';
+  name = '';
+  email = '';
+  password = '';
+  role = '';
 
   constructor(
     private authService: AuthService,
@@ -37,11 +37,18 @@ export class Register {
     }).subscribe({
       next: () => {
         alert('Registration successful. Please login.');
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);   // landing / login
       },
       error: (err) => {
         alert(err.error?.message || 'Registration failed');
       }
     });
   }
+
+  // 🔥 THIS FIXES YOUR ISSUE
+ goToLogin(): void {
+  console.log('login click');   // 🔥 test
+  this.router.navigate(['/login']);
+}
+
 }

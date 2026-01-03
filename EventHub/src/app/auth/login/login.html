@@ -1,36 +1,32 @@
-<div class="login-container">
-  <div class="login-card">
+<div class="login-page">
 
-    <h2>EventHub</h2>
+
+
+  <!-- LOGIN CARD -->
+  <div class="login-box">
+    <h2>User Login</h2>
 
     <!-- EMAIL -->
-    <div class="field">
-      <input
-        type="email"
-        placeholder="Email address"
-        [(ngModel)]="email"
-      />
-    </div>
+    <label>Email</label>
+    <input
+      type="email"
+      placeholder="Enter your email"
+      [(ngModel)]="email"
+    />
 
     <!-- PASSWORD -->
-    <div class="field password-field">
-      <input
-        [type]="showPassword ? 'text' : 'password'"
-        placeholder="Password"
-        [(ngModel)]="password"
-      />
-      <span class="toggle" (click)="togglePassword()">
-        {{ showPassword ? 'Hide' : 'Show' }}
-      </span>
-    </div>
+    <label>Password</label>
+    <input
+      [type]="showPassword ? 'text' : 'password'"
+      placeholder="Enter your password"
+      [(ngModel)]="password"
+    />
 
-    <!-- LOGIN BUTTON -->
     <button (click)="login()">Login</button>
 
-    <p class="note">
-      Don’t have an account?
-      <span class="link" (click)="goToRegister()">Register</span>
-    </p>
-
+    <a class="signup-link" (click)="goToRegister()">
+      Don't have an account? Sign Up
+    </a>
   </div>
+
 </div>
