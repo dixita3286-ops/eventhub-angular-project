@@ -10,14 +10,33 @@ const registrationRoutes = require('./routes/registrationRoutes');
 const app = express();
 
 /* ================= MIDDLEWARE ================= */
-app.use(cors());
+
+/* 🔥 CORS FIX (VERY IMPORTANT FOR IMAGES) */
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
+
 app.use(express.json());
 
 /* ================= STATIC FILES =================
-   Images:  http://localhost:5000/public/xxx.png
+   Images:  http://localhost:5000/Public/xxx.png
    Files:   http://localhost:5000/files/xxx.pdf
 ================================================ */
-app.use('/public', express.static(path.join(__dirname, '../EventHub/public')));
+
+/* 🔥 STATIC IMAGES WITH HEADERS (CORB FIX) */
+app.use(
+  '/Public',
+  express.static(path.join(__dirname, '../public'), {
+    setHeaders: (res, filePath) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    }
+  })
+);
+
+/* FILE DOWNLOADS (unchanged) */
 app.use('/files', express.static(path.join(__dirname, '../EventHub/files')));
 
 /* ================= DATABASE ================= */

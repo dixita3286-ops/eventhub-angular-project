@@ -23,7 +23,6 @@ import { RegisteredStudent } from './organizer/registered-student/registered-stu
 
 /* ===== STUDENT ===== */
 import { StudentHome } from './student/student-home/student-home';
-import { StudentDashboard } from './student/student-dashboard/student-dashboard';
 import { StudentRegistrations } from './student/student-registrations/student-registrations';
 import { StudentCategoryEvents } from './student/student-category-events/student-category-events';
 import { StudentEventDetails } from './student/student-event-details/student-event-details';
@@ -74,12 +73,6 @@ export const routes: Routes = [
     data: { role: 'student' }
   },
   {
-    path: 'student/dashboard',
-    component: StudentDashboard,
-    canActivate: [authGuard, roleGuard],
-    data: { role: 'student' }
-  },
-  {
     path: 'student/registrations',
     component: StudentRegistrations,
     canActivate: [authGuard, roleGuard],
@@ -91,19 +84,19 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' }
   },
-    {
-    path: 'student/student-category-events',
-    component: StudentCategoryEvents,
-    canActivate: [authGuard, roleGuard],
-    data: { role: 'student' }
+{
+  path: 'student/student-category-events',
+  loadComponent: () =>
+    import('./student/student-category-events/student-category-events')
+      .then(m => m.StudentCategoryEvents)
   },
- {
-  path: 'student/event-details/:id',     // 🔥 FIXED
-  component: StudentEventDetails,        // 🔥 FIXED
-  canActivate: [authGuard, roleGuard],
-  data: { role: 'student' },
-  runGuardsAndResolvers: 'always'   
-},
+  {
+    path: 'student/event-details/:id',     // 🔥 FIXED
+    component: StudentEventDetails,        // 🔥 FIXED
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'student' },
+    runGuardsAndResolvers: 'always'   
+  },
   /* ===== ORGANIZER ===== */
   {
     path: 'organizer',

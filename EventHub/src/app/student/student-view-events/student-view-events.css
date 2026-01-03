@@ -1,0 +1,197 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: black;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #000;
+  padding: 12px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2000;
+  border-bottom: 2px solid #ff9900;
+  box-shadow: 0 3px 20px rgba(255,153,0,0.3);
+}
+
+.navbar-left img {
+  height: 40px;
+  border-radius: 6px;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 5px;
+}
+
+.navbar a:hover,
+.navbar a.active {
+  background: rgba(255,255,255,0.2);
+}
+
+#hamburgerBtn {
+  background: #000;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* ================= SIDE MENU ================= */
+#sideMenu {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100vh;
+  background: rgba(0,0,0,0.97);
+  z-index: 3000;
+  box-shadow: -5px 0 20px rgba(0,0,0,0.4);
+  transition: right 0.35s ease-in-out;
+}
+
+#sideMenu.show {
+  right: 0;
+}
+
+#sideMenu a {
+  display: block;
+  padding: 15px 22px;
+  font-size: 17px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-decoration: none;
+}
+
+#sideMenu .close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  padding: 15px;
+  cursor: pointer;
+}
+
+/* ================= MAIN ================= */
+.main {
+  padding: 70px 90px 90px;
+}
+
+
+h1 {
+  margin-top: 0;
+  text-align: center;
+  font-family: 'Parisienne', cursive;
+  font-size: 48px;
+  color: #ffcc66;
+  margin-bottom: 25px;
+  text-shadow:
+    0 0 6px rgba(255,204,102,0.7),
+    0 0 12px rgba(255,153,0,0.6);
+}
+
+/* ================= FILTERS ================= */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filters input,
+.filters select {
+  padding: 10px 14px;
+  background: #000;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* ================= EVENTS GRID ================= */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+}
+
+/* ================= EVENT CARD ================= */
+.event-card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.45);
+  transition: 0.25s ease;
+}
+
+.event-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+/* IMAGE (same as PHP page) */
+.event-img-wrapper img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================= INFO ================= */
+.event-info {
+  padding: 16px 18px;
+}
+
+.event-info h3 {
+  color: #ff9900;
+  margin-bottom: 8px;
+}
+
+.event-info p {
+  color: #ddd;
+  margin: 4px 0;
+}
+
+/* ================= ACTIONS ================= */
+.event-actions {
+  padding: 12px 18px;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  gap: 10px;
+}
+
+.event-actions a {
+  color: #ff8c00;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ================= EMPTY ================= */
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #aaa;
+}
