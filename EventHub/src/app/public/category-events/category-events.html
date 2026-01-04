@@ -1,6 +1,3 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
-
 <div class="main">
 
   <h1>
@@ -39,9 +36,28 @@
         </div>
 
         <div class="event-actions">
+
           <button class="link-btn" (click)="viewDetails(e._id)">
             View Details
           </button>
+
+          <span>|</span>
+
+          <span
+            class="registered"
+            *ngIf="registeredIds.has(e._id)"
+          >
+            Registered
+          </span>
+
+          <button
+            class="link-btn"
+            *ngIf="!registeredIds.has(e._id)"
+            (click)="handleRegister(e._id)"
+          >
+            Register
+          </button>
+
         </div>
 
       </div>

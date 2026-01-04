@@ -16,7 +16,10 @@ export class StudentCategoryEvents implements OnInit {
 
   events$!: Observable<any[]>;
   category$!: Observable<string>;
+
   registeredIds = new Set<string>();
+  isLoggedIn = false;
+  userId: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,29 +34,28 @@ export class StudentCategoryEvents implements OnInit {
       map(params => params['category'] || '')
     );
 
-    /* 🔥 REGISTERED EVENTS (ONLY IF LOGGED IN) */
-    const userStr = sessionStorage.getItem('user');
+    /* USER CHECK (NO DEPENDENCY ON CLICK) */
+    const userStr = localStorage.getItem('user');
+    this.isLoggedIn = !!userStr;
 
     if (userStr) {
       const user = JSON.parse(userStr);
+      this.userId = user._id;
 
+      /* 🔥 FETCH REGISTERED EVENTS IMMEDIATELY */
       this.http
-        .get<any[]>(`http://localhost:5000/api/registrations/student/${user._id}`)
+        .get<any[]>(`http://localhost:5000/api/registrations/student/${this.userId}`)
         .subscribe(data => {
-          this.registeredIds.clear(); // safety
+          this.registeredIds.clear();
           data.forEach(r => {
             if (r.eventId?._id) {
               this.registeredIds.add(r.eventId._id);
             }
           });
         });
-
-    } else {
-      // 🔥 NOT LOGGED IN → show NOTHING as registered
-      this.registeredIds.clear();
     }
 
-    /* EVENTS */
+    /* EVENTS (ALWAYS LOAD) */
     this.events$ = this.route.queryParams.pipe(
       switchMap(params =>
         this.http.get<any[]>(
@@ -70,7 +72,7 @@ export class StudentCategoryEvents implements OnInit {
     );
   }
 
-  /* FILTERS */
+  /* SEARCH */
   onSearch(value: string) {
     this.router.navigate([], {
       queryParams: { search: value },
@@ -78,6 +80,7 @@ export class StudentCategoryEvents implements OnInit {
     });
   }
 
+  /* SORT */
   onSort(value: string) {
     this.router.navigate([], {
       queryParams: { sort: value },
@@ -90,13 +93,11 @@ export class StudentCategoryEvents implements OnInit {
     this.router.navigate(['/student/event-details', id]);
   }
 
-  /* REGISTER */
+  /* REGISTER CLICK */
   handleRegister(eventId: string) {
 
-    const userStr = sessionStorage.getItem('user');
-
-    // 🔴 NOT LOGGED IN
-    if (!userStr) {
+    /* 🔴 NOT LOGGED IN */
+    if (!this.isLoggedIn) {
       Swal.fire({
         icon: 'warning',
         title: 'Login Required',
@@ -111,7 +112,12 @@ export class StudentCategoryEvents implements OnInit {
       return;
     }
 
-    // 🟢 PAYMENT METHOD
+    /* 🟢 ALREADY REGISTERED (SAFETY) */
+    if (this.registeredIds.has(eventId)) {
+      return;
+    }
+
+    /* 🟢 PAYMENT */
     Swal.fire({
       title: 'Select Payment Method',
       icon: 'question',

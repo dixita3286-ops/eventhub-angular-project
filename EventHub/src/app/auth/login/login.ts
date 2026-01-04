@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -11,25 +11,24 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
-export class Login implements OnInit {
+export class Login {
 
   email: string = '';
   password: string = '';
   showPassword: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    localStorage.removeItem('user');
-  }
-
+  // ================= TOGGLE PASSWORD =================
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
+  // ================= LOGIN =================
   login(): void {
 
     if (!this.email || !this.password) {
@@ -37,37 +36,48 @@ export class Login implements OnInit {
       return;
     }
 
+    this.loading = true;
+
     this.authService.login({
       email: this.email,
       password: this.password
     }).subscribe({
+
       next: (user: any) => {
 
-        console.log('LOGIN RESPONSE:', user);
+        console.log('LOGIN SUCCESS:', user);
 
+        // 🔥 SAVE USER
         localStorage.setItem('user', JSON.stringify(user));
 
-        // 🔥 ROLE BASED ROUTING (FIX)
-        if (user.role === 'student') {
-          this.router.navigate(['/student-home']);
-        } 
-        else if (user.role === 'admin') {
-          this.router.navigate(['/admin-home']);
-        } 
-        else if (user.role === 'organizer') {
-          this.router.navigate(['/organizer-home']);
-        } 
-        else {
-          alert('Unknown role');
+        // 🔥 ROLE BASED REDIRECT (FIXED)
+         if (user.role === 'student') {
+           this.router.navigateByUrl('/student');
         }
+          else if (user.role === 'admin') {
+            this.router.navigateByUrl('/admin');
+        }
+          else if (user.role === 'organizer') {
+              this.router.navigateByUrl('/organizer');
+        }
+
+        else {
+          alert('Invalid user role');
+          localStorage.removeItem('user');
+        }
+
+        this.loading = false;
       },
+
       error: () => {
+        this.loading = false;
         alert('Invalid email or password');
       }
     });
   }
 
+  // ================= GO TO REGISTER =================
   goToRegister(): void {
-    this.router.navigate(['/register']);
+    this.router.navigateByUrl('/register');
   }
 }
