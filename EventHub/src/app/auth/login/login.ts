@@ -15,7 +15,7 @@ export class Login implements OnInit {
 
   email: string = '';
   password: string = '';
-  showPassword: boolean = false;   
+  showPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -31,6 +31,7 @@ export class Login implements OnInit {
   }
 
   login(): void {
+
     if (!this.email || !this.password) {
       alert('Please enter email and password');
       return;
@@ -40,9 +41,25 @@ export class Login implements OnInit {
       email: this.email,
       password: this.password
     }).subscribe({
-      next: (user: any) => {        // ⭐ type fixed
+      next: (user: any) => {
+
+        console.log('LOGIN RESPONSE:', user);
+
         localStorage.setItem('user', JSON.stringify(user));
-        this.router.navigate(['/' + user.role]);
+
+        // 🔥 ROLE BASED ROUTING (FIX)
+        if (user.role === 'student') {
+          this.router.navigate(['/student-home']);
+        } 
+        else if (user.role === 'admin') {
+          this.router.navigate(['/admin-home']);
+        } 
+        else if (user.role === 'organizer') {
+          this.router.navigate(['/organizer-home']);
+        } 
+        else {
+          alert('Unknown role');
+        }
       },
       error: () => {
         alert('Invalid email or password');
