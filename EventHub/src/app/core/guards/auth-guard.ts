@@ -1,14 +1,20 @@
-import { CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const user = localStorage.getItem('user');
+  const user = sessionStorage.getItem('user');
 
-  if (user) {
-    return true; // logged in → allow
+  // 🔥 PUBLIC ROUTES (NO ROLE REQUIRED)
+  if (!route.data || !route.data['role']) {
+    return true;
   }
 
-  // not logged in → redirect to login
-  return router.createUrlTree(['/']);
+  // 🔒 PROTECTED ROUTES
+  if (!user) {
+    router.navigate(['/login']);
+    return false;
+  }
+
+  return true;
 };
