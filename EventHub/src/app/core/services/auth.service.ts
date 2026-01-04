@@ -21,20 +21,23 @@ export class AuthService {
     return this.http.post<any>(`${this.baseUrl}/register`, data);
   }
 
-  // 🔥 ADD THESE
+  // ✅ STORE USER
   setUser(user: any) {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
+  // ✅ GET USER
   getUser() {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }
 
+  // ✅ CHECK LOGIN
   isLoggedIn() {
     return !!localStorage.getItem('user');
   }
 
+  // ✅ LOGOUT
   logout() {
     localStorage.removeItem('user');
   }

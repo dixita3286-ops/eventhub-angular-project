@@ -1,59 +1,66 @@
 /* ================= PAGE BASE ================= */
-app-student-home {
+app-landing {
   display: block;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Times New Roman', serif;
   background: radial-gradient(1200px circle at top, #141414, #050505);
   color: #fff;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-/* ================= BANNER ================= */
-.banner {
-  width: 100%;
-  height: 600px;
+/* ================= HERO ================= */
+.hero {
+  height: 52vh;
   background: url('/bg10.jpg') no-repeat center center;
   background-size: cover;
   position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
 /* ================= EVENTS SECTION ================= */
 .events-container {
-  padding: 90px 0 110px;
+  height: 48vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: linear-gradient(to bottom,black);
 }
 
 /* ================= HEADING ================= */
 .events-container h3 {
-  margin-bottom: 75px;
-  font-size: 34px;
-  font-weight: 600;
-  letter-spacing: 1.3px;
   text-align: center;
-  background: linear-gradient(90deg, #ffb347, #ff8c00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: 'Parisienne', cursive;
+  font-size: 35px;
+  color: #ffcc66;
+  margin: 15px 10px;
+  text-shadow:
+    0 0 8px rgba(255,204,102,0.8),
+    0 0 18px rgba(255,153,0,0.8);
 }
 
 /* ================= GRID ================= */
 .event-grid {
   width: 100%;
-  max-width: 2000px;        /* 🔥 6 cards fit thava mate */
-  padding: 0 40px;
-
+  max-width: 2000px;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);  /* 🔥 EXACT 6 IN ONE LINE */
-  gap: 30px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
 }
 
 /* ================= CARD ================= */
 .event-card {
-  display: flex;                 /* 🔥 IMPORTANT */
-  flex-direction: column;        /* 🔥 vertical layout */
-  align-items: center;           /* 🔥 center title + button */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   background: linear-gradient(
     145deg,
@@ -61,102 +68,53 @@ app-student-home {
     rgba(255,255,255,0.03)
   );
 
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-
-  border-radius: 26px;
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.15);
   overflow: hidden;
-  position: relative;
 
-  box-shadow:
-    0 22px 55px rgba(0,0,0,0.6),
-    inset 0 1px 1px rgba(255,255,255,0.10);
-
-  transition: transform 0.45s ease, box-shadow 0.45s ease;
-  will-change: transform;
+  box-shadow: 0 16px 36px rgba(0,0,0,0.55);
+  transition: transform 0.35s ease;
 }
 
-/* subtle shine */
-.event-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    120deg,
-    transparent 25%,
-    rgba(255,255,255,0.18),
-    transparent 75%
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-
-.event-card:hover::before {
-  opacity: 1;
-}
-
-/* ================= CARD HOVER ================= */
 .event-card:hover {
-  transform: translateY(-10px);
-  box-shadow:
-    0 38px 80px rgba(0,0,0,0.85),
-    0 0 35px rgba(255,153,0,0.18);
+  transform: translateY(-6px);
 }
 
 /* ================= IMAGE ================= */
 .event-card img {
   width: 100%;
-  height: 230px;
+  height: 150px;
   object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.event-card:hover img {
-  transform: scale(1.06);
 }
 
 /* ================= TITLE ================= */
 .event-card h4 {
-  margin: 22px 0 18px;
-  font-size: 22px;
+  margin: 12px 0 10px;
+  font-size: 17px;
   font-weight: 500;
-  letter-spacing: 0.4px;
-  color: #ffffff;
-  text-align: center;
 }
 
 /* ================= BUTTON ================= */
 .btn {
-  margin-top: auto;          /* 🔥 SAME LEVEL FOR ALL CARDS */
-  margin-bottom: 22px;
-  align-self: center;        /* 🔥 PERFECT CENTER */
+  margin-top: auto;
+  margin-bottom: 14px;
 
   background: linear-gradient(135deg, #ffb347, #ff9500);
   color: #000;
 
-  padding: 12px 34px;
+  padding: 8px 24px;
   border-radius: 999px;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  letter-spacing: 0.6px;
 
   border: none;
   cursor: pointer;
 
-  box-shadow:
-    0 8px 24px rgba(255,153,0,0.35),
-    inset 0 1px 1px rgba(255,255,255,0.35);
-
-  transition: all 0.35s ease;
+  box-shadow: 0 6px 18px rgba(255,153,0,0.35);
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 14px 38px rgba(255,153,0,0.55);
 }
-
-
-

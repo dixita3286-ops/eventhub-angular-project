@@ -1,8 +1,8 @@
-/* ================= HOST ================= */
+/* ================= HOST FIX (MOST IMPORTANT) ================= */
 :host {
   display: block;
   min-height: 100vh;
-  background: #0d0d0d;
+  background: #0d0d0d;   /* PHP background */
 }
 
 /* ================= RESET ================= */
@@ -15,7 +15,8 @@
 
 /* ================= MAIN ================= */
 .main {
-  padding: 140px 70px 70px;
+  padding: 140px 70px 70px;   /* SAME AS PHP */
+  background: transparent;
 }
 
 /* ================= HEADING ================= */
@@ -59,7 +60,7 @@
   color: #fff;
 }
 
-/* ================= GRID ================= */
+/* ================= EVENT GRID ================= */
 .event-grid {
   display: flex;
   flex-wrap: wrap;
@@ -67,7 +68,7 @@
   gap: 25px;
 }
 
-/* ================= CARD ================= */
+/* ================= EVENT CARD ================= */
 .event-card {
   width: 300px;
   background: rgba(255,255,255,0.08);
@@ -85,7 +86,7 @@
 /* ================= IMAGE ================= */
 .event-card img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1 / 1;   /* PHP SAME */
   object-fit: cover;
 }
 
@@ -117,6 +118,7 @@
   font-size: 14px;
 }
 
+/* LINK BUTTON LIKE PHP <a> */
 .link-btn {
   background: none;
   border: none;
@@ -128,6 +130,12 @@
 
 .link-btn:hover {
   text-decoration: underline;
+}
+
+/* REGISTERED */
+.registered {
+  color: #999;
+  font-weight: bold;
 }
 
 /* ================= NO DATA ================= */

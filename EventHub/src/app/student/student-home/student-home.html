@@ -1,9 +1,12 @@
-<!-- BANNER -->
-<div class="banner"></div>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+<!-- HERO -->
+<div class="hero">
+</div>
 
-<!-- EVENTS -->
+<!-- CATEGORIES -->
 <div class="events-container">
-  <h3>Step Into the World of Opportunities & Celebrations</h3>
+  <h3>Explore Event Categories</h3>
 
   <div class="event-grid">
     <div class="event-card" *ngFor="let cat of categories">
@@ -12,7 +15,6 @@
 
       <h4>{{ cat.name }}</h4>
 
-      <!-- IMPORTANT: type="button" -->
       <button
         type="button"
         class="btn"

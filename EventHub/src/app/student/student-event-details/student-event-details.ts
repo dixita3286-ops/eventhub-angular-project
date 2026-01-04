@@ -64,7 +64,29 @@ export class StudentEventDetails implements OnInit {
       });
   }
 
-  downloadFile(file: string) {
-    window.location.href = 'http://localhost:5000/files/' + file;
-  }
+  downloadFile(filePath: string) {
+  const fileUrl = 'http://localhost:5000' + filePath;
+
+  this.http.get(fileUrl, { responseType: 'blob' }).subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+
+      // ✅ extract filename from path
+      a.download = filePath.split('/').pop() || 'event-file';
+
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('❌ File download failed', err);
+    }
+  });
+}
+
 }

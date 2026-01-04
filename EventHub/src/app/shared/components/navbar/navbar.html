@@ -1,3 +1,9 @@
+<!-- NOT LOGGED IN TEMPLATE -->
+<ng-template #guest>
+  <a routerLink="/login" (click)="closeMenu()">Login</a>
+  <a routerLink="/register" (click)="closeMenu()">Register</a>
+</ng-template>
+
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar">
   <div class="navbar-left">
@@ -5,7 +11,6 @@
   </div>
 
   <div class="navbar-right">
-    <!-- Hamburger (always visible) -->
     <button id="hamburgerBtn" (click)="toggleMenu()">☰</button>
   </div>
 </nav>
@@ -29,7 +34,6 @@
 
     <ng-container *ngIf="user.role === 'admin'">
       <a (click)="goTo('/admin')">Home</a>
-      <a (click)="goTo('/admin/dashboard')">Dashboard</a>
       <a (click)="goTo('/admin/manage-events')">Manage Events</a>
       <a (click)="goTo('/admin/manage-users')">Manage Users</a>
     </ng-container>
@@ -48,10 +52,4 @@
 
     <a class="logout" (click)="logout()">Logout</a>
   </ng-container>
-
-  <!-- NOT LOGGED IN -->
-  <ng-template #guest>
-    <a routerLink="/login" (click)="closeMenu()">Login</a>
-    <a routerLink="/register" (click)="closeMenu()">Register</a>
-  </ng-template>
 </div>

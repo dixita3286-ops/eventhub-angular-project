@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -10,7 +10,7 @@ type Status = 'approved' | 'pending' | 'rejected' | 'all';
   standalone: true,
   imports: [
     CommonModule,
-    HttpClientModule   // ✅ VERY IMPORTANT
+    HttpClientModule
   ],
   templateUrl: './my-event.html',
   styleUrls: ['./my-event.css']
@@ -19,12 +19,12 @@ export class MyEvent implements OnInit {
 
   events: any[] = [];
   filteredEvents: any[] = [];
-
   status: Status = 'all';
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef   // 🔥 ADDED
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +36,6 @@ export class MyEvent implements OnInit {
     }
 
     const user = JSON.parse(userStr);
-
     console.log('Organizer ID:', user._id);
 
     this.http
@@ -44,8 +43,12 @@ export class MyEvent implements OnInit {
       .subscribe({
         next: (res) => {
           console.log('Events API response:', res);
+
           this.events = res || [];
           this.applyFilter();
+
+          // 🔥 FORCE UI RENDER (MAIN FIX)
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('API Error:', err);

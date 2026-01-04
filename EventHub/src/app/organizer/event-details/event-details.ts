@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-event-details',
@@ -11,35 +12,76 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class EventDetails implements OnInit {
 
-  eventId!: number;
-
-  // demo data (PHP DB ni jagyae)
   event: any = null;
+  loading = true;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.eventId = Number(this.route.snapshot.paramMap.get('id'));
+    // ✅ SUBSCRIBE TO PARAM CHANGES
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
 
-    // 🔹 Normally API call aavse (GET /events/:id)
-    this.event = {
-      id: this.eventId,
-      title: 'Angular Workshop',
-      description: 'Angular hands-on workshop with real projects.',
-      category: 'Workshop',
-      date: '2026-01-10',
-      venue: 'Auditorium',
-      registrationFees: 500,
-      image: 'assets/default-event.jpg',
-      file: 'sample-event.pdf'
-    };
+      console.log('EVENT ID:', id);
+
+      if (!id) {
+        console.error('❌ ID NOT FOUND');
+        this.loading = false;
+        return;
+      }
+
+      this.fetchEvent(id);
+    });
   }
 
-  downloadFile() {
-    // 🔥 demo download (backend ma API hase)
-    const link = document.createElement('a');
-    link.href = 'assets/sample-event.pdf';
-    link.download = 'event-file.pdf';
-    link.click();
+  fetchEvent(id: string) {
+    this.loading = true;
+    this.event = null;
+
+    this.http
+      .get(`http://localhost:5000/api/events/${id}`)
+      .subscribe({
+        next: (data) => {
+          this.event = data;
+          this.loading = false;
+
+          // 🔥 FORCE UI UPDATE
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
+
+  downloadFile(filePath: string) {
+  const fileUrl = 'http://localhost:5000' + filePath;
+
+  this.http.get(fileUrl, { responseType: 'blob' }).subscribe({
+    next: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+
+      const a = document.createElement('a');
+      a.href = url;
+
+      // ✅ extract filename from path
+      a.download = filePath.split('/').pop() || 'event-file';
+
+      document.body.appendChild(a);
+      a.click();
+
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    },
+    error: (err) => {
+      console.error('❌ File download failed', err);
+    }
+  });
+}
 }

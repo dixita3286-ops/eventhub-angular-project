@@ -1,132 +1,120 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: 'Poppins', Arial, sans-serif;
-  background: radial-gradient(circle at top, #0f172a, #000);
+/* ================= PAGE BASE ================= */
+app-organizer-home {
+  display: block;
+  height: 100vh;
+  width: 100%;
+  font-family: 'Times New Roman', serif;
+  background: radial-gradient(1200px circle at top, #141414, #050505);
   color: #fff;
+  overflow: hidden;
 }
 
-/* ================= BANNER ================= */
-.banner {
-  height: 550px;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(253, 251, 251, 0.25),
-      rgba(0,0,0,0.95)
-    ),
-    url('/bg10.jpg') center center / cover no-repeat;
+/* ================= HERO ================= */
+.hero {
+  height: 52vh;
+  background: url('/bg10.jpg') no-repeat center center;
+  background-size: cover;
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ================= EVENTS ================= */
+.hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* ================= EVENTS SECTION ================= */
 .events-container {
-  padding: 80px 50px;
-  text-align: center;
+  height: 48vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+/* ================= HEADING ================= */
 .events-container h3 {
-  margin-bottom: 50px;
-  font-size: 30px;
-  font-weight: 800;
-  background: linear-gradient(90deg, #ff9900, #ff5f00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  text-align: center;
+  font-family: 'Parisienne', cursive;
+  font-size: 35px;
+  color: #ffcc66;
+  margin: 15px 10px;
+  text-shadow:
+    0 0 8px rgba(255,204,102,0.8),
+    0 0 18px rgba(255,153,0,0.8);
 }
 
 /* ================= GRID ================= */
 .event-grid {
+  width: 100%;
+  max-width: 2000px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 35px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
 }
 
-/* ================= PREMIUM CARD ================= */
+/* ================= CARD ================= */
 .event-card {
-  background: rgba(255,255,255,0.09);
-  border-radius: 22px;
-  padding-bottom: 22px;
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255,255,255,0.15);
-  transition: 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-/* 🔥 OVERLAY (CLICK SAFE) */
-.event-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
   background: linear-gradient(
-    130deg,
-    transparent,
-    rgba(255,153,0,0.3),
-    transparent
+    145deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.03)
   );
-  opacity: 0;
-  transition: 0.4s;
-  pointer-events: none;   /* 🔥 IMPORTANT FIX */
-}
 
-.event-card:hover::before {
-  opacity: 1;
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.15);
+  overflow: hidden;
+
+  box-shadow: 0 16px 36px rgba(0,0,0,0.55);
+  transition: transform 0.35s ease;
 }
 
 .event-card:hover {
-  transform: translateY(-16px) scale(1.04);
-  box-shadow:
-    0 0 40px rgba(255,153,0,0.45),
-    0 0 120px rgba(255,153,0,0.25);
+  transform: translateY(-6px);
 }
 
-/* ================= CARD IMAGE ================= */
+/* ================= IMAGE ================= */
 .event-card img {
   width: 100%;
-  height: 220px;
+  height: 150px;
   object-fit: cover;
-  border-radius: 22px 22px 0 0;
-  transition: 0.4s ease;
-}
-
-.event-card:hover img {
-  transform: scale(1.08);
 }
 
 /* ================= TITLE ================= */
 .event-card h4 {
-  margin: 22px 0 16px;
-  font-size: 20px;
-  font-weight: 700;
-  position: relative;
-  z-index: 2;
+  margin: 12px 0 10px;
+  font-size: 17px;
+  font-weight: 500;
 }
 
-/* ================= BUTTON (CLICK FIXED) ================= */
+/* ================= BUTTON ================= */
 .btn {
-  position: relative;
-  z-index: 5;               /* 🔥 ABOVE OVERLAY */
-  pointer-events: auto;     /* 🔥 CLICK ENABLED */
+  margin-top: auto;
+  margin-bottom: 14px;
 
-  background: linear-gradient(135deg, #ff9900, #ff5f00);
+  background: linear-gradient(135deg, #ffb347, #ff9500);
   color: #000;
-  border: none;
-  padding: 12px 26px;
+
+  padding: 8px 24px;
   border-radius: 999px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 600;
+
+  border: none;
   cursor: pointer;
-  box-shadow:
-    0 0 18px rgba(255,153,0,0.7),
-    0 0 50px rgba(255,153,0,0.45);
-  transition: 0.3s ease;
+
+  box-shadow: 0 6px 18px rgba(255,153,0,0.35);
+  transition: all 0.3s ease;
 }
 
 .btn:hover {
-  transform: scale(1.12);
-  box-shadow:
-    0 0 30px rgba(255,153,0,0.95),
-    0 0 90px rgba(255,153,0,0.7);
+  transform: translateY(-2px);
 }

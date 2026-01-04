@@ -6,7 +6,7 @@
   width: 100vw;
   box-sizing: border-box;
   background: #000;
-  padding: 12px 25px;
+  padding: 10px 0px 10px 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -15,7 +15,7 @@
 }
 
 .navbar-left img {
-  height: 40px;
+  height: 35px;
   border-radius: 6px;
 }
 
@@ -37,9 +37,9 @@
   background: #111;
   color: #ffcc66;
   border: 2px solid #ff9900;
-  padding: 6px 14px;
+  padding: 6px 10px;
   border-radius: 10px;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -83,7 +83,7 @@
 
 /* ================= MENU HEADER ================= */
 .menu-header {
-  padding: 18px 22px;
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;

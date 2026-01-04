@@ -1,49 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-organizer-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    RouterOutlet
+  ],
   templateUrl: './organizer-home.html',
-  styleUrls: ['./organizer-home.css']
+  styleUrls: ['./organizer-home.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class OrganizerHome {
 
-  constructor(private router: Router) {}
-
   categories = [
-    {
-      name: 'Workshop',
-      image: '/workshop.jpg'
-    },
-    {
-      name: 'Seminar',
-      image: '/seminar.jpg'
-    },
-    {
-      name: 'Cultural',
-      image: '/cultural.jpg'
-    },
-    {
-      name: 'Sports',
-      image: '/sports.jpg'
-    },
-    {
-      name: 'Social',
-      image: '/social.jpg'
-    },
-    {
-      name: 'Exhibition',
-      image: '/exhibition.jpg'
-    }
+    { name: 'Workshop', image: 'http://localhost:5000/public/career_guidance.png' },
+    { name: 'Seminar', image: 'http://localhost:5000/public/ai_seminar.png' },
+    { name: 'Cultural', image: 'http://localhost:5000/public/cultural_fest.png' },
+    { name: 'Sports', image: 'http://localhost:5000/public/badminton_championship.png' },
+    { name: 'Social', image: 'http://localhost:5000/public/blood_donation.png' },
+    { name: 'Exhibition', image: 'http://localhost:5000/public/exhibition.jpg' }
   ];
 
+  constructor(private router: Router) {}
+
   goToCategory(category: string) {
-    this.router.navigate(
-      ['/organizer/category-event'],
-      { queryParams: { category } }
+    this.router.navigateByUrl(
+      `/organizer/category-event?category=${category}`
     );
   }
 }

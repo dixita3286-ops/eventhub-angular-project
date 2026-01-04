@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-category-event',
+  selector: 'app-public-category-events',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './category-event.html',
-  styleUrls: ['./category-event.css']
+  templateUrl: './category-events.html',
+  styleUrls: ['./category-events.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class CategoryEvent implements OnInit {
+export class CategoryEvents implements OnInit {
 
   events$!: Observable<any[]>;
   category$!: Observable<string>;
@@ -24,10 +25,12 @@ export class CategoryEvent implements OnInit {
 
   ngOnInit(): void {
 
+    /* CATEGORY */
     this.category$ = this.route.queryParams.pipe(
       map(params => params['category'] || '')
     );
 
+    /* EVENTS */
     this.events$ = this.route.queryParams.pipe(
       switchMap(params =>
         this.http.get<any[]>(
@@ -44,6 +47,7 @@ export class CategoryEvent implements OnInit {
     );
   }
 
+  /* FILTERS */
   onSearch(value: string) {
     this.router.navigate([], {
       queryParams: { search: value },
@@ -58,11 +62,8 @@ export class CategoryEvent implements OnInit {
     });
   }
 
+  /* DETAILS */
   viewDetails(id: string) {
-    this.router.navigate(['/organizer/event-details', id]);
-  }
-
-  modifyEvent(id: string) {
-    this.router.navigate(['/organizer/modify-events-org', id]);
+    this.router.navigate(['/public/event-details', id]);
   }
 }

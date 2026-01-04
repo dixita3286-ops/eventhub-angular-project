@@ -1,1 +1,27 @@
-<p>admin-home works!</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
+<!-- HERO -->
+<div class="hero"></div>
+
+<!-- CATEGORIES -->
+<div class="events-container">
+  <h3>Explore Event Categories</h3>
+
+  <div class="event-grid">
+    <div class="event-card" *ngFor="let cat of categories">
+
+      <img [src]="cat.image" [alt]="cat.name">
+
+      <h4>{{ cat.name }}</h4>
+
+      <button
+        type="button"
+        class="btn"
+        (click)="goToCategory(cat.name)">
+        View Events
+      </button>
+
+    </div>
+  </div>
+</div>

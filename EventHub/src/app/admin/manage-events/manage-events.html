@@ -1,1 +1,68 @@
-<p>manage-events works!</p>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
+<!-- ================= MAIN ================= -->
+<div class="main">
+
+  <h1>Manage All Events</h1>
+
+  <!-- ================= FILTERS ================= -->
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search events..."
+      (keyup)="onSearchChange($any($event.target).value)"
+    >
+
+    <select [(ngModel)]="category" (change)="loadEvents()">
+      <option value="">All Categories</option>
+      <option value="Workshop">Workshop</option>
+      <option value="Seminar">Seminar</option>
+      <option value="Cultural">Cultural</option>
+      <option value="Sports">Sports</option>
+      <option value="Social">Social</option>
+      <option value="Exhibition">Exhibition</option>
+    </select>
+
+    <select [(ngModel)]="sort" (change)="loadEvents()">
+      <option value="desc">Newest</option>
+      <option value="asc">Oldest</option>
+    </select>
+  </div>
+
+  <!-- ================= EVENTS GRID ================= -->
+  <div class="event-grid">
+
+    <p *ngIf="events.length === 0" class="empty">
+      No events found.
+    </p>
+
+    <div class="event-card" *ngFor="let e of events">
+
+      <div class="event-img-wrapper">
+        <img
+          [src]="'http://localhost:5000' + e.eventImage"
+          alt="Event Image"
+        />
+      </div>
+
+      <div class="event-info">
+        <h3>{{ e.title }}</h3>
+        <p>Category : {{ e.category }}</p>
+        <p>Date : {{ e.date | date }}</p>
+        <p>Venue : {{ e.venue }}</p>
+      </div>
+
+      <!-- ================= ADMIN ACTIONS ================= -->
+      <div class="event-actions">
+        <a (click)="viewDetails(e._id)">View |</a>
+        <a (click)="viewRegistrations(e._id)">Registrations |</a>
+        <a (click)="modifyEvent(e._id)">Modify |</a>
+        <a class="danger" (click)="deleteEvent(e._id)">Delete</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

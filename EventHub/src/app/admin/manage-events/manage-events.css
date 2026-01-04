@@ -1,0 +1,228 @@
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ================= ANGULAR PAGE BACKGROUND ================= */
+:host {
+  display: block;
+  min-height: 100vh;
+  width: 100%;
+  background: #0d0d0d;
+  color: #fff;
+}
+
+
+/* ================= MAIN ================= */
+.main {
+  width: 100%;
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: 90px 60px 90px;
+  background: transparent;
+}
+
+/* ================= TITLE ================= */
+h1 {
+  text-align: center;
+  font-family: 'Parisienne', cursive;
+  font-size: 48px;
+  color: #ffcc66;
+  margin-bottom: 30px;
+  text-shadow:
+    0 0 8px rgba(255,204,102,0.8),
+    0 0 18px rgba(255,153,0,0.8);
+}
+
+/* ================= FILTERS ================= */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.filters input,
+.filters select {
+  padding: 12px 16px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+}
+
+/* ================= EVENTS GRID ================= */
+.event-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 26px;
+  width: 100%;
+}
+
+/* ================= EVENT CARD (BIG + PREMIUM) ================= */
+.event-card {
+  position: relative;
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.02)
+  );
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,0.55);
+  transition: all 0.35s ease;
+  overflow: hidden;
+}
+
+/* SHINE LAYER */
+.event-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,200,100,0.55),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 0;
+}
+
+/* HOVER EFFECT */
+.event-card:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow:
+    0 0 25px rgba(255,153,0,0.35),
+    0 0 55px rgba(255,153,0,0.25),
+    0 25px 60px rgba(0,0,0,0.7);
+}
+
+.event-card:hover::before {
+  opacity: 1;
+}
+
+/* ================= IMAGE ================= */
+.event-img-wrapper img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ================= INFO ================= */
+.event-info {
+  position: relative;
+  z-index: 1;
+}
+
+.event-info h3 {
+  font-size: 17px;
+  color: #ffcc66;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.event-info p {
+  font-size: 13px;
+  color: #ddd;
+  margin: 3px 0;
+}
+
+/* ================= ACTIONS ================= */
+.event-actions {
+  position: relative;
+  z-index: 1;
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.event-actions a {
+  color: #ff9900;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.event-actions span {
+  color: #aaa;
+}
+
+/* ================= EMPTY ================= */
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #aaa;
+  margin-top: 40px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1500px) {
+  .event-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1200px) {
+  .event-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .event-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  h1 {
+    font-size: 36px;
+  }
+
+  .main {
+    padding: 90px 20px 60px;
+  }
+
+  .event-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= FIX SELECT DROPDOWN VISIBILITY ================= */
+
+/* dropdown box */
+.filters select {
+  background-color: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* dropdown options */
+.filters select option {
+  background-color: #111 !important;
+  color: #fff !important;
+  padding: 10px;
+}
+
+/* when option is hovered / selected */
+.filters select option:hover,
+.filters select option:checked {
+  background-color: #ff9900 !important;
+  color: #000 !important;
+}
+
+/* DELETE LINK */
+.event-actions .danger {
+  color: #ff4d4d;
+}

@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-category-event',
+  selector: 'app-admin-category-events',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './category-event.html',
-  styleUrls: ['./category-event.css']
+  templateUrl: './admin-category-events.html',
+  styleUrls: ['./admin-category-events.css'],
+  encapsulation: ViewEncapsulation.None
 })
-export class CategoryEvent implements OnInit {
+export class AdminCategoryEvents implements OnInit {
 
   events$!: Observable<any[]>;
   category$!: Observable<string>;
@@ -59,10 +60,6 @@ export class CategoryEvent implements OnInit {
   }
 
   viewDetails(id: string) {
-    this.router.navigate(['/organizer/event-details', id]);
-  }
-
-  modifyEvent(id: string) {
-    this.router.navigate(['/organizer/modify-events-org', id]);
+    this.router.navigate(['/admin/admin-event-details', id]);
   }
 }

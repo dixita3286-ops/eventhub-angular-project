@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router, NavigationEnd, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,15 +14,16 @@ import { filter } from 'rxjs';
 export class Navbar implements OnInit {
 
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   user: any = null;
   showMenu = false;
 
   ngOnInit(): void {
-    // 🔥 first load
+    // ✅ Load user initially
     this.loadUser();
 
-    // 🔥 update navbar on every route change
+    // ✅ Update navbar on every route change
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -30,10 +32,9 @@ export class Navbar implements OnInit {
       });
   }
 
-  // ✅ SESSION STORAGE ONLY
+  // ✅ FIX: use AuthService + localStorage
   loadUser() {
-    const u = sessionStorage.getItem('user');
-    this.user = u ? JSON.parse(u) : null;
+    this.user = this.authService.getUser();
   }
 
   toggleMenu() {
@@ -50,8 +51,7 @@ export class Navbar implements OnInit {
   }
 
   logout() {
-    // 🔥 proper logout
-    sessionStorage.clear();
+    this.authService.logout();
     this.user = null;
     this.closeMenu();
     this.router.navigate(['/login']);

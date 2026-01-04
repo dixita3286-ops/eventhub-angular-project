@@ -14,7 +14,6 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'eventId and userId required' });
     }
 
-    // ❌ prevent duplicate registration
     const existing = await Registration.findOne({ eventId, userId });
     if (existing) {
       return res.status(409).json({
@@ -22,14 +21,10 @@ router.post('/', async (req, res) => {
       });
     }
 
-    const registration = new Registration({
-      eventId,
-      userId
-    });
-
+    const registration = new Registration({ eventId, userId });
     await registration.save();
 
-    return res.status(201).json({
+    res.status(201).json({
       message: 'Registered successfully',
       registration
     });
@@ -41,16 +36,33 @@ router.post('/', async (req, res) => {
 });
 
 /* =====================================================
+   GET : REGISTRATIONS BY EVENT (ADMIN / ORGANIZER)
+   URL : /api/registrations/event/:eventId
+===================================================== */
+router.get('/event/:eventId', async (req, res) => {
+  try {
+    const registrations = await Registration
+      .find({ eventId: req.params.eventId })
+      .populate('userId', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.json(registrations);
+
+  } catch (err) {
+    console.error('Fetch event registrations error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+/* =====================================================
    GET : STUDENT REGISTRATIONS
    URL : /api/registrations/student/:userId
 ===================================================== */
 router.get('/student/:userId', async (req, res) => {
   try {
-    const { userId } = req.params;
-
     const registrations = await Registration
-      .find({ userId })
-      .populate('eventId'); // 🔥 VERY IMPORTANT
+      .find({ userId: req.params.userId })
+      .populate('eventId');
 
     res.json(registrations);
 

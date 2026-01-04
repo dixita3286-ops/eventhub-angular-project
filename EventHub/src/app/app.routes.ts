@@ -4,16 +4,20 @@ import { Routes } from '@angular/router';
 import { Landing } from './public/landing/landing';
 import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
+import { CategoryEvents } from './public/category-events/category-events';
+import { PublicEventDetails } from './public/event-details/event-details';
 
 /* ===== ADMIN ===== */
 import { AdminHome } from './admin/admin-home/admin-home';
-import { AdminDashboard } from './admin/admin-dashboard/admin-dashboard';
+import { AdminCategoryEvents } from './admin/admin-category-events/admin-category-events';
+import { AdminEventDetails } from './admin/admin-event-details/admin-event-details';
 import { ManageEvents } from './admin/manage-events/manage-events';
 import { ManageUsers } from './admin/manage-users/manage-users';
+import { AdminRegisteredStudent } from './admin/admin-registered-student/admin-registered-student';
+import { AdminModifyEvents } from './admin/admin-modify-events/admin-modify-events';
 
 /* ===== ORGANIZER ===== */
 import { OrganizerHome } from './organizer/organizer-home/organizer-home';
-
 import { CreateEvent } from './organizer/create-event/create-event';
 import { MyEvent } from './organizer/my-event/my-event';
 import { CategoryEvent } from './organizer/category-event/category-event';
@@ -33,15 +37,23 @@ import { StudentPayment } from './student/student-payment/student-payment';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 
-
 export const routes: Routes = [
 
-  /* ===== PUBLIC ===== */
+  /* ================= PUBLIC ================= */
   { path: '', component: Landing },
   { path: 'login', component: Login },
   { path: 'register', component: Register },
 
-  /* ===== ADMIN ===== */
+  {
+    path: 'public/category-events',
+    component: CategoryEvents
+  },
+  {
+    path: 'public/event-details/:id',
+    component: PublicEventDetails
+  },
+
+  /* ================= ADMIN ================= */
   {
     path: 'admin',
     component: AdminHome,
@@ -49,10 +61,17 @@ export const routes: Routes = [
     data: { role: 'admin' }
   },
   {
-    path: 'admin/dashboard',
-    component: AdminDashboard,
+    path: 'admin/admin-category-events',
+    component: AdminCategoryEvents,
     canActivate: [authGuard, roleGuard],
     data: { role: 'admin' }
+  },
+  {
+    path: 'admin/event-details/:id',
+    component: AdminEventDetails,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' },
+    runGuardsAndResolvers: 'always'
   },
   {
     path: 'admin/manage-events',
@@ -66,8 +85,20 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'admin' }
   },
+  {
+    path: 'admin/admin-registered-student/:eventId',
+    component: AdminRegisteredStudent,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' }
+  },
+  {
+    path: 'admin/admin-modify-events/:id',
+    component: AdminModifyEvents,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'admin' }
+  },
 
-  /* ===== STUDENT ===== */
+  /* ================= STUDENT ================= */
   {
     path: 'student',
     component: StudentHome,
@@ -86,28 +117,28 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' }
   },
-{
-  path: 'student/student-category-events',
-  loadComponent: () =>
-    import('./student/student-category-events/student-category-events')
-      .then(m => m.StudentCategoryEvents)
+  {
+    path: 'student/student-category-events',
+    component: StudentCategoryEvents,
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'student' }
   },
   {
-    path: 'student/event-details/:id',     
-    component: StudentEventDetails,        
+    path: 'student/event-details/:id',
+    component: StudentEventDetails,
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' },
-    runGuardsAndResolvers: 'always'   
+    runGuardsAndResolvers: 'always'
   },
   {
-    path: 'student/payment/:id',     
-    component: StudentPayment,        
+    path: 'student/payment/:id',
+    component: StudentPayment,
     canActivate: [authGuard, roleGuard],
     data: { role: 'student' },
-    runGuardsAndResolvers: 'always'   
+    runGuardsAndResolvers: 'always'
   },
 
-  /* ===== ORGANIZER ===== */
+  /* ================= ORGANIZER ================= */
   {
     path: 'organizer',
     component: OrganizerHome,
@@ -151,6 +182,6 @@ export const routes: Routes = [
     data: { role: 'organizer' }
   },
 
-  /* ===== FALLBACK ===== */
+  /* ================= FALLBACK ================= */
   { path: '**', redirectTo: '' }
 ];

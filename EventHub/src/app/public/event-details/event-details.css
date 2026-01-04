@@ -40,13 +40,11 @@
   position: relative;
 }
 
-/* FADE IN */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ================= HOVER GLOW ================= */
 .event-card:hover {
   transform: translateY(-10px) scale(1.02);
   border-color: rgba(255,153,0,.8);
@@ -56,7 +54,6 @@
     0 0 140px rgba(255,153,0,.2);
 }
 
-/* ================= IMAGE ================= */
 .event-card img {
   width: 260px;
   height: 260px;
@@ -75,7 +72,6 @@
     0 0 70px rgba(255,153,0,.5);
 }
 
-/* ================= TITLE ================= */
 .event-card h2 {
   font-family: 'Parisienne', cursive;
   font-size: 44px;
@@ -84,7 +80,6 @@
   text-shadow: 0 0 14px rgba(255,170,70,.7);
 }
 
-/* ================= INFO ================= */
 .event-info {
   width: 82%;
   margin: auto;
@@ -108,7 +103,6 @@
   font-size: 15px;
 }
 
-/* ================= BUTTON ================= */
 .download-btn {
   margin-top: 26px;
   padding: 14px 26px;
@@ -155,7 +149,6 @@
   margin: 14px auto 20px;
 }
 
-/* SHIMMER EFFECT */
 .event-card.skeleton .img,
 .event-card.skeleton .line {
   background: linear-gradient(
@@ -173,7 +166,6 @@
   100% { background-position: -100% 0; }
 }
 
-/* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
   .event-card {
     padding: 26px;

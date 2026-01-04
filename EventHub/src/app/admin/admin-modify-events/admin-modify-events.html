@@ -1,0 +1,36 @@
+<section class="page">
+
+  <h1>Modify Event</h1>
+
+  <form (ngSubmit)="updateEvent()" *ngIf="event">
+
+    <label>Title</label>
+    <input type="text" [(ngModel)]="event.title" name="title" required>
+
+    <label>Description</label>
+    <textarea [(ngModel)]="event.description" name="description"></textarea>
+
+    <label>Category</label>
+    <select [(ngModel)]="event.category" name="category">
+      <option>Workshop</option>
+      <option>Seminar</option>
+      <option>Cultural</option>
+      <option>Sports</option>
+      <option>Social</option>
+      <option>Exhibition</option>
+    </select>
+
+    <label>Date</label>
+    <input type="date" [(ngModel)]="event.date" name="date">
+
+    <label>Venue</label>
+    <input type="text" [(ngModel)]="event.venue" name="venue">
+
+    <label>Registration Fee</label>
+    <input type="number" [(ngModel)]="event.registrationFee" name="registrationFee">
+
+    <button type="submit">Update Event</button>
+
+  </form>
+
+</section>

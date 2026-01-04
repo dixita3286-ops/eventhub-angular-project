@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #0d0d0d;
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+}
+
+.page {
+  padding: 60px 80px;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Parisienne', cursive;
+  font-size: 44px;
+  color: #ffcc66;
+  margin-bottom: 40px;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.06);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* HEADER */
+th {
+  background: rgba(255,204,102,0.18);
+  color: #ffcc66;
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 600;
+}
+
+/* BODY CELLS (🔥 THIS WAS MISSING) */
+td {
+  padding: 14px 18px;
+  color: #ffffff;               /* 🔥 FIX */
+  font-size: 14px;
+}
+
+/* ROW BACKGROUND */
+tbody tr {
+  background: rgba(255,255,255,0.04);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.08);
+}
+
+/* ROW SEPARATOR */
+tbody tr:not(:last-child) {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+/* 🔥 FORCE TABLE BACK TO NATIVE MODE (FINAL FIX) */
+table {
+  display: table !important;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  display: table-header-group !important;
+}
+
+tbody {
+  display: table-row-group !important;
+}
+
+tr {
+  display: table-row !important;
+}
+
+th, td {
+  display: table-cell !important;
+  color: #fff !important;
+}
