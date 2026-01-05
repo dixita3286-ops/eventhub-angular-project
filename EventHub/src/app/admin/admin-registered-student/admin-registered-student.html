@@ -2,25 +2,32 @@
 
   <h1>Registered Students</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Student Name</th>
-        <th>Email</th>
-        <th>Registered On</th>
-      </tr>
-    </thead>
+  <p *ngIf="students.length === 0" class="empty">
+    No registrations found.
+  </p>
 
-    <tbody>
-      <tr *ngFor="let s of students; let i = index">
-        <td>{{ i + 1 }}</td>
-        <td>{{ s.userId.name }}</td>
-        <td>{{ s.userId.email }}</td>
-        <td>{{ s.registeredAt | date:'medium' }}</td>
-      </tr>
-    </tbody>
+  <div class="student-grid">
 
-  </table>
+    <div class="student-card" *ngFor="let s of students; let i = index">
+
+      <div class="avatar">
+        {{ s.userId.name.charAt(0) | uppercase }}
+      </div>
+
+      <div class="info">
+        <h3>{{ s.userId.name }}</h3>
+        <p>{{ s.userId.email }}</p>
+        <span>Registered on {{ s.registeredAt | date:'medium' }}</span>
+      </div>
+
+      <button
+        class="delete-btn"
+        (click)="deleteRegistration(s._id, i)">
+        Remove
+      </button>
+
+    </div>
+
+  </div>
 
 </section>

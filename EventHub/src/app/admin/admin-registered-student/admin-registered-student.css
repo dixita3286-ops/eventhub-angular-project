@@ -7,77 +7,105 @@
 }
 
 .page {
-  padding: 60px 80px;
+  padding: 80px 60px;
 }
 
+/* TITLE */
 h1 {
   text-align: center;
   font-family: 'Parisienne', cursive;
   font-size: 44px;
   color: #ffcc66;
   margin-bottom: 40px;
+  text-shadow: 0 0 10px rgba(255,204,102,0.6);
 }
 
-/* TABLE */
-table {
-  width: 100%;
-  max-width: 1000px;
+/* EMPTY */
+.empty {
+  text-align: center;
+  color: #aaa;
+  margin-top: 50px;
+}
+
+/* GRID */
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1300px;
   margin: auto;
-  border-collapse: collapse;
-  background: rgba(255,255,255,0.06);
-  border-radius: 16px;
-  overflow: hidden;
 }
 
-/* HEADER */
-th {
-  background: rgba(255,204,102,0.18);
+/* CARD */
+.student-card {
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,0.10),
+    rgba(255,255,255,0.02)
+  );
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+  transition: all 0.3s ease;
+}
+
+.student-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 25px rgba(255,153,0,0.35);
+}
+
+/* AVATAR */
+.avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffcc66, #ff9900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* INFO */
+.info {
+  flex: 1;
+}
+
+.info h3 {
+  margin: 0;
+  font-size: 16px;
   color: #ffcc66;
-  padding: 14px 18px;
-  text-align: left;
-  font-weight: 600;
 }
 
-/* BODY CELLS (🔥 THIS WAS MISSING) */
-td {
-  padding: 14px 18px;
-  color: #ffffff;               /* 🔥 FIX */
-  font-size: 14px;
+.info p {
+  margin: 2px 0;
+  font-size: 13px;
+  color: #ddd;
 }
 
-/* ROW BACKGROUND */
-tbody tr {
-  background: rgba(255,255,255,0.04);
+.info span {
+  font-size: 12px;
+  color: #aaa;
 }
 
-tbody tr:nth-child(even) {
-  background: rgba(255,255,255,0.08);
+/* DELETE BUTTON */
+.delete-btn {
+  background: transparent;
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  padding: 6px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.3s ease;
 }
 
-/* ROW SEPARATOR */
-tbody tr:not(:last-child) {
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-/* 🔥 FORCE TABLE BACK TO NATIVE MODE (FINAL FIX) */
-table {
-  display: table !important;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead {
-  display: table-header-group !important;
-}
-
-tbody {
-  display: table-row-group !important;
-}
-
-tr {
-  display: table-row !important;
-}
-
-th, td {
-  display: table-cell !important;
-  color: #fff !important;
+.delete-btn:hover {
+  background: #ff4d4d;
+  color: #000;
 }
