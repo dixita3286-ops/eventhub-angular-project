@@ -1,34 +1,43 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-registrations',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,   // ✅ ngIf, ngFor, ngClass
+    FormsModule,    // ✅ ngModel
+    DatePipe        // ✅ date pipe
+  ],
   templateUrl: './student-registrations.html',
   styleUrls: ['./student-registrations.css']
 })
 export class StudentRegistrations implements OnInit {
 
   registrations: any[] = [];
+  filteredStudents: any[] = [];
+
+  search: string = '';
+  status: string = '';
   loading = true;
 
   constructor(
     private router: Router,
-    private cdr: ChangeDetectorRef // 🔥 IMPORTANT
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadMyRegistrations();
   }
 
+  /* ================= LOAD ================= */
   loadMyRegistrations() {
     const userStr = localStorage.getItem('user');
 
     if (!userStr) {
       this.loading = false;
-      this.cdr.detectChanges();
       return;
     }
 
@@ -37,18 +46,32 @@ export class StudentRegistrations implements OnInit {
     fetch(`http://localhost:5000/api/registrations/student/${user._id}`)
       .then(res => res.json())
       .then(data => {
-        console.log('MY REGISTRATIONS:', data);
-
         this.registrations = data;
+        this.applyFilter();
         this.loading = false;
-
-        // 🔥 FORCE UI UPDATE
         this.cdr.detectChanges();
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         this.loading = false;
-        this.cdr.detectChanges();
       });
+  }
+
+  /* ================= FILTER ================= */
+  applyFilter() {
+    this.filteredStudents = this.registrations.filter(r => {
+      const matchSearch =
+        this.search === '' ||
+        r.eventId?.title?.toLowerCase().includes(this.search.toLowerCase());
+
+      const matchStatus =
+        this.status === '' || r.status === this.status;
+
+      return matchSearch && matchStatus;
+    });
+  }
+
+  /* ================= BACK ================= */
+  goBack() {
+    this.router.navigate(['/student']);
   }
 }

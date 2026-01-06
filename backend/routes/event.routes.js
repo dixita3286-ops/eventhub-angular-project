@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
     await event.save();
     res.status(201).json(event);
   } catch (err) {
-    console.error(err);
+    console.error('Create event error:', err);
     res.status(500).json({ message: 'Error creating event' });
   }
 });
@@ -29,7 +29,7 @@ router.get('/organizer/:organizerId', async (req, res) => {
 
     res.json(events);
   } catch (err) {
-    console.error(err);
+    console.error('Organizer events error:', err);
     res.status(500).json({ message: 'Error fetching organizer events' });
   }
 });
@@ -43,11 +43,10 @@ router.get('/admin', async (req, res) => {
     const events = await Event.find().sort({ date: -1 });
     res.json(events);
   } catch (err) {
-    console.error(err);
+    console.error('Admin events error:', err);
     res.status(500).json({ message: 'Error fetching admin events' });
   }
 });
-
 
 /* =====================================================
    GET EVENTS WITH FILTERS (Student / Public)
@@ -78,17 +77,19 @@ router.get('/', async (req, res) => {
     res.json(events);
 
   } catch (err) {
-    console.error(err);
+    console.error('Public events error:', err);
     res.status(500).json({ message: 'Error fetching events' });
   }
 });
 
 /* =====================================================
-   GET SINGLE EVENT DETAILS
+   🔥 GET SINGLE EVENT DETAILS (FOR MODIFY PAGE)
    GET /api/events/:id
 ===================================================== */
 router.get('/:id', async (req, res) => {
   try {
+    console.log('FETCH EVENT ID:', req.params.id);
+
     const event = await Event.findById(req.params.id);
 
     if (!event) {
@@ -96,8 +97,9 @@ router.get('/:id', async (req, res) => {
     }
 
     res.json(event);
+
   } catch (err) {
-    console.error(err);
+    console.error('Get single event error:', err);
     res.status(500).json({ message: 'Error fetching event details' });
   }
 });
@@ -121,7 +123,7 @@ router.put('/:id', async (req, res) => {
     res.json(updatedEvent);
 
   } catch (err) {
-    console.error(err);
+    console.error('Update event error:', err);
     res.status(500).json({ message: 'Error updating event' });
   }
 });
@@ -145,7 +147,5 @@ router.delete('/:id', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-
-
 
 module.exports = router;

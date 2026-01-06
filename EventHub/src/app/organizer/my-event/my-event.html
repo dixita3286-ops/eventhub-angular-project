@@ -1,17 +1,57 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
+
 <div class="main">
 
   <!-- HEADER -->
-  <div class="top-bar">
-    <h1>My Events</h1>
-    <button class="create-btn" (click)="createEvent()">+ Create Event</button>
+  <div class="header-bar">
+    <h1>{{ activeTab === 'my' ? 'My Events' : 'All Events' }}</h1>
+    <button class="add-btn" (click)="createEvent()">+ Create Event</button>
   </div>
 
-  <!-- FILTERS -->
-  <div class="filters">
-    <button (click)="setStatus('all')" [class.active]="status==='all'">All</button>
-    <button (click)="setStatus('approved')" [class.active]="status==='approved'">Approved</button>
-    <button (click)="setStatus('pending')" [class.active]="status==='pending'">Pending</button>
-    <button (click)="setStatus('rejected')" [class.active]="status==='rejected'">Rejected</button>
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+
+    <!-- TAB SELECT -->
+    <select (change)="changeTab($any($event.target).value)">
+      <option value="all" [selected]="activeTab==='all'">All Events</option>
+      <option value="my" [selected]="activeTab==='my'">My Events</option>
+    </select>
+
+    <!-- STATUS (ONLY MY EVENTS) -->
+    <div class="status-inline" *ngIf="activeTab==='my'">
+      <button (click)="setStatus('all')" [class.active]="status==='all'">All</button>
+      <button (click)="setStatus('approved')" [class.active]="status==='approved'">Approved</button>
+      <button (click)="setStatus('pending')" [class.active]="status==='pending'">Pending</button>
+      <button (click)="setStatus('rejected')" [class.active]="status==='rejected'">Rejected</button>
+    </div>
+
+    <!-- SEARCH -->
+    <input
+      type="text"
+      placeholder="Search..."
+      [(ngModel)]="search"
+      (input)="applyAllFilters()"
+    />
+
+    <!-- CATEGORY -->
+    <select [(ngModel)]="category" (change)="applyAllFilters()">
+      <option value="">All Categories</option>
+      <option value="Workshop">Workshop</option>
+      <option value="Seminar">Seminar</option>
+      <option value="Cultural">Cultural</option>
+      <option value="Sports">Sports</option>
+      <option value="Social">Social</option>
+      <option value="Exhibition">Exhibition</option>
+    </select>
+
+    <!-- DATE SORT -->
+    <select [(ngModel)]="dateSort" (change)="applyAllFilters()">
+      <option value="newest">Newest First</option>
+      <option value="oldest">Oldest First</option>
+    </select>
+
   </div>
 
   <!-- EVENTS GRID -->
@@ -19,25 +59,26 @@
 
     <div class="event-card" *ngFor="let e of filteredEvents">
 
-      <!-- IMAGE -->
       <img
-        [src]="'http://localhost:5000' + e.eventImage"
-        alt="event image"
+        [src]="e.eventImage ? 'http://localhost:5000' + e.eventImage : '/assets/default.jpg'"
       />
 
-      <!-- INFO -->
-      <div class="info">
+      <div class="event-info">
         <h3>{{ e.title }}</h3>
         <p><b>Category:</b> {{ e.category }}</p>
         <p><b>Date:</b> {{ e.date | date }}</p>
         <p><b>Venue:</b> {{ e.venue }}</p>
       </div>
 
-      <!-- ACTIONS -->
-      <div class="actions">
+      <div class="event-actions">
         <a (click)="modify(e._id)">Modify</a>
+        <span class="separator">|</span>
         <a (click)="viewDetails(e._id)">View Details</a>
-        <a (click)="viewRegistrations(e._id)">View Registrations</a>
+
+        <ng-container *ngIf="activeTab==='my'">
+          <span class="separator">|</span>
+          <a (click)="viewRegistrations(e._id)">View Registrations</a>
+        </ng-container>
       </div>
 
     </div>
@@ -45,7 +86,7 @@
   </div>
 
   <p class="no-data" *ngIf="filteredEvents.length === 0">
-    No events found
+    No events found.
   </p>
 
 </div>

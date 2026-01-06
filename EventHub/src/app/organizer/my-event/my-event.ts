@@ -2,15 +2,18 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
-type Status = 'approved' | 'pending' | 'rejected' | 'all';
+type Status = 'all' | 'approved' | 'pending' | 'rejected';
+type Tab = 'my' | 'all';
 
 @Component({
   selector: 'app-my-event',
   standalone: true,
   imports: [
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   templateUrl: './my-event.html',
   styleUrls: ['./my-event.css']
@@ -19,56 +22,91 @@ export class MyEvent implements OnInit {
 
   events: any[] = [];
   filteredEvents: any[] = [];
+
+  /* 🔥 DEFAULT = ALL EVENTS OF THIS ORGANIZER */
+  activeTab: Tab = 'all';
   status: Status = 'all';
+  search: string = '';
+  category: string = '';
+  dateSort: 'newest' | 'oldest' = 'newest';
+
+  organizerId!: string;
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cdr: ChangeDetectorRef   // 🔥 ADDED
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-
     const userStr = localStorage.getItem('user');
-    if (!userStr) {
-      console.error('User not found in localStorage');
-      return;
-    }
+    if (!userStr) return;
 
     const user = JSON.parse(userStr);
-    console.log('Organizer ID:', user._id);
+    this.organizerId = user._id;
 
-    this.http
-      .get<any[]>(`http://localhost:5000/api/events/organizer/${user._id}`)
-      .subscribe({
-        next: (res) => {
-          console.log('Events API response:', res);
-
-          this.events = res || [];
-          this.applyFilter();
-
-          // 🔥 FORCE UI RENDER (MAIN FIX)
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error('API Error:', err);
-        }
-      });
+    this.fetchEvents();
   }
 
-  applyFilter() {
-    if (this.status === 'all') {
-      this.filteredEvents = [...this.events];
-    } else {
-      this.filteredEvents = this.events.filter(
-        e => e.status === this.status
+  /* ================= FETCH EVENTS ================= */
+  fetchEvents() {
+
+    // 🔥 IMPORTANT CHANGE HERE
+    // All Events = this organizer ni badhii events
+    const url = `http://localhost:5000/api/events/organizer/${this.organizerId}`;
+
+    this.http.get<any[]>(url).subscribe({
+      next: res => {
+        this.events = res || [];
+        this.applyAllFilters();
+        this.cdr.detectChanges();
+      },
+      error: err => console.error('API Error:', err)
+    });
+  }
+
+  /* ================= FILTER LOGIC ================= */
+  applyAllFilters() {
+    let data = [...this.events];
+
+    // STATUS FILTER (only when My Events selected)
+    if (this.activeTab === 'my' && this.status !== 'all') {
+      data = data.filter(e => e.status === this.status);
+    }
+
+    // SEARCH (TITLE)
+    if (this.search.trim()) {
+      const q = this.search.toLowerCase();
+      data = data.filter(e =>
+        e.title?.toLowerCase().includes(q)
       );
     }
+
+    // CATEGORY
+    if (this.category) {
+      data = data.filter(e => e.category === this.category);
+    }
+
+    // DATE SORT
+    data.sort((a, b) => {
+      const da = new Date(a.date).getTime();
+      const db = new Date(b.date).getTime();
+      return this.dateSort === 'oldest' ? da - db : db - da;
+    });
+
+    this.filteredEvents = data;
+  }
+
+  /* ================= UI ACTIONS ================= */
+  changeTab(tab: Tab) {
+    this.activeTab = tab;
+    this.status = 'all';
+    this.applyAllFilters();   // 🔥 no refetch needed
   }
 
   setStatus(s: Status) {
     this.status = s;
-    this.applyFilter();
+    this.applyAllFilters();
   }
 
   createEvent() {
@@ -83,7 +121,9 @@ export class MyEvent implements OnInit {
     this.router.navigate(['/organizer/event-details', id]);
   }
 
-  viewRegistrations(id: string) {
-    this.router.navigate(['/organizer/registered-student', id]);
-  }
+viewRegistrations(eventId: string) {
+  this.router.navigate(['/organizer/registered-student', eventId]);
+}
+
+
 }

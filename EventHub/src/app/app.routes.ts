@@ -176,11 +176,12 @@ export const routes: Routes = [
     data: { role: 'organizer' }
   },
   {
-    path: 'organizer/registered-student/:eventId',
-    component: RegisteredStudent,
-    canActivate: [authGuard, roleGuard],
-    data: { role: 'organizer' }
-  },
+  path: 'organizer/registered-student/:eventId',
+  component: RegisteredStudent,
+  canActivate: [authGuard, roleGuard],
+  data: { role: 'organizer' }
+},
+
 
   /* ================= FALLBACK ================= */
   { path: '**', redirectTo: '' }

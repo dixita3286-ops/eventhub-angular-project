@@ -1,6 +1,3 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
-
 <section class="page">
 
   <h1>My Registered Events</h1>
@@ -15,13 +12,13 @@
     You have not registered for any events yet.
   </div>
 
-  <!-- EVENTS LIST -->
-  <div class="timeline" *ngIf="!loading && registrations.length > 0">
+  <!-- EVENTS GRID -->
+  <div class="event-grid" *ngIf="!loading && registrations.length > 0">
 
-    <div class="timeline-item" *ngFor="let reg of registrations">
+    <div class="event-card" *ngFor="let reg of registrations">
 
       <!-- IMAGE -->
-      <div class="thumb">
+      <div class="img-wrap">
         <img
           *ngIf="reg.eventId?.eventImage"
           [src]="'http://localhost:5000' + reg.eventId.eventImage"
@@ -29,16 +26,16 @@
         />
       </div>
 
-      <!-- CONTENT -->
-      <div class="content">
+      <!-- BODY -->
+      <div class="card-body">
         <h3>{{ reg.eventId?.title }}</h3>
 
         <p class="meta">
-          <span>{{ reg.eventId?.category }}</span>
-          •
-          <span>{{ reg.eventId?.date | date:'mediumDate' }}</span>
-          •
-          <span>{{ reg.eventId?.venue }}</span>
+          📅 {{ reg.eventId?.date | date:'mediumDate' }}
+        </p>
+
+        <p class="meta">
+          📍 {{ reg.eventId?.venue }}
         </p>
 
         <p class="desc">

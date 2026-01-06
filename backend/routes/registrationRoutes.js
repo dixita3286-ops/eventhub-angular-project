@@ -1,92 +1,106 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Registration = require('../models/Registration');
 
 /* =====================================================
-   POST : REGISTER FOR EVENT
-   URL  : /api/registrations
+   REGISTER STUDENT FOR EVENT
+   POST /api/registrations
 ===================================================== */
 router.post('/', async (req, res) => {
   try {
     const { eventId, userId } = req.body;
 
     if (!eventId || !userId) {
-      return res.status(400).json({ message: 'eventId and userId required' });
+      return res.status(400).json({ message: 'Missing data' });
     }
 
-    const existing = await Registration.findOne({ eventId, userId });
-    if (existing) {
-      return res.status(409).json({
-        message: 'Already registered for this event'
-      });
+    // prevent duplicate registration
+    const already = await Registration.findOne({ eventId, userId });
+    if (already) {
+      return res.status(409).json({ message: 'Already registered' });
     }
 
-    const registration = new Registration({ eventId, userId });
+    const registration = new Registration({
+      eventId,
+      userId,
+      status: 'registered'
+    });
+
     await registration.save();
 
-    res.status(201).json({
-      message: 'Registered successfully',
-      registration
-    });
+    res.status(201).json(registration);
 
   } catch (err) {
     console.error('Registration error:', err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Registration failed' });
   }
 });
 
 /* =====================================================
-   GET : REGISTRATIONS BY EVENT (ADMIN / ORGANIZER)
-   URL : /api/registrations/event/:eventId
-===================================================== */
-router.get('/event/:eventId', async (req, res) => {
-  try {
-    const registrations = await Registration
-      .find({ eventId: req.params.eventId })
-      .populate('userId', 'name email')
-      .sort({ createdAt: -1 });
-
-    res.json(registrations);
-
-  } catch (err) {
-    console.error('Fetch event registrations error:', err);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-/* =====================================================
-   GET : STUDENT REGISTRATIONS
-   URL : /api/registrations/student/:userId
+   GET REGISTERED EVENTS FOR STUDENT
+   GET /api/registrations/student/:userId
 ===================================================== */
 router.get('/student/:userId', async (req, res) => {
   try {
-    const registrations = await Registration
-      .find({ userId: req.params.userId })
-      .populate('eventId');
+    const { userId } = req.params;
 
-    res.json(registrations);
+    const registrations = await Registration.find({ userId })
+      .populate('eventId')   // 🔥 event details laviye
+      .sort({ registeredAt: -1 });
+
+    // frontend-friendly format
+    const formatted = registrations.map(r => ({
+      _id: r._id,
+      eventId: r.eventId?._id,
+      title: r.eventId?.title,
+      category: r.eventId?.category,
+      date: r.eventId?.date,
+      venue: r.eventId?.venue,
+      eventImage: r.eventId?.eventImage,
+      registeredAt: r.registeredAt
+    }));
+
+    res.json(formatted);
 
   } catch (err) {
-    console.error('Fetch registrations error:', err);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Student registrations error:', err);
+    res.status(500).json({ message: 'Failed to fetch registrations' });
   }
 });
 
-/* =====================================================
-   GET : ALL REGISTRATIONS (ADMIN OPTIONAL)
-   URL : /api/registrations
-===================================================== */
-router.get('/', async (req, res) => {
+/* ================= GET REGISTERED STUDENTS BY EVENT ================= */
+router.get('/event/:eventId', async (req, res) => {
   try {
-    const registrations = await Registration
-      .find()
-      .populate('eventId')
-      .populate('userId');
+    const { eventId } = req.params;
 
-    res.json(registrations);
+    console.log('EVENT ID RECEIVED:', eventId);
+
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      return res.status(400).json([]);
+    }
+
+    const registrations = await Registration.find({
+      eventId: new mongoose.Types.ObjectId(eventId)
+    })
+      .populate('userId', 'name email mobile')
+      .sort({ registeredAt: -1 });
+
+    console.log('REGISTRATIONS FOUND:', registrations.length);
+
+   const formatted = registrations.map(r => ({
+  name: r.userId?.name,
+  email: r.userId?.email,
+  status: r.status || 'registered',
+  createdAt: r.registeredAt
+}));
+
+res.json(formatted);
+
 
   } catch (err) {
-    res.status(500).json({ message: 'Server error' });
+    console.error(err);
+    res.status(500).json([]);
   }
 });
 
