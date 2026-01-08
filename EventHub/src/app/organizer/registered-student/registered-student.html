@@ -26,13 +26,18 @@
     </select>
   </div>
 
+  <!-- LOADER -->
+  
+
   <!-- SQUARE CARDS -->
-  <div class="card-grid" *ngIf="filteredStudents.length > 0">
+  <div class="card-grid" *ngIf="!loading && filteredStudents.length > 0">
     <div class="student-card" *ngFor="let s of filteredStudents; let i = index">
 
       <div class="card-top">
         <span class="index">No : {{ i + 1 }}</span>
-        <span class="badge" [ngClass]="s.status">{{ s.status }}</span>
+        <span class="badge" [ngClass]="s.status || 'registered'">
+          {{ s.status || 'registered' }}
+        </span>
       </div>
 
       <div class="card-body">
@@ -49,7 +54,7 @@
   </div>
 
   <!-- NO DATA -->
-  <p class="no-data" *ngIf="filteredStudents.length === 0">
+  <p class="no-data" *ngIf="!loading && filteredStudents.length === 0">
     No registered students found.
   </p>
 

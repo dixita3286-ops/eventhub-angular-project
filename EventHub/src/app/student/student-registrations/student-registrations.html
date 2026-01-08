@@ -1,3 +1,4 @@
+
 <section class="page">
 
   <h1>My Registered Events</h1>
@@ -8,26 +9,29 @@
   </div>
 
   <!-- NO DATA -->
-  <div class="info" *ngIf="!loading && registrations.length === 0">
+  <div class="info" *ngIf="!loading && filteredStudents.length === 0">
     You have not registered for any events yet.
   </div>
 
   <!-- EVENTS GRID -->
-  <div class="event-grid" *ngIf="!loading && registrations.length > 0">
+  <div class="event-grid" *ngIf="!loading && filteredStudents.length > 0">
 
-    <div class="event-card" *ngFor="let reg of registrations">
+    <div class="event-card" *ngFor="let reg of filteredStudents">
 
       <!-- IMAGE -->
       <div class="img-wrap">
-        <img
-          *ngIf="reg.eventId?.eventImage"
-          [src]="'http://localhost:5000' + reg.eventId.eventImage"
-          alt="Event Image"
-        />
+<img
+  *ngIf="reg.eventId?.eventImage"
+  [src]="'http://localhost:5000' + reg.eventId.eventImage"
+  alt="Event Image"
+/>
+
+
       </div>
 
       <!-- BODY -->
       <div class="card-body">
+
         <h3>{{ reg.eventId?.title }}</h3>
 
         <p class="meta">
@@ -41,6 +45,7 @@
         <p class="desc">
           {{ reg.eventId?.description }}
         </p>
+
       </div>
 
     </div>

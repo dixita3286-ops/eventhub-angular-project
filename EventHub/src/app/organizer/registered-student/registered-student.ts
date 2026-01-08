@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-registered-student',
   standalone: true,
   imports: [
-    CommonModule,   // ngIf, ngFor, ngClass
-    FormsModule,    // ngModel
-    DatePipe        // date pipe
+    CommonModule,
+    FormsModule,
+    DatePipe,
+    HttpClientModule
   ],
   templateUrl: './registered-student.html',
   styleUrls: ['./registered-student.css']
@@ -19,36 +21,67 @@ export class RegisteredStudent implements OnInit {
   students: any[] = [];
   filteredStudents: any[] = [];
 
-  search: string = '';
-  status: string = '';
+  search = '';
+  status = '';
+  loading = true;
 
-  constructor(private router: Router) {}
+  eventId: string | null = null;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef   // 🔥 THIS IS THE KEY
+  ) {}
 
   ngOnInit(): void {
-    this.loadStudents();
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('eventId');
+
+      if (!id) {
+        this.loading = false;
+        return;
+      }
+
+      this.eventId = id;
+      this.loadStudents();
+    });
   }
 
   /* ================= LOAD STUDENTS ================= */
   loadStudents() {
-    fetch('http://localhost:5000/api/registrations/organizer')
-      .then(res => res.json())
-      .then(data => {
-        this.students = data;
-        this.applyFilter();
-      })
-      .catch(err => console.error(err));
+    this.loading = true;
+
+    this.http
+      .get<any[]>(`http://localhost:5000/api/registrations/event/${this.eventId}`)
+      .subscribe({
+        next: data => {
+          this.students = data || [];
+          this.applyFilter();
+          this.loading = false;
+
+          // 🔥 FORCE UI REFRESH
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.error(err);
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
+      });
   }
 
   /* ================= FILTER ================= */
   applyFilter() {
     this.filteredStudents = this.students.filter(s => {
+
       const matchSearch =
-        this.search === '' ||
-        s.studentName?.toLowerCase().includes(this.search.toLowerCase()) ||
+        !this.search ||
+        s.name?.toLowerCase().includes(this.search.toLowerCase()) ||
         s.email?.toLowerCase().includes(this.search.toLowerCase());
 
       const matchStatus =
-        this.status === '' || s.status === this.status;
+        !this.status || s.status === this.status;
 
       return matchSearch && matchStatus;
     });
@@ -56,6 +89,6 @@ export class RegisteredStudent implements OnInit {
 
   /* ================= BACK ================= */
   goBack() {
-    this.router.navigate(['/organizer']);
+    this.router.navigate(['/organizer/my-event']);
   }
 }

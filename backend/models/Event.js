@@ -25,7 +25,7 @@ const eventSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  eventFile: {
+  eventImage: {
     type: String
   },
   status: {

@@ -43,31 +43,20 @@ router.post('/', async (req, res) => {
 ===================================================== */
 router.get('/student/:userId', async (req, res) => {
   try {
-    const { userId } = req.params;
-
-    const registrations = await Registration.find({ userId })
-      .populate('eventId')   // 🔥 event details laviye
+    const registrations = await Registration.find({
+      userId: req.params.userId
+    })
+      .populate('eventId')   // 🔥 eventImage aavse
       .sort({ registeredAt: -1 });
 
-    // frontend-friendly format
-    const formatted = registrations.map(r => ({
-      _id: r._id,
-      eventId: r.eventId?._id,
-      title: r.eventId?.title,
-      category: r.eventId?.category,
-      date: r.eventId?.date,
-      venue: r.eventId?.venue,
-      eventImage: r.eventId?.eventImage,
-      registeredAt: r.registeredAt
-    }));
-
-    res.json(formatted);
+    res.json(registrations);
 
   } catch (err) {
-    console.error('Student registrations error:', err);
-    res.status(500).json({ message: 'Failed to fetch registrations' });
+    console.error(err);
+    res.status(500).json([]);
   }
 });
+
 
 /* ================= GET REGISTERED STUDENTS BY EVENT ================= */
 router.get('/event/:eventId', async (req, res) => {
