@@ -1,1 +1,72 @@
-<p>manage-users works!</p>
+<section class="page">
+
+  <!-- ===== HEADER ===== -->
+  <div class="top-bar">
+
+    <!-- CENTERED TITLE -->
+    <div class="title-wrapper">
+      <h1>Manage Users</h1>
+      
+    </div>
+
+    <!-- BACK BUTTON RIGHT SIDE -->
+    <button class="back-btn right" (click)="goBack()">
+      Back →
+    </button>
+
+  </div>
+
+ 
+
+  <!-- ===== CONTROLS ===== -->
+  <div class="control-bar">
+
+    <input
+      type="text"
+      class="search-box"
+      placeholder="Search users..."
+      [(ngModel)]="searchText"
+    />
+
+    <select
+      class="role-select"
+      [(ngModel)]="roleFilter">
+
+      <option value="all">All</option>
+      <option value="user">Students</option>
+      <option value="organizer">Organizers</option>
+      <option value="admin">Admins</option>
+
+    </select>
+
+  </div>
+
+
+
+  <!-- ===== USERS ===== -->
+  <p *ngIf="filteredUsers.length === 0" class="empty">
+    No users found.
+  </p>
+
+  <div class="user-grid">
+
+    <div class="user-card" *ngFor="let u of filteredUsers">
+
+      <div class="avatar">
+        {{ u.name?.charAt(0) | uppercase }}
+      </div>
+
+      <div class="info">
+        <h3>{{ u.name }}</h3>
+        <p>{{ u.email }}</p>
+
+        <span class="role">
+          {{ u.role | uppercase }}
+        </span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

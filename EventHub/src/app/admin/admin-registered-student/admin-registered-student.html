@@ -1,3 +1,6 @@
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+
 <section class="page">
 
   <h1>Registered Students</h1>
@@ -8,23 +11,19 @@
 
   <div class="student-grid">
 
-    <div class="student-card" *ngFor="let s of students; let i = index">
+    <div class="student-card" *ngFor="let s of students">
 
       <div class="avatar">
-        {{ s.userId.name.charAt(0) | uppercase }}
+        {{ s.name?.charAt(0) | uppercase }}
       </div>
 
       <div class="info">
-        <h3>{{ s.userId.name }}</h3>
-        <p>{{ s.userId.email }}</p>
-        <span>Registered on {{ s.registeredAt | date:'medium' }}</span>
+        <h3>{{ s.name }}</h3>
+        <p>{{ s.email }}</p>
+        <span>
+          Registered on {{ s.createdAt | date:'medium' }}
+        </span>
       </div>
-
-      <button
-        class="delete-btn"
-        (click)="deleteRegistration(s._id, i)">
-        Remove
-      </button>
 
     </div>
 
