@@ -1,8 +1,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
 
-
-
 <!-- ================= MAIN ================= -->
 <div class="main">
 
@@ -60,8 +58,14 @@
           View Details |
         </a>
 
-        <a href="javascript:void(0)" (click)="registerEvent(e._id)">
-          Register
+        <!-- 🔥 REGISTER / REGISTERED FIX -->
+        <a
+          href="javascript:void(0)"
+          (click)="!isRegistered(e._id) && registerEvent(e._id)"
+          [style.pointerEvents]="isRegistered(e._id) ? 'none' : 'auto'"
+          [style.opacity]="isRegistered(e._id) ? '0.6' : '1'"
+        >
+          {{ isRegistered(e._id) ? 'Registered' : 'Register' }}
         </a>
       </div>
 

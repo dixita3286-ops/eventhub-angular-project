@@ -1,98 +1,212 @@
+/* ===============================
+   GLOBAL BACKGROUND
+   =============================== */
+
 :host {
   display: block;
   min-height: 100vh;
-  background: #0d0d0d;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(255,215,0,0.06), transparent 60%),
+    linear-gradient(135deg, #050505, #0b0b0b, #050505);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* CENTER LAYOUT */
+/* ===============================
+   CENTER FORM
+   =============================== */
+
 .main {
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 40px;
+  justify-content: center;
 }
 
-/* FORM CARD */
+/* ===============================
+   GLASS FORM BOX (MEDIUM)
+   =============================== */
+
 .form-box {
-  width: 100%;
-  max-width: 900px;   /* 🔥 THIS FIXES NARROW ISSUE */
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 22px;
-  padding: 45px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  width: 520px;               /* 🔥 MEDIUM WIDTH */
+  padding: 32px 34px;         /* 🔥 COMPACT */
+  border-radius: 20px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.07),
+    rgba(255,255,255,0.02)
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border: 1px solid rgba(255, 215, 0, 0.25);
+
+  box-shadow:
+    0 25px 60px rgba(0,0,0,0.85),
+    inset 0 0 20px rgba(255,215,0,0.08);
+
+  position: relative;
+  overflow: hidden;
 }
 
-h1 {
+/* SUBTLE GOLD SHINE */
+.form-box::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    120deg,
+    transparent 45%,
+    rgba(255,215,0,0.12),
+    transparent 55%
+  );
+  animation: shine 10s linear infinite;
+}
+
+@keyframes shine {
+  from { transform: translateX(-40%) rotate(25deg); }
+  to   { transform: translateX(40%) rotate(25deg); }
+}
+
+/* ===============================
+   TITLE
+   =============================== */
+
+.form-box h1 {
   text-align: center;
-  color: #ffb300;
-  margin-bottom: 30px;
-  font-size: 28px;
-}
-
-/* FORM */
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin-bottom: 8px;
-  color: #ffb300;
+  font-size: 24px;            /* 🔥 SMALLER */
   font-weight: 600;
+  margin-bottom: 24px;
+  letter-spacing: 0.8px;
+
+  background: linear-gradient(90deg, #ffd36a, #ffb700);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow: 0 0 15px rgba(255,215,0,0.35);
 }
 
-input,
-textarea,
-select {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: #fff;
-  font-size: 15px;
-}
+/* ===============================
+   MESSAGE
+   =============================== */
 
-textarea {
-  resize: none;
-}
-
-select option {
-  background: #000;
-  color: #fff;
-}
-
-/* FILE INPUT FIX */
-input[type="file"] {
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-/* BUTTON */
-button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 14px;
-  background: linear-gradient(135deg, #ffb300, #ff7b00);
-  border: none;
-  border-radius: 14px;
-  color: #111;
-  font-weight: 700;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.95;
-}
-
-/* MESSAGE */
 .message {
+  background: rgba(255,215,0,0.12);
+  border: 1px solid rgba(255,215,0,0.5);
+  color: #ffd36a;
+  padding: 10px 14px;
+  border-radius: 10px;
   text-align: center;
   margin-bottom: 18px;
-  color: #ffcc00;
+  font-size: 13px;
+}
+
+/* ===============================
+   FORM GROUP
+   =============================== */
+
+.form-group {
+  margin-bottom: 16px;        /* 🔥 LESS GAP */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+  color: #ffd36a;
+  letter-spacing: 0.3px;
+}
+
+/* ===============================
+   INPUTS
+   =============================== */
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;         /* 🔥 COMPACT */
+  border-radius: 10px;
+
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,215,0,0.25);
+  color: #fff;
+
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.form-group textarea {
+  resize: none;
+  min-height: 70px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #ffd36a;
+  box-shadow:
+    0 0 0 1px rgba(255,215,0,0.6),
+    0 0 18px rgba(255,215,0,0.35);
+}
+
+/* FILE INPUT */
+.form-group input[type="file"] {
+  padding: 8px;
+  font-size: 12px;
+  background: rgba(0,0,0,0.35);
+}
+
+/* ===============================
+   BUTTON
+   =============================== */
+
+button[type="submit"] {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+
+  font-size: 14px;
   font-weight: 600;
+  letter-spacing: 0.5px;
+
+  color: #1a1200;
+  background: linear-gradient(
+    135deg,
+    #ffcc66,
+    #ffb700,
+    #ffd36a
+  );
+
+  box-shadow:
+    0 8px 22px rgba(255,183,0,0.45),
+    inset 0 0 8px rgba(255,255,255,0.35);
+
+  transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 35px rgba(255,183,0,0.6),
+    inset 0 0 10px rgba(255,255,255,0.45);
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+
+@media (max-width: 600px) {
+  .form-box {
+    width: 92%;
+    padding: 28px 22px;
+  }
+
+  .form-box h1 {
+    font-size: 22px;
+  }
 }

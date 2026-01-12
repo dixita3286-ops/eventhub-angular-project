@@ -1,8 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import Swal from 'sweetalert2';
+import { filter, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-student-view-events',
@@ -11,7 +12,7 @@ import Swal from 'sweetalert2';
   templateUrl: './student-view-events.html',
   styleUrls: ['./student-view-events.css']
 })
-export class StudentViewEvents implements OnInit {
+export class StudentViewEvents implements OnInit, OnDestroy {
 
   events: any[] = [];
 
@@ -22,15 +23,41 @@ export class StudentViewEvents implements OnInit {
   showMenu = false;
   typingTimer: any;
 
+  // 🔥 REGISTERED EVENTS
+  registeredEventIds: string[] = [];
+
+  private routeSub!: Subscription;
+
   constructor(
     private cdr: ChangeDetectorRef,
     private router: Router
   ) {}
 
+  /* ================= INIT ================= */
   ngOnInit(): void {
-    this.loadEvents();
+
+    // 🔥 FIRST LOAD (page open)
+    this.reloadAll();
+
+    // 🔥 NAVBAR / MENU CLICK FIX
+    this.routeSub = this.router.events
+      .pipe(filter(e => e instanceof NavigationEnd))
+      .subscribe(() => {
+        this.reloadAll();
+      });
   }
 
+  ngOnDestroy(): void {
+    if (this.routeSub) this.routeSub.unsubscribe();
+  }
+
+  /* ================= RELOAD EVERYTHING ================= */
+  reloadAll() {
+    this.loadEvents();
+    this.loadMyRegistrations();
+  }
+
+  /* ================= LOAD EVENTS ================= */
   loadEvents() {
     const q = encodeURIComponent(this.search.trim());
 
@@ -45,6 +72,7 @@ export class StudentViewEvents implements OnInit {
       .catch(err => console.error(err));
   }
 
+  /* ================= SEARCH ================= */
   onSearchChange(value: string) {
     clearTimeout(this.typingTimer);
     this.search = value;
@@ -54,8 +82,36 @@ export class StudentViewEvents implements OnInit {
     }, 300);
   }
 
+  /* ================= LOAD MY REGISTRATIONS ================= */
+  loadMyRegistrations() {
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      this.registeredEventIds = [];
+      return;
+    }
+
+    const user = JSON.parse(userStr);
+
+    fetch(`http://localhost:5000/api/registrations/student/${user._id}`)
+      .then(res => res.json())
+      .then(data => {
+        this.registeredEventIds = data.map(
+          (r: any) => r.eventId?._id
+        );
+        this.cdr.detectChanges();
+      });
+  }
+
+  /* ================= CHECK REGISTERED ================= */
+  isRegistered(eventId: string): boolean {
+    return this.registeredEventIds.includes(eventId);
+  }
+
   /* ================= REGISTER EVENT (PAYMENT FLOW) ================= */
   registerEvent(eventId: string) {
+
+    // 🔒 ALREADY REGISTERED
+    if (this.isRegistered(eventId)) return;
 
     const userStr = localStorage.getItem('user');
 
