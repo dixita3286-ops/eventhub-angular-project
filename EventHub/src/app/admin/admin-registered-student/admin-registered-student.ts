@@ -21,7 +21,6 @@ export class AdminRegisteredStudent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     const eventId = this.route.snapshot.paramMap.get('eventId');
     if (!eventId) return;
 
@@ -35,6 +34,35 @@ export class AdminRegisteredStudent implements OnInit {
         },
         error: (err) => {
           console.error('Error loading registrations', err);
+        }
+      });
+  }
+
+  cancelRegistration(registrationId: string) {
+
+      console.log('CANCEL ID:', registrationId);
+
+      if (!registrationId) {
+    alert('Registration ID missing');
+    return;
+  }
+    if (!confirm('Are you sure you want to cancel this registration?')) {
+      return;
+    }
+
+    this.http
+      .delete(`http://localhost:5000/api/registrations/${registrationId}`)
+      .subscribe({
+        next: () => {
+          this.students = this.students.filter(
+            s => s._id !== registrationId
+          );
+          this.cdr.detectChanges();
+          alert('Registration cancelled successfully');
+        },
+        error: (err) => {
+          console.error('Cancel failed', err);
+          alert('Failed to cancel registration');
         }
       });
   }

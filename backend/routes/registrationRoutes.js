@@ -78,6 +78,7 @@ router.get('/event/:eventId', async (req, res) => {
     console.log('REGISTRATIONS FOUND:', registrations.length);
 
    const formatted = registrations.map(r => ({
+  _id: r._id,
   name: r.userId?.name,
   email: r.userId?.email,
   status: r.status || 'registered',
@@ -90,6 +91,26 @@ res.json(formatted);
   } catch (err) {
     console.error(err);
     res.status(500).json([]);
+  }
+});
+
+/* ================= CANCEL / DELETE REGISTRATION =================
+   DELETE /api/registrations/:id
+===================================================== */
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid registration id' });
+    }
+
+    await Registration.findByIdAndDelete(id);
+
+    res.json({ message: 'Registration cancelled successfully' });
+  } catch (err) {
+    console.error('Cancel registration error:', err);
+    res.status(500).json({ message: 'Failed to cancel registration' });
   }
 });
 
