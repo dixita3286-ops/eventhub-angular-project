@@ -1,77 +1,86 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-student-registrations',
   standalone: true,
-  imports: [
-    CommonModule,   // ✅ ngIf, ngFor, ngClass
-    FormsModule,    // ✅ ngModel
-    DatePipe        // ✅ date pipe
-  ],
+  imports: [CommonModule],
   templateUrl: './student-registrations.html',
   styleUrls: ['./student-registrations.css']
 })
 export class StudentRegistrations implements OnInit {
 
-  registrations: any[] = [];
+  students: any[] = [];
   filteredStudents: any[] = [];
-
-  search: string = '';
-  status: string = '';
   loading = true;
 
-  constructor(
-    private router: Router,
-    private cdr: ChangeDetectorRef
-  ) {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.loadMyRegistrations();
+    this.loadRegistrations();
   }
 
-  /* ================= LOAD ================= */
-  loadMyRegistrations() {
-    const userStr = localStorage.getItem('user');
+  /* ================= LOAD REGISTRATIONS ================= */
+  loadRegistrations() {
 
-    if (!userStr) {
-      this.loading = false;
-      return;
-    }
+    const userStr = localStorage.getItem('user');
+    if (!userStr) return;
 
     const user = JSON.parse(userStr);
 
     fetch(`http://localhost:5000/api/registrations/student/${user._id}`)
       .then(res => res.json())
       .then(data => {
-        this.registrations = data;
-        this.applyFilter();
+        this.students = data;
+        this.filteredStudents = data;
         this.loading = false;
         this.cdr.detectChanges();
       })
-      .catch(() => {
+      .catch(err => {
+        console.error(err);
         this.loading = false;
       });
   }
 
-  /* ================= FILTER ================= */
-  applyFilter() {
-    this.filteredStudents = this.registrations.filter(r => {
-      const matchSearch =
-        this.search === '' ||
-        r.eventId?.title?.toLowerCase().includes(this.search.toLowerCase());
+  /* ================= CANCEL REGISTRATION ================= */
+  cancelRegistration(registrationId: string) {
 
-      const matchStatus =
-        this.status === '' || r.status === this.status;
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You want to cancel this registration?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel',
+      cancelButtonText: 'No'
+    }).then(result => {
 
-      return matchSearch && matchStatus;
+      if (result.isConfirmed) {
+
+        fetch(`http://localhost:5000/api/registrations/${registrationId}`, {
+          method: 'DELETE'
+        })
+          .then(res => res.json())
+          .then(() => {
+
+            // Remove instantly from UI
+            this.filteredStudents =
+              this.filteredStudents.filter(
+                r => r._id !== registrationId
+              );
+
+            Swal.fire(
+              'Cancelled!',
+              'Your registration has been cancelled.',
+              'success'
+            );
+
+            this.cdr.detectChanges();
+          })
+          .catch(err => console.error(err));
+      }
+
     });
   }
 
-  /* ================= BACK ================= */
-  goBack() {
-    this.router.navigate(['/student']);
-  }
 }

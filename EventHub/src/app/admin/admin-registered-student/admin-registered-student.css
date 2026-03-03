@@ -1,166 +1,174 @@
-/* ================= RESET ================= */
+/* ================= GLOBAL ================= */
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* ================= ANGULAR PAGE BACKGROUND ================= */
-:host {
-  display: block;
-  min-height: 100vh;
-  width: 100%;
-  background: #0d0d0d;
-  color: #fff;
+body {
+  background: radial-gradient(circle at top, #1a1a1a, #000);
 }
 
 /* ================= PAGE ================= */
 .page {
-  max-width: 1600px;
-  margin: auto;
-  padding: 90px 60px;
-  background: transparent;
-  font-family: 'Poppins', system-ui, sans-serif;
+  padding: 40px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,200,80,0.15), transparent 40%),
+    radial-gradient(circle at 80% 10%, rgba(255,140,0,0.12), transparent 45%),
+    #050505;
 }
 
-/* ================= HEADING ================= */
-.page h1 {
+/* ================= TITLE ================= */
+h1 {
   text-align: center;
-  font-family: 'Parisienne', cursive;
-  font-size: 46px;
-  color: #ffcc66;
-  margin-bottom: 45px;
+  font-size: 42px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+  color: #ffd580;
   text-shadow:
-    0 0 10px rgba(255,204,102,0.9),
-    0 0 22px rgba(255,153,0,0.8);
+    0 0 10px rgba(255,200,80,0.6),
+    0 0 30px rgba(255,160,0,0.35);
 }
 
 /* ================= EMPTY ================= */
 .empty {
   text-align: center;
-  font-size: 15px;
   color: #aaa;
-  margin-top: 60px;
+  font-size: 15px;
 }
 
 /* ================= GRID ================= */
 .student-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 28px;
 }
 
-/* ================= STUDENT CARD ================= */
+/* ================= GLASS CARD ================= */
 .student-card {
   position: relative;
   padding: 22px;
-  border-radius: 20px;
-  background: linear-gradient(
-    160deg,
-    rgba(255,255,255,0.10),
-    rgba(255,255,255,0.02)
-  );
-  box-shadow: 0 14px 35px rgba(0,0,0,0.6);
+  border-radius: 22px;
   display: flex;
-  align-items: center;
   gap: 18px;
-  transition: all 0.35s ease;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(255, 255, 255, 0.03)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.7),
+    inset 0 0 30px rgba(255, 200, 120, 0.08);
+  transition: all 0.4s ease;
   overflow: hidden;
 }
 
-/* GOLD SHINE */
+/* 🔥 Shine sweep */
 .student-card::before {
-  content: "";
+  content: '';
   position: absolute;
-  inset: -2px;
+  inset: 0;
   background: linear-gradient(
     120deg,
-    transparent,
-    rgba(255,200,100,0.55),
-    transparent
+    transparent 20%,
+    rgba(255, 220, 140, 0.25),
+    transparent 80%
   );
   opacity: 0;
-  transition: opacity 0.35s ease;
+  transition: 0.6s;
 }
 
+.student-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255, 220, 140, 0.25),
+    transparent 80%
+  );
+  opacity: 0;
+  transition: 0.6s;
+  pointer-events: none; /* ✅ IMPORTANT */
+}
+
+/* Hover lift */
 .student-card:hover {
-  transform: translateY(-8px) scale(1.04);
+  transform: translateY(-10px) scale(1.02);
   box-shadow:
-    0 0 25px rgba(255,153,0,0.35),
-    0 0 55px rgba(255,153,0,0.25),
-    0 30px 70px rgba(0,0,0,0.8);
-}
-
-.student-card:hover::before {
-  opacity: 1;
+    0 30px 70px rgba(0, 0, 0, 0.85),
+    inset 0 0 40px rgba(255, 180, 80, 0.18);
 }
 
 /* ================= AVATAR ================= */
 .avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #ffcc66, #ff9900);
-  color: #000;
-  font-size: 24px;
-  font-weight: 700;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffd36a, #ff9f1a);
+  color: #1a1a1a;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  box-shadow: 0 0 18px rgba(255,153,0,0.7);
-  position: relative;
-  z-index: 1;
+  font-size: 22px;
+  font-weight: 600;
+  box-shadow:
+    0 0 18px rgba(255, 180, 70, 0.9),
+    inset 0 0 12px rgba(255, 255, 255, 0.5);
 }
 
 /* ================= INFO ================= */
-.info {
-  position: relative;
-  z-index: 1;
-}
-
 .info h3 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #ffcc66;
-  margin-bottom: 6px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: #fff;
 }
 
 .info p {
+  margin: 4px 0;
   font-size: 14px;
-  color: #ddd;
-  margin-bottom: 6px;
-  word-break: break-all;
+  color: #d6d6d6;
 }
 
 .info span {
-  font-size: 12.5px;
-  color: #aaa;
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: #b0b0b0;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 1400px) {
-  .student-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* ================= CANCEL BUTTON ================= */
+.cancel-btn {
+  margin-top: 14px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  position: relative;
+  z-index: 5; /* ✅ IMPORTANT */
+  color: #2a0000;
+  background: linear-gradient(135deg, #ffccaa, #ff6a3d);
 }
 
-@media (max-width: 1000px) {
-  .student-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Button hover */
+.cancel-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #ff8a5c, #ff2e2e);
+  color: #fff;
+  box-shadow:
+    0 0 25px rgba(255, 60, 60, 0.95),
+    inset 0 0 14px rgba(255, 255, 255, 0.4);
 }
 
-@media (max-width: 600px) {
-  .page {
-    padding: 80px 20px;
-  }
-
-  .student-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .page h1 {
-    font-size: 34px;
-  }
+/* Button click */
+.cancel-btn:active {
+  transform: scale(0.95);
 }

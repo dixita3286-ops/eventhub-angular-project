@@ -54,6 +54,7 @@
 .form-box::before {
   content: '';
   position: absolute;
+   pointer-events: none; 
   inset: -50%;
   background: linear-gradient(
     120deg,
@@ -79,7 +80,8 @@
   font-weight: 600;
   margin-bottom: 24px;
   letter-spacing: 0.8px;
-
+ position: relative;
+  z-index: 2;
   background: linear-gradient(90deg, #ffd36a, #ffb700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

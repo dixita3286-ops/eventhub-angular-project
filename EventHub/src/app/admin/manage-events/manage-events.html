@@ -1,36 +1,7 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
-
-<!-- ================= MAIN ================= -->
 <div class="main">
 
   <h1>Manage All Events</h1>
 
-  <!-- ================= FILTERS ================= -->
-  <div class="filters">
-    <input
-      type="text"
-      placeholder="Search events..."
-      (keyup)="onSearchChange($any($event.target).value)"
-    >
-
-    <select [(ngModel)]="category" (change)="loadEvents()">
-      <option value="">All Categories</option>
-      <option value="Workshop">Workshop</option>
-      <option value="Seminar">Seminar</option>
-      <option value="Cultural">Cultural</option>
-      <option value="Sports">Sports</option>
-      <option value="Social">Social</option>
-      <option value="Exhibition">Exhibition</option>
-    </select>
-
-    <select [(ngModel)]="sort" (change)="loadEvents()">
-      <option value="desc">Newest</option>
-      <option value="asc">Oldest</option>
-    </select>
-  </div>
-
-  <!-- ================= EVENTS GRID ================= -->
   <div class="event-grid">
 
     <p *ngIf="events.length === 0" class="empty">
@@ -51,9 +22,7 @@
         <p>Category : {{ e.category }}</p>
         <p>Date : {{ e.date | date }}</p>
         <p>Venue : {{ e.venue }}</p>
-      </div>
-
-      <!-- ================= ADMIN ACTIONS ================= -->
+      <!-- OTHER ACTIONS -->
       <div class="event-actions">
         <a (click)="viewDetails(e._id)">View |</a>
         <a (click)="viewRegistrations(e._id)">Registrations |</a>

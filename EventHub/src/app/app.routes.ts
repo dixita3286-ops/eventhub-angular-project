@@ -6,6 +6,7 @@ import { Login } from './auth/login/login';
 import { Register } from './auth/register/register';
 import { CategoryEvents } from './public/category-events/category-events';
 import { PublicEventDetails } from './public/event-details/event-details';
+import { Events } from './public/events/events';
 
 /* ===== ADMIN ===== */
 import { AdminHome } from './admin/admin-home/admin-home';
@@ -15,6 +16,7 @@ import { ManageEvents } from './admin/manage-events/manage-events';
 import { ManageUsers } from './admin/manage-users/manage-users';
 import { AdminRegisteredStudent } from './admin/admin-registered-student/admin-registered-student';
 import { AdminModifyEvents } from './admin/admin-modify-events/admin-modify-events';
+import { ManageProposals } from './admin/manage-proposals/manage-proposals';
 
 /* ===== ORGANIZER ===== */
 import { OrganizerHome } from './organizer/organizer-home/organizer-home';
@@ -37,6 +39,7 @@ import { StudentPayment } from './student/student-payment/student-payment';
 import { authGuard } from './core/guards/auth-guard';
 import { roleGuard } from './core/guards/role-guard';
 
+
 export const routes: Routes = [
 
   /* ================= PUBLIC ================= */
@@ -52,7 +55,10 @@ export const routes: Routes = [
     path: 'public/event-details/:id',
     component: PublicEventDetails
   },
-
+  {
+    path: 'events',
+    component: Events
+  },
   /* ================= ADMIN ================= */
   {
     path: 'admin',
@@ -97,6 +103,10 @@ export const routes: Routes = [
     canActivate: [authGuard, roleGuard],
     data: { role: 'admin' }
   },
+  {
+  path: 'admin/manage-proposals',
+  component: ManageProposals
+},
 
   /* ================= STUDENT ================= */
   {

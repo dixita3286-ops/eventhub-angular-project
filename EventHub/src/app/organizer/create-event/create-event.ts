@@ -16,22 +16,20 @@ export class CreateEvent {
   category = '';
   date = '';
   venue = '';
-  registrationFees: number | null = null;
+  registrationFee: number | null = null; // ✅ FIXED NAME
 
-  eventFile: File | null = null;
   eventImage: File | null = null;
 
   message = '';
 
-  onFileChange(event: any, type: 'file' | 'image') {
-    if (type === 'file') {
-      this.eventFile = event.target.files[0];
-    } else {
-      this.eventImage = event.target.files[0];
-    }
+  /* ================= FILE CHANGE ================= */
+  onFileChange(event: any) {
+    this.eventImage = event.target.files[0];
   }
 
+  /* ================= CREATE EVENT ================= */
   createEvent() {
+
     const today = new Date();
     const minDate = new Date();
     minDate.setDate(today.getDate() + 5);
@@ -41,29 +39,52 @@ export class CreateEvent {
       return;
     }
 
-    // 🔥 Normally API call jase (POST)
-    console.log({
-      title: this.title,
-      description: this.description,
-      category: this.category,
-      date: this.date,
-      venue: this.venue,
-      registrationFees: this.registrationFees,
-      eventFile: this.eventFile,
-      eventImage: this.eventImage,
-      status: 'pending'
-    });
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
+      this.message = 'You must login first.';
+      return;
+    }
 
-    this.message = 'Event created successfully! Waiting for admin approval.';
+    const user = JSON.parse(userStr);
 
-    // reset form
-    this.title = '';
-    this.description = '';
-    this.category = '';
-    this.date = '';
-    this.venue = '';
-    this.registrationFees = null;
-    this.eventFile = null;
-    this.eventImage = null;
+    const formData = new FormData();
+
+    formData.append('title', this.title);
+    formData.append('description', this.description);
+    formData.append('category', this.category);
+    formData.append('date', this.date);
+    formData.append('venue', this.venue);
+    formData.append('registrationFee', String(this.registrationFee));
+    formData.append('createdBy', user._id); // 🔥 IMPORTANT
+
+    if (this.eventImage) {
+      formData.append('eventImage', this.eventImage);
+    }
+
+    fetch('http://localhost:5000/api/events', {
+      method: 'POST',
+      body: formData
+    })
+      .then(res => res.json())
+      .then(() => {
+
+        this.message = 'Event request sent to admin for approval.';
+
+        // Reset form
+        this.title = '';
+        this.description = '';
+        this.category = '';
+        this.date = '';
+        this.venue = '';
+        this.registrationFee = null;
+        this.eventImage = null;
+
+      })
+      .catch(err => {
+        console.error(err);
+        this.message = 'Error creating event.';
+      });
+
   }
+
 }

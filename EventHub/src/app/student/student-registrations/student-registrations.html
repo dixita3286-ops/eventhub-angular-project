@@ -1,4 +1,3 @@
-
 <section class="page">
 
   <h1>My Registered Events</h1>
@@ -20,13 +19,11 @@
 
       <!-- IMAGE -->
       <div class="img-wrap">
-<img
-  *ngIf="reg.eventId?.eventImage"
-  [src]="'http://localhost:5000' + reg.eventId.eventImage"
-  alt="Event Image"
-/>
-
-
+        <img
+          *ngIf="reg.eventId?.eventImage"
+          [src]="'http://localhost:5000' + reg.eventId.eventImage"
+          alt="Event Image"
+        />
       </div>
 
       <!-- BODY -->
@@ -45,6 +42,13 @@
         <p class="desc">
           {{ reg.eventId?.description }}
         </p>
+
+        <!-- 🔥 CANCEL BUTTON -->
+        <div class="card-actions">
+          <button (click)="cancelRegistration(reg._id)">
+            Cancel Registration
+          </button>
+        </div>
 
       </div>
 

@@ -1,0 +1,42 @@
+<div class="main">
+
+  <h1>Manage Event Proposals</h1>
+
+  <div class="proposal-grid">
+
+    <p *ngIf="proposals.length === 0" class="empty">
+      No pending proposals.
+    </p>
+
+    <div class="proposal-card" *ngFor="let e of proposals">
+
+      <img
+        [src]="'http://localhost:5000' + e.eventImage"
+        alt="Event Image"
+      />
+
+      <h3>{{ e.title }}</h3>
+      <p>Category : {{ e.category }}</p>
+      <p>Date : {{ e.date | date }}</p>
+      <p>Venue : {{ e.venue }}</p>
+      <p>Registration Fee : ₹{{ e.registrationFee }}</p>
+
+      <div class="buttons">
+        <button
+          class="approve-btn"
+          (click)="updateStatus(e._id, 'approved')">
+          Approve
+        </button>
+
+        <button
+          class="reject-btn"
+          (click)="updateStatus(e._id, 'rejected')">
+          Reject
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
