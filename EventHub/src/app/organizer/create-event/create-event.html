@@ -3,6 +3,7 @@
 
     <h1>Create New Event</h1>
 
+    <!-- SUCCESS / ERROR MESSAGE -->
     <div *ngIf="message" class="message">
       {{ message }}
     </div>
@@ -36,6 +37,7 @@
           [(ngModel)]="category"
           name="category"
           required>
+
           <option value="">Select Category</option>
           <option value="Workshop">Workshop</option>
           <option value="Seminar">Seminar</option>
@@ -43,6 +45,7 @@
           <option value="Sports">Sports</option>
           <option value="Social">Social</option>
           <option value="Exhibition">Exhibition</option>
+
         </select>
       </div>
 
@@ -53,6 +56,7 @@
           type="date"
           [(ngModel)]="date"
           name="date"
+          [min]="minDate"
           required>
       </div>
 
@@ -81,10 +85,27 @@
       <!-- EVENT IMAGE -->
       <div class="form-group">
         <label>Upload Event Image</label>
+
         <input
           type="file"
           accept="image/*"
           (change)="onFileChange($event)">
+
+        <!-- IMAGE PREVIEW -->
+        <img
+          *ngIf="imagePreview"
+          [src]="imagePreview"
+          class="preview">
+      </div>
+
+      <!-- EVENT PDF -->
+      <div class="form-group">
+        <label>Upload Event PDF (Optional)</label>
+
+        <input
+          type="file"
+          accept="application/pdf"
+          (change)="onPdfChange($event)">
       </div>
 
       <!-- SUBMIT BUTTON -->

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -9,25 +9,67 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './create-event.html',
   styleUrl: './create-event.css',
 })
-export class CreateEvent {
+export class CreateEvent implements OnInit {
 
   title = '';
   description = '';
   category = '';
   date = '';
   venue = '';
-  registrationFee: number | null = null; // ✅ FIXED NAME
+  registrationFee: number | null = null;
 
   eventImage: File | null = null;
+  eventPdf: File | null = null;
 
   message = '';
+  minDate = '';
 
-  /* ================= FILE CHANGE ================= */
+  imagePreview: string | null = null;
+
+  /* ================= INIT ================= */
+
+  ngOnInit() {
+
+    const today = new Date();
+
+    // minimum date = today + 5 days
+    today.setDate(today.getDate() + 5);
+
+    this.minDate = today.toISOString().split('T')[0];
+
+  }
+
+  /* ================= IMAGE CHANGE ================= */
+
   onFileChange(event: any) {
+
+  if (event.target.files.length > 0) {
+
     this.eventImage = event.target.files[0];
+
+    const reader = new FileReader();
+
+    reader.onload = (e: any) => {
+      this.imagePreview = e.target.result;
+    };
+
+    reader.readAsDataURL(this.eventImage as File);
+
+  }
+
+}
+  /* ================= PDF CHANGE ================= */
+
+  onPdfChange(event: any) {
+
+    if (event.target.files.length > 0) {
+      this.eventPdf = event.target.files[0];
+    }
+
   }
 
   /* ================= CREATE EVENT ================= */
+
   createEvent() {
 
     const today = new Date();
@@ -39,7 +81,15 @@ export class CreateEvent {
       return;
     }
 
+    /* ===== VALIDATION ===== */
+
+    if (!this.title || !this.category || !this.date || !this.venue || this.registrationFee === null) {
+      this.message = 'Please fill all required fields.';
+      return;
+    }
+
     const userStr = localStorage.getItem('user');
+
     if (!userStr) {
       this.message = 'You must login first.';
       return;
@@ -54,36 +104,46 @@ export class CreateEvent {
     formData.append('category', this.category);
     formData.append('date', this.date);
     formData.append('venue', this.venue);
-    formData.append('registrationFee', String(this.registrationFee));
-    formData.append('createdBy', user._id); // 🔥 IMPORTANT
+    formData.append('registrationFee', this.registrationFee.toString());
+    formData.append('createdBy', user._id);
 
     if (this.eventImage) {
       formData.append('eventImage', this.eventImage);
+    }
+
+    if (this.eventPdf) {
+      formData.append('eventPdf', this.eventPdf);
     }
 
     fetch('http://localhost:5000/api/events', {
       method: 'POST',
       body: formData
     })
-      .then(res => res.json())
-      .then(() => {
+    .then(res => res.json())
+    .then(data => {
 
-        this.message = 'Event request sent to admin for approval.';
+      this.message = data.message || 'Event created successfully!';
 
-        // Reset form
-        this.title = '';
-        this.description = '';
-        this.category = '';
-        this.date = '';
-        this.venue = '';
-        this.registrationFee = null;
-        this.eventImage = null;
+      /* RESET FORM */
 
-      })
-      .catch(err => {
-        console.error(err);
-        this.message = 'Error creating event.';
-      });
+      this.title = '';
+      this.description = '';
+      this.category = '';
+      this.date = '';
+      this.venue = '';
+      this.registrationFee = null;
+
+      this.eventImage = null;
+      this.eventPdf = null;
+      this.imagePreview = null;
+
+    })
+    .catch(err => {
+
+      console.error(err);
+      this.message = 'Error creating event.';
+
+    });
 
   }
 

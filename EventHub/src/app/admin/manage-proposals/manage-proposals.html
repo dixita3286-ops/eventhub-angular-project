@@ -11,9 +11,8 @@
     <div class="proposal-card" *ngFor="let e of proposals">
 
       <img
-        [src]="'http://localhost:5000' + e.eventImage"
-        alt="Event Image"
-      />
+[src]="getImageUrl(e.eventImage)"
+alt="Event Image">
 
       <h3>{{ e.title }}</h3>
       <p>Category : {{ e.category }}</p>

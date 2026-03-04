@@ -10,7 +10,7 @@ const eventSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['Seminar', 'Cultural', 'Sports', 'Social', 'Exhibition'],
+    enum: ['Workshop', 'Seminar', 'Cultural', 'Sports', 'Social', 'Exhibition'],
     required: true
   },
   date: {
@@ -26,6 +26,9 @@ const eventSchema = new mongoose.Schema({
     required: true
   },
   eventImage: {
+    type: String
+  },
+    eventPdf: {
     type: String
   },
   status: {

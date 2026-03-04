@@ -60,9 +60,9 @@
     <div class="event-card" *ngFor="let e of filteredEvents">
 
       <img
-        [src]="e.eventImage ? 'http://localhost:5000' + e.eventImage : '/assets/default.jpg'"
-      />
-
+  [src]="getImageUrl(e.eventImage)"
+  (error)="$event.target.src='assets/default.jpg'"
+/>
       <div class="event-info">
         <h3>{{ e.title }}</h3>
         <p><b>Category:</b> {{ e.category }}</p>

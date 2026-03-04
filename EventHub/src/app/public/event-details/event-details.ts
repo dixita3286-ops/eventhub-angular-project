@@ -29,6 +29,7 @@ export class PublicEventDetails implements OnInit {
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
+
       const id = params.get('id');
 
       if (!id) {
@@ -37,28 +38,50 @@ export class PublicEventDetails implements OnInit {
       }
 
       this.fetchEvent(id);
+
     });
   }
 
   fetchEvent(id: string) {
+
     this.loading = true;
 
     this.http
       .get(`http://localhost:5000/api/events/${id}`)
       .subscribe({
         next: (data) => {
+
           this.event = data;
           this.loading = false;
           this.cdr.detectChanges();
+
         },
         error: () => {
+
           this.loading = false;
           this.cdr.detectChanges();
+
         }
       });
+
+  }
+
+  /* 🔥 IMAGE FIX */
+  getImageUrl(image: string) {
+
+    if (!image) {
+      return 'assets/default.jpg';
+    }
+
+    if (image.includes('/public')) {
+      return 'http://localhost:5000' + image;
+    }
+
+    return 'http://localhost:5000/uploads/images/' + image;
   }
 
   downloadFile(filePath: string) {
     window.location.href = 'http://localhost:5000' + filePath;
   }
+
 }

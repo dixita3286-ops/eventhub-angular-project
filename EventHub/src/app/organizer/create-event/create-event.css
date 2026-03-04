@@ -1,12 +1,12 @@
 /* ===============================
    GLOBAL BACKGROUND
-   =============================== */
+================================ */
 
 :host {
   display: block;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top, rgba(255,215,0,0.06), transparent 60%),
+    radial-gradient(circle at top, rgba(255,215,0,0.05), transparent 60%),
     linear-gradient(135deg, #050505, #0b0b0b, #050505);
   color: #fff;
   font-family: 'Poppins', sans-serif;
@@ -14,22 +14,24 @@
 
 /* ===============================
    CENTER FORM
-   =============================== */
+================================ */
 
 .main {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px 20px;
 }
 
 /* ===============================
-   GLASS FORM BOX (MEDIUM)
-   =============================== */
+   FORM BOX
+================================ */
 
 .form-box {
-  width: 520px;               /* 🔥 MEDIUM WIDTH */
-  padding: 32px 34px;         /* 🔥 COMPACT */
+  width: 520px;
+  padding: 35px;
+
   border-radius: 20px;
 
   background: linear-gradient(
@@ -37,52 +39,27 @@
     rgba(255,255,255,0.07),
     rgba(255,255,255,0.02)
   );
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
 
-  border: 1px solid rgba(255, 215, 0, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid rgba(255,215,0,0.25);
 
   box-shadow:
-    0 25px 60px rgba(0,0,0,0.85),
-    inset 0 0 20px rgba(255,215,0,0.08);
-
-  position: relative;
-  overflow: hidden;
-}
-
-/* SUBTLE GOLD SHINE */
-.form-box::before {
-  content: '';
-  position: absolute;
-   pointer-events: none; 
-  inset: -50%;
-  background: linear-gradient(
-    120deg,
-    transparent 45%,
-    rgba(255,215,0,0.12),
-    transparent 55%
-  );
-  animation: shine 10s linear infinite;
-}
-
-@keyframes shine {
-  from { transform: translateX(-40%) rotate(25deg); }
-  to   { transform: translateX(40%) rotate(25deg); }
+    0 25px 60px rgba(0,0,0,0.8),
+    inset 0 0 20px rgba(255,215,0,0.06);
 }
 
 /* ===============================
    TITLE
-   =============================== */
+================================ */
 
 .form-box h1 {
   text-align: center;
-  font-size: 24px;            /* 🔥 SMALLER */
-  font-weight: 600;
-  margin-bottom: 24px;
-  letter-spacing: 0.8px;
- position: relative;
-  z-index: 2;
-  background: linear-gradient(90deg, #ffd36a, #ffb700);
+  font-size: 26px;
+  margin-bottom: 25px;
+
+  background: linear-gradient(90deg,#ffd36a,#ffb700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
@@ -91,52 +68,58 @@
 
 /* ===============================
    MESSAGE
-   =============================== */
+================================ */
 
 .message {
   background: rgba(255,215,0,0.12);
   border: 1px solid rgba(255,215,0,0.5);
+
   color: #ffd36a;
-  padding: 10px 14px;
+
+  padding: 10px;
   border-radius: 10px;
+
   text-align: center;
+
   margin-bottom: 18px;
   font-size: 13px;
 }
 
 /* ===============================
    FORM GROUP
-   =============================== */
+================================ */
 
 .form-group {
-  margin-bottom: 16px;        /* 🔥 LESS GAP */
+  margin-bottom: 16px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
   font-size: 13px;
   color: #ffd36a;
-  letter-spacing: 0.3px;
 }
 
 /* ===============================
    INPUTS
-   =============================== */
+================================ */
 
 .form-group input,
 .form-group textarea,
 .form-group select {
+
   width: 100%;
-  padding: 10px 12px;         /* 🔥 COMPACT */
+  padding: 10px 12px;
+
   border-radius: 10px;
 
   background: rgba(0,0,0,0.55);
   border: 1px solid rgba(255,215,0,0.25);
-  color: #fff;
 
+  color: #fff;
   font-size: 13px;
-  transition: all 0.3s ease;
+
+  transition: all 0.25s ease;
 }
 
 .form-group textarea {
@@ -144,39 +127,72 @@
   min-height: 70px;
 }
 
+/* INPUT FOCUS */
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
+
   border-color: #ffd36a;
+
   box-shadow:
     0 0 0 1px rgba(255,215,0,0.6),
     0 0 18px rgba(255,215,0,0.35);
 }
 
-/* FILE INPUT */
+/* ===============================
+   FILE INPUT
+================================ */
+
 .form-group input[type="file"] {
-  padding: 8px;
+  padding: 7px;
   font-size: 12px;
-  background: rgba(0,0,0,0.35);
+}
+
+/* ===============================
+   IMAGE PREVIEW
+================================ */
+
+.preview {
+
+  width: 100%;
+  height: 180px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+  margin-top: 10px;
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  transition: transform 0.3s ease;
+}
+
+.preview:hover {
+  transform: scale(1.03);
 }
 
 /* ===============================
    BUTTON
-   =============================== */
+================================ */
 
 button[type="submit"] {
+
   width: 100%;
-  margin-top: 10px;
+  margin-top: 12px;
+
   padding: 12px;
+
   border-radius: 12px;
   border: none;
+
   cursor: pointer;
 
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.5px;
 
   color: #1a1200;
+
   background: linear-gradient(
     135deg,
     #ffcc66,
@@ -192,7 +208,9 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
+
   transform: translateY(-2px);
+
   box-shadow:
     0 12px 35px rgba(255,183,0,0.6),
     inset 0 0 10px rgba(255,255,255,0.45);
@@ -200,15 +218,17 @@ button[type="submit"]:hover {
 
 /* ===============================
    RESPONSIVE
-   =============================== */
+================================ */
 
 @media (max-width: 600px) {
+
   .form-box {
-    width: 92%;
-    padding: 28px 22px;
+    width: 100%;
+    padding: 25px;
   }
 
   .form-box h1 {
     font-size: 22px;
   }
+
 }

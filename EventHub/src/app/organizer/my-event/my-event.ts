@@ -51,8 +51,6 @@ export class MyEvent implements OnInit {
   /* ================= FETCH EVENTS ================= */
   fetchEvents() {
 
-    // 🔥 IMPORTANT CHANGE HERE
-    // All Events = this organizer ni badhii events
     const url = `http://localhost:5000/api/events/organizer/${this.organizerId}`;
 
     this.http.get<any[]>(url).subscribe({
@@ -69,12 +67,10 @@ export class MyEvent implements OnInit {
   applyAllFilters() {
     let data = [...this.events];
 
-    // STATUS FILTER (only when My Events selected)
     if (this.activeTab === 'my' && this.status !== 'all') {
       data = data.filter(e => e.status === this.status);
     }
 
-    // SEARCH (TITLE)
     if (this.search.trim()) {
       const q = this.search.toLowerCase();
       data = data.filter(e =>
@@ -82,12 +78,10 @@ export class MyEvent implements OnInit {
       );
     }
 
-    // CATEGORY
     if (this.category) {
       data = data.filter(e => e.category === this.category);
     }
 
-    // DATE SORT
     data.sort((a, b) => {
       const da = new Date(a.date).getTime();
       const db = new Date(b.date).getTime();
@@ -97,11 +91,29 @@ export class MyEvent implements OnInit {
     this.filteredEvents = data;
   }
 
+  /* ================= IMAGE FIX ADD ================= */
+
+  getImageUrl(image: string) {
+
+    if (!image) {
+      return 'assets/default.jpg';
+    }
+
+    // old images from public folder
+    if (image.includes('/public')) {
+      return 'http://localhost:5000' + image;
+    }
+
+    // uploaded images
+    return 'http://localhost:5000/uploads/images/' + image;
+  }
+
   /* ================= UI ACTIONS ================= */
+
   changeTab(tab: Tab) {
     this.activeTab = tab;
     this.status = 'all';
-    this.applyAllFilters();   // 🔥 no refetch needed
+    this.applyAllFilters();
   }
 
   setStatus(s: Status) {
@@ -121,9 +133,8 @@ export class MyEvent implements OnInit {
     this.router.navigate(['/organizer/event-details', id]);
   }
 
-viewRegistrations(eventId: string) {
-  this.router.navigate(['/organizer/registered-student', eventId]);
-}
-
+  viewRegistrations(eventId: string) {
+    this.router.navigate(['/organizer/registered-student', eventId]);
+  }
 
 }

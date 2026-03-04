@@ -19,16 +19,42 @@ export class ManageProposals implements OnInit {
     this.loadProposals();
   }
 
+  /* ================= LOAD PROPOSALS ================= */
+
   loadProposals() {
+
     fetch('http://localhost:5000/api/events/admin/pending')
       .then(res => res.json())
       .then(data => {
-        // Only pending events
+
         this.proposals = data.filter((e: any) => e.status === 'pending');
+
         this.cdr.detectChanges();
+
       })
       .catch(err => console.error(err));
+
   }
+
+  /* ================= IMAGE URL FIX ================= */
+
+  getImageUrl(image: string) {
+
+    if (!image) {
+      return '';
+    }
+
+    // old images (public folder)
+    if (image.includes('/public')) {
+      return 'http://localhost:5000' + image;
+    }
+
+    // new uploaded images
+    return 'http://localhost:5000/uploads/images/' + image;
+
+  }
+
+  /* ================= UPDATE STATUS ================= */
 
   updateStatus(eventId: string, status: string) {
 
@@ -48,6 +74,7 @@ export class ManageProposals implements OnInit {
           body: JSON.stringify({ status })
         })
         .then(() => {
+
           this.loadProposals();
 
           Swal.fire(
@@ -55,14 +82,18 @@ export class ManageProposals implements OnInit {
             `Proposal ${status} successfully.`,
             'success'
           );
+
         })
         .catch(() => {
+
           Swal.fire('Error', 'Failed to update status', 'error');
+
         });
 
       }
 
     });
+
   }
 
 }

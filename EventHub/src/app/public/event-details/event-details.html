@@ -13,7 +13,8 @@
   <div class="event-card" *ngIf="!loading && event">
 
     <img
-      [src]="'http://localhost:5000' + event.eventImage"
+      [src]="getImageUrl(event.eventImage)"
+      (error)="$event.target.src='assets/default.jpg'"
       alt="Event Image"
     />
 
@@ -34,6 +35,11 @@
       Download Event File
     </button>
 
+  </div>
+
+  <!-- EVENT NOT FOUND -->
+  <div class="event-card" *ngIf="!loading && !event">
+    <h2>Event not found</h2>
   </div>
 
 </div>

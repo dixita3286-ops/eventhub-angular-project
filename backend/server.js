@@ -19,8 +19,6 @@ app.use(cors({
 
 app.use(express.json());
 
-
-
 /* ================= STATIC FILES =================
    Images: http://localhost:5000/public/xxx.png
    Files : http://localhost:5000/uploads/files/xxx.pdf

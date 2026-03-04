@@ -34,6 +34,23 @@ export class ManageEvents implements OnInit {
       .catch(err => console.error(err));
   }
 
+  /* ================= IMAGE FIX ADD ================= */
+
+  getImageUrl(image: string) {
+
+    if (!image) {
+      return 'assets/default.jpg';
+    }
+
+    // old images from public folder
+    if (image.includes('/public')) {
+      return 'http://localhost:5000' + image;
+    }
+
+    // uploaded images
+    return 'http://localhost:5000/uploads/images/' + image;
+  }
+
   /* ================= VIEW DETAILS ================= */
   viewDetails(id: string) {
     this.router.navigate(['/admin/event-details', id]);
