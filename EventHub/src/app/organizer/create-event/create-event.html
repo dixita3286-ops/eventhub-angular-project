@@ -4,10 +4,6 @@
 
     <h1>Create Event</h1>
 
-    <div *ngIf="message" class="message">
-      {{ message }}
-    </div>
-
     <form (ngSubmit)="createEvent()" #eventForm="ngForm">
 
       <!-- TITLE -->

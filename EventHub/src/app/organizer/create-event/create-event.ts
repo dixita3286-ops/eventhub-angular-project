@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-create-event',
@@ -23,7 +24,6 @@ export class CreateEvent implements OnInit {
 
   imagePreview: string | null = null;
 
-  message = '';
   minDate = '';
 
   ngOnInit() {
@@ -64,7 +64,13 @@ export class CreateEvent implements OnInit {
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      this.message = 'Only PDF files allowed.';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid File',
+        text: 'Only PDF files allowed.'
+      });
+
       return;
     }
 
@@ -81,24 +87,48 @@ export class CreateEvent implements OnInit {
     minDate.setDate(today.getDate() + 5);
 
     if (new Date(this.date) < minDate) {
-      this.message = 'Event date must be at least 5 days from today.';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Invalid Date',
+        text: 'Event date must be at least 5 days from today.'
+      });
+
       return;
     }
 
     if (!this.eventImage) {
-      this.message = 'Please upload event image.';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'Image Required',
+        text: 'Please upload event image.'
+      });
+
       return;
     }
 
     if (!this.eventFile) {
-      this.message = 'Please upload event PDF.';
+
+      Swal.fire({
+        icon: 'warning',
+        title: 'PDF Required',
+        text: 'Please upload event PDF.'
+      });
+
       return;
     }
 
     const userStr = localStorage.getItem('user');
 
     if (!userStr) {
-      this.message = 'You must login first.';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Required',
+        text: 'You must login first.'
+      });
+
       return;
     }
 
@@ -124,7 +154,12 @@ export class CreateEvent implements OnInit {
     .then(res => res.json())
     .then(data => {
 
-      this.message = 'Event created successfully. Waiting for admin approval.';
+      Swal.fire({
+        icon: 'success',
+        title: 'Event Created',
+        text: 'Event created successfully. Waiting for admin approval.',
+        confirmButtonColor: '#3085d6'
+      });
 
       this.title = '';
       this.description = '';
@@ -141,7 +176,12 @@ export class CreateEvent implements OnInit {
     .catch(err => {
 
       console.error(err);
-      this.message = 'Error creating event.';
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Error creating event.'
+      });
 
     });
 
