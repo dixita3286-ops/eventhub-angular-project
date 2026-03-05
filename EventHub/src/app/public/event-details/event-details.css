@@ -1,186 +1,174 @@
-/* ================= RESET ================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* PAGE BACKGROUND */
+
+.main{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0f0f0f,#1a1a1a,#000);
+  padding:40px;
+  font-family:'Poppins',sans-serif;
 }
 
-/* ================= PAGE BG ================= */
-:host {
-  display: block;
-  min-height: 100vh;
-  background: #000;
-  font-family: 'Poppins', sans-serif;
-  color: #fff;
-}
 
-/* ================= MAIN ================= */
-.main {
-  padding-top: 120px;
-  padding-bottom: 80px;
-  display: flex;
-  justify-content: center;
-}
 
-/* ================= EVENT CARD ================= */
-.event-card {
-  width: 85%;
-  max-width: 650px;
-  background: #050505;
-  border-radius: 24px;
-  padding: 36px;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,.12);
+/* EVENT CARD */
 
+.event-card{
+  width:420px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+  border-radius:18px;
+  padding:25px;
   box-shadow:
-    0 0 40px rgba(0,0,0,.9);
-
-  transition: all .4s ease;
-  animation: fadeIn .6s ease;
-  position: relative;
+  0 0 15px rgba(255,215,0,0.2),
+  0 0 40px rgba(255,215,0,0.1);
+  border:1px solid rgba(255,215,0,0.3);
+  position:relative;
+  overflow:hidden;
+  transition:0.4s;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* GOLDEN SHINE EFFECT */
 
-.event-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  border-color: rgba(255,153,0,.8);
-  box-shadow:
-    0 0 30px rgba(255,153,0,.8),
-    0 0 80px rgba(255,153,0,.4),
-    0 0 140px rgba(255,153,0,.2);
-}
-
-.event-card img {
-  width: 260px;
-  height: 260px;
-  object-fit: cover;
-  border-radius: 18px;
-  margin-bottom: 24px;
-
-  box-shadow: 0 0 22px rgba(255,153,0,.4);
-  transition: .4s ease;
-}
-
-.event-card:hover img {
-  transform: scale(1.06);
-  box-shadow:
-    0 0 30px rgba(255,153,0,.9),
-    0 0 70px rgba(255,153,0,.5);
-}
-
-.event-card h2 {
-  font-family: 'Parisienne', cursive;
-  font-size: 44px;
-  color: #ffbb55;
-  margin-bottom: 18px;
-  text-shadow: 0 0 14px rgba(255,170,70,.7);
-}
-
-.event-info {
-  width: 82%;
-  margin: auto;
-  text-align: left;
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.event-info p {
-  margin: 10px 0;
-  color: #eaeaea;
-}
-
-.event-info strong {
-  color: #ffcc66;
-}
-
-.event-info .desc {
-  margin-top: 14px;
-  color: #ccc;
-  font-size: 15px;
-}
-
-.download-btn {
-  margin-top: 26px;
-  padding: 14px 26px;
-  border-radius: 16px;
-  background: #ff9900;
-  color: #000;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: .3s ease;
-}
-
-.download-btn:hover {
-  background: #ffb733;
-  transform: translateY(-3px);
-  box-shadow:
-    0 0 25px rgba(255,153,0,.9),
-    0 0 80px rgba(255,153,0,.45);
-}
-
-/* ================= SKELETON ================= */
-.event-card.skeleton {
-  background: #050505;
-}
-
-.event-card.skeleton .img {
-  width: 260px;
-  height: 260px;
-  border-radius: 18px;
-  margin: 0 auto 24px;
-}
-
-.event-card.skeleton .line {
-  height: 14px;
-  width: 100%;
-  border-radius: 8px;
-  margin: 12px 0;
-}
-
-.event-card.skeleton .line.title {
-  height: 28px;
-  width: 70%;
-  margin: 14px auto 20px;
-}
-
-.event-card.skeleton .img,
-.event-card.skeleton .line {
-  background: linear-gradient(
-    110deg,
-    #111 25%,
-    #222 37%,
-    #111 63%
+.event-card::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-150%;
+  width:50%;
+  height:100%;
+  background:linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,215,0,0.5),
+    transparent
   );
-  background-size: 400% 100%;
-  animation: shimmer 1.6s infinite linear;
+  transform:skewX(-25deg);
 }
 
-@keyframes shimmer {
-  0%   { background-position: 100% 0; }
-  100% { background-position: -100% 0; }
+.event-card:hover::before{
+  left:150%;
+  transition:1.6s; /* only hover time animation */
 }
 
-@media (max-width: 768px) {
-  .event-card {
-    padding: 26px;
-  }
+/* IMAGE */
 
-  .event-card img {
-    width: 220px;
-    height: 220px;
-  }
-
-  .event-card h2 {
-    font-size: 36px;
-  }
-
-  .event-info {
-    width: 100%;
-  }
+.event-card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:15px;
+  border:2px solid rgba(255,215,0,0.5);
 }
+
+
+
+/* TITLE */
+
+.event-card h2{
+  text-align:center;
+  margin-bottom:15px;
+  font-size:24px;
+  background:linear-gradient(90deg,#FFD700,#fff5b1,#FFD700);
+  -webkit-background-clip:text;
+  color:transparent;
+  font-weight:700;
+}
+
+
+
+/* EVENT INFO */
+
+.event-info p{
+  margin:8px 0;
+  color:#ddd;
+  font-size:15px;
+}
+
+.event-info strong{
+  color:#FFD700;
+}
+
+
+
+/* DESCRIPTION */
+
+.desc{
+  margin-top:10px;
+  line-height:1.6;
+}
+
+
+
+/* DOWNLOAD BUTTON */
+
+.download-btn{
+  margin-top:20px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(45deg,#FFD700,#ffcc00,#FFD700);
+  color:#000;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+  transition:0.3s;
+  box-shadow:0 0 12px rgba(255,215,0,0.6);
+}
+
+.download-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px rgba(255,215,0,0.9);
+}
+
+
+
+/* =========================
+   SKELETON LOADER
+========================= */
+
+.skeleton{
+  animation:pulse 1.5s infinite;
+}
+
+.skeleton .img{
+  width:100%;
+  height:220px;
+  border-radius:10px;
+  background:#333;
+  margin-bottom:15px;
+}
+
+.skeleton .line{
+  height:12px;
+  background:#333;
+  margin:10px 0;
+  border-radius:6px;
+}
+
+.skeleton .title{
+  height:20px;
+  width:70%;
+}
+
+@keyframes pulse{
+  0%{opacity:0.6}
+  50%{opacity:1}
+  100%{opacity:0.6}
+}
+
+
+
+/* RESPONSIVE */
+
+@media(max-width:480px){
+
+  .event-card{
+    width:95%;
+  }
+
+} 
+

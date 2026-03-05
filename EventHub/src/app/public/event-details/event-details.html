@@ -13,8 +13,7 @@
   <div class="event-card" *ngIf="!loading && event">
 
     <img
-      [src]="getImageUrl(event.eventImage)"
-      (error)="$event.target.src='assets/default.jpg'"
+      [src]="'http://localhost:5000' + event.eventImage"
       alt="Event Image"
     />
 

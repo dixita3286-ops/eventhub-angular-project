@@ -194,16 +194,36 @@ router.get('/admin/pending', async (req, res) => {
 });
 
 /* =====================================================
-   STUDENT / PUBLIC EVENTS
+   STUDENT / PUBLIC EVENTS (WITH CATEGORY FILTER)
 ===================================================== */
 
 router.get('/', async (req, res) => {
 
   try {
 
-    const events = await Event.find({
+    const { category, search, sort } = req.query;
+
+    let filter = {
       status: 'approved'
-    }).sort({ date: 1 });
+    };
+
+    /* CATEGORY FILTER */
+    if (category && category !== '') {
+      filter.category = category;
+    }
+
+    /* SEARCH FILTER */
+    if (search && search !== '') {
+      filter.title = { $regex: search, $options: 'i' };
+    }
+
+    let sortOption = { date: 1 };
+
+    if (sort === 'date_desc') {
+      sortOption = { date: -1 };
+    }
+
+    const events = await Event.find(filter).sort(sortOption);
 
     res.json(events);
 
