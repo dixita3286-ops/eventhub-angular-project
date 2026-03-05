@@ -28,9 +28,9 @@ const eventSchema = new mongoose.Schema({
   eventImage: {
     type: String
   },
-    eventPdf: {
-    type: String
-  },
+   eventFile: {
+  type: String
+},
   status: {
     type: String,
     enum: ['pending', 'approved', 'rejected'],

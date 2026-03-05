@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './create-event.html',
-  styleUrl: './create-event.css',
+  styleUrl: './create-event.css'
 })
 export class CreateEvent implements OnInit {
 
@@ -19,33 +19,31 @@ export class CreateEvent implements OnInit {
   registrationFee: number | null = null;
 
   eventImage: File | null = null;
-  eventPdf: File | null = null;
+  eventFile: File | null = null;
+
+  imagePreview: string | null = null;
 
   message = '';
   minDate = '';
 
-  imagePreview: string | null = null;
-
-  /* ================= INIT ================= */
-
   ngOnInit() {
 
     const today = new Date();
-
-    // minimum date = today + 5 days
     today.setDate(today.getDate() + 5);
 
     this.minDate = today.toISOString().split('T')[0];
 
   }
 
-  /* ================= IMAGE CHANGE ================= */
+  /* IMAGE CHANGE */
 
   onFileChange(event: any) {
 
-  if (event.target.files.length > 0) {
+    const file = event.target.files[0];
 
-    this.eventImage = event.target.files[0];
+    if (!file) return;
+
+    this.eventImage = file;
 
     const reader = new FileReader();
 
@@ -53,22 +51,28 @@ export class CreateEvent implements OnInit {
       this.imagePreview = e.target.result;
     };
 
-    reader.readAsDataURL(this.eventImage as File);
+    reader.readAsDataURL(file);
 
   }
 
-}
-  /* ================= PDF CHANGE ================= */
+  /* PDF CHANGE */
 
   onPdfChange(event: any) {
 
-    if (event.target.files.length > 0) {
-      this.eventPdf = event.target.files[0];
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    if (file.type !== 'application/pdf') {
+      this.message = 'Only PDF files allowed.';
+      return;
     }
+
+    this.eventFile = file;
 
   }
 
-  /* ================= CREATE EVENT ================= */
+  /* CREATE EVENT */
 
   createEvent() {
 
@@ -81,10 +85,13 @@ export class CreateEvent implements OnInit {
       return;
     }
 
-    /* ===== VALIDATION ===== */
+    if (!this.eventImage) {
+      this.message = 'Please upload event image.';
+      return;
+    }
 
-    if (!this.title || !this.category || !this.date || !this.venue || this.registrationFee === null) {
-      this.message = 'Please fill all required fields.';
+    if (!this.eventFile) {
+      this.message = 'Please upload event PDF.';
       return;
     }
 
@@ -104,16 +111,11 @@ export class CreateEvent implements OnInit {
     formData.append('category', this.category);
     formData.append('date', this.date);
     formData.append('venue', this.venue);
-    formData.append('registrationFee', this.registrationFee.toString());
+    formData.append('registrationFee', this.registrationFee!.toString());
     formData.append('createdBy', user._id);
 
-    if (this.eventImage) {
-      formData.append('eventImage', this.eventImage);
-    }
-
-    if (this.eventPdf) {
-      formData.append('eventPdf', this.eventPdf);
-    }
+    formData.append('eventImage', this.eventImage);
+    formData.append('eventFile', this.eventFile);
 
     fetch('http://localhost:5000/api/events', {
       method: 'POST',
@@ -122,9 +124,7 @@ export class CreateEvent implements OnInit {
     .then(res => res.json())
     .then(data => {
 
-      this.message = data.message || 'Event created successfully!';
-
-      /* RESET FORM */
+      this.message = 'Event created successfully. Waiting for admin approval.';
 
       this.title = '';
       this.description = '';
@@ -134,7 +134,7 @@ export class CreateEvent implements OnInit {
       this.registrationFee = null;
 
       this.eventImage = null;
-      this.eventPdf = null;
+      this.eventFile = null;
       this.imagePreview = null;
 
     })

@@ -12,10 +12,9 @@
 
       <div class="event-img-wrapper">
         <img
-  [src]="getImageUrl(e.eventImage)"
-  (error)="$event.target.src='assets/default.jpg'"
-  alt="Event Image"
-/>
+          [src]="'http://localhost:5000' + e.eventImage"
+          alt="Event Image"
+        />
       </div>
 
       <div class="event-info">

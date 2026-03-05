@@ -15,10 +15,9 @@ const storage = multer.diskStorage({
       cb(null, 'uploads/images');
     }
 
-    else if (file.fieldname === 'eventPdf') {
-      cb(null, 'uploads/files');
-    }
-
+    else if (file.fieldname === 'eventFile') {
+  cb(null, 'uploads/files');
+}
   },
 
   filename: function (req, file, cb) {
@@ -36,8 +35,8 @@ const upload = multer({ storage: storage });
 router.post(
   '/',
   upload.fields([
-    { name: 'eventImage', maxCount: 1 },
-    { name: 'eventPdf', maxCount: 1 }
+  { name: 'eventImage', maxCount: 1 },
+  { name: 'eventFile', maxCount: 1 }
   ]),
   async (req, res) => {
 
@@ -53,16 +52,13 @@ router.post(
         registrationFee: req.body.registrationFee,
         createdBy: req.body.createdBy,
 
-        eventImage:
-          req.files && req.files.eventImage
-            ? req.files.eventImage[0].filename
-            : null,
+        eventImage: req.files['eventImage']
+  ? '/uploads/images/' + req.files['eventImage'][0].filename
+  : '',
 
-        eventPdf:
-          req.files && req.files.eventPdf
-            ? req.files.eventPdf[0].filename
-            : null
-
+eventFile: req.files['eventFile']
+  ? '/uploads/files/' + req.files['eventFile'][0].filename
+  : '',
       });
 
       await event.save();
