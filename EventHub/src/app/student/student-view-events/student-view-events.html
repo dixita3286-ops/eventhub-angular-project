@@ -8,13 +8,14 @@
 
   <!-- ================= FILTERS ================= -->
   <div class="filters">
+
     <input
       type="text"
       placeholder="Search events..."
       (keyup)="onSearchChange($any($event.target).value)"
     >
 
-    <select [(ngModel)]="category" (change)="loadEvents()" backgroundColor="black">
+    <select [(ngModel)]="category" (change)="loadEvents()">
       <option value="">All Categories</option>
       <option value="Workshop">Workshop</option>
       <option value="Seminar">Seminar</option>
@@ -28,6 +29,7 @@
       <option value="desc">Newest</option>
       <option value="asc">Oldest</option>
     </select>
+
   </div>
 
   <!-- ================= EVENTS GRID ================= -->
@@ -38,6 +40,11 @@
     </p>
 
     <div class="event-card" *ngFor="let e of events">
+
+      <!-- 🔥 FREE BADGE IMAGE CORNER -->
+      <div class="free-badge" *ngIf="e.registrationFee === 0">
+        FREE
+      </div>
 
       <div class="event-img-wrapper">
         <img
@@ -54,11 +61,12 @@
       </div>
 
       <div class="event-actions">
+
         <a [routerLink]="['/student/event-details', e._id]">
           View Details |
         </a>
 
-        <!-- 🔥 REGISTER / REGISTERED FIX -->
+        <!-- REGISTER / REGISTERED -->
         <a
           href="javascript:void(0)"
           (click)="!isRegistered(e._id) && registerEvent(e._id)"
@@ -67,6 +75,7 @@
         >
           {{ isRegistered(e._id) ? 'Registered' : 'Register' }}
         </a>
+
       </div>
 
     </div>
