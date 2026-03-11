@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,89 +18,135 @@ export class StudentPayment implements OnInit {
   method!: 'upi' | 'card';
   userId!: string;
 
-  // form
-  upiId = '';
+  amount:number = 0;
+
+  upiId:string = "dixita3286@okicici";
+  upiLink:string = '';
+  qrCode:string = '';
+
   cardNumber = '';
   expiry = '';
   cvv = '';
 
+  loading:boolean = true;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cd: ChangeDetectorRef   // 👈 important
   ) {}
 
   ngOnInit(): void {
 
-    // ✅ EVENT ID FROM ROUTE
-    this.route.paramMap.subscribe(p => {
-      this.eventId = p.get('id')!;
-    });
-
-    // ✅ METHOD FROM QUERY
     this.route.queryParams.subscribe(q => {
       this.method = q['method'];
     });
 
-    // ✅ USER FROM LOCAL STORAGE
-    const userStr = localStorage.getItem('user');
-    if (!userStr) {
-      Swal.fire('Error', 'User not logged in', 'error');
+    this.route.paramMap.subscribe(p => {
+
+      this.eventId = p.get('id')!;
+
+      this.http.get<any>(`http://localhost:5000/api/events/${this.eventId}`)
+      .subscribe(event => {
+
+        this.amount = event.registrationFee;
+
+        this.generateQR();
+
+        this.loading = false;
+
+        this.cd.detectChanges();   // 👈 force UI refresh
+
+      });
+
+    });
+
+    const user = localStorage.getItem('user');
+
+    if(!user){
+      Swal.fire('Error','Login required','error');
       this.router.navigate(['/login']);
       return;
     }
 
-    this.userId = JSON.parse(userStr)._id;
+    this.userId = JSON.parse(user)._id;
+
   }
 
-  payNow() {
+  generateQR(){
 
-    // 🔒 BASIC VALIDATION
-    if (this.method === 'upi' && !this.upiId) {
-      Swal.fire('Invalid UPI', 'Enter UPI ID', 'error');
-      return;
-    }
+    this.upiLink =
+    `upi://pay?pa=${this.upiId}&pn=Dixita&am=${this.amount}&cu=INR`;
 
-    if (this.method === 'card' && (!this.cardNumber || !this.expiry || !this.cvv)) {
-      Swal.fire('Invalid Card', 'Fill all card details', 'error');
-      return;
-    }
+    this.qrCode =
+    'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' +
+    encodeURIComponent(this.upiLink);
 
-    // 🔄 LOADER
+  }
+
+  payNow(){
+
     Swal.fire({
-      title: 'Processing payment...',
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading()
+      title:'Processing Payment...',
+      allowOutsideClick:false,
+      didOpen:()=>Swal.showLoading()
     });
 
-    // ⏳ FAKE PAYMENT DELAY
-    setTimeout(() => {
+    setTimeout(()=>{
 
-      // 🔥 REAL REGISTRATION API CALL
       this.http.post(
         'http://localhost:5000/api/registrations',
         {
-          eventId: this.eventId,
-          userId: this.userId
+          eventId:this.eventId,
+          userId:this.userId,
+          amount:this.amount,
+          method:this.method
         }
       ).subscribe({
-        next: () => {
-          Swal.fire('Success', 'Registration successful 🎉', 'success')
-            .then(() => this.router.navigate(['/student/registrations']));
+
+        next:()=>{
+
+          Swal.fire(
+            'Payment Successful',
+            'Registration completed',
+            'success'
+          ).then(()=>{
+            this.router.navigate(['/student/registrations']);
+          });
+
         },
-        error: (err) => {
-          if (err.status === 409) {
-            Swal.fire('Info', 'You are already registered', 'info');
-          } else {
-            Swal.fire('Error', 'Registration failed', 'error');
+
+        error:(err)=>{
+
+          if(err.status === 409){
+
+            Swal.fire(
+              'Already Registered',
+              'You already joined this event',
+              'info'
+            );
+
+          }else{
+
+            Swal.fire(
+              'Error',
+              'Registration failed',
+              'error'
+            );
+
           }
+
         }
+
       });
 
-    }, 1500);
+    },1500);
+
   }
 
-  cancelPayment() {
+  cancelPayment(){
     this.router.navigate(['/student/view-events']);
   }
+
 }

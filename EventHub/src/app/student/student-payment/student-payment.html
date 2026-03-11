@@ -1,42 +1,72 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"> 
-<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <div class="payment-container">
 
   <h2>Secure Payment</h2>
   <p class="sub">Complete your registration</p>
 
-  <!-- ================= UPI ================= -->
-  <div class="payment-box" *ngIf="method === 'upi'">
-    <h3>UPI Payment</h3>
+  <!-- ================= LOADING ================= -->
 
-    <input
-      type="text"
-      placeholder="example@upi"
-      [(ngModel)]="upiId"
-    >
-
-    <small class="hint">Accepted: Google Pay, PhonePe, Paytm</small>
-
-    <button class="pay-btn" (click)="payNow()">Pay ₹499</button>
+  <div *ngIf="loading" class="loading-box">
+    Loading payment details...
   </div>
 
-  <!-- ================= CARD ================= -->
-  <div class="payment-box" *ngIf="method === 'card'">
+
+  <!-- ================= UPI PAYMENT ================= -->
+
+  <div class="payment-box" *ngIf="method === 'upi' && !loading">
+
+    <h3>UPI Payment</h3>
+
+    <div class="qr-box">
+
+      <!-- QR CODE -->
+      <img [src]="qrCode" alt="UPI QR">
+
+      <p class="scan-text">
+        Scan using Google Pay / PhonePe / Paytm
+      </p>
+
+      <div class="amount-box">
+        <span>Amount</span>
+        <h4>₹{{amount}}</h4>
+      </div>
+
+      <p class="upi-id">
+        UPI ID: <strong>dixita3286@okicici</strong>
+      </p>
+
+      <p class="instruction">
+        After completing payment click the button below
+      </p>
+
+    </div>
+
+    <button class="pay-btn" (click)="payNow()">
+      I Have Paid ₹{{amount}}
+    </button>
+
+  </div>
+
+
+  <!-- ================= CARD PAYMENT ================= -->
+
+  <div class="payment-box" *ngIf="method === 'card' && !loading">
+
     <h3>Card Payment</h3>
 
     <input
       type="text"
       maxlength="16"
-      placeholder="Card Number (16 digits)"
+      placeholder="Card Number"
       [(ngModel)]="cardNumber"
     >
 
     <div class="row">
+
       <input
         type="text"
         placeholder="MM/YY"
-        maxlength="5"
         [(ngModel)]="expiry"
       >
 
@@ -46,11 +76,20 @@
         placeholder="CVV"
         [(ngModel)]="cvv"
       >
+
     </div>
 
-    <button class="pay-btn" (click)="payNow()">Pay ₹499</button>
+    <button class="pay-btn" (click)="payNow()">
+      Pay ₹{{amount}}
+    </button>
+
   </div>
 
-  <button class="cancel-btn" (click)="cancelPayment()">Cancel</button>
+
+  <!-- CANCEL BUTTON -->
+
+  <button class="cancel-btn" (click)="cancelPayment()" *ngIf="!loading">
+    Cancel
+  </button>
 
 </div>
