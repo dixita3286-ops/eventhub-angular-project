@@ -5,14 +5,12 @@
   <h2>Secure Payment</h2>
   <p class="sub">Complete your registration</p>
 
-  <!-- ================= LOADING ================= -->
-
+  <!-- LOADING -->
   <div *ngIf="loading" class="loading-box">
     Loading payment details...
   </div>
 
-
-  <!-- ================= UPI PAYMENT ================= -->
+  <!-- ================= UPI ================= -->
 
   <div class="payment-box" *ngIf="method === 'upi' && !loading">
 
@@ -20,7 +18,6 @@
 
     <div class="qr-box">
 
-      <!-- QR CODE -->
       <img [src]="qrCode" alt="UPI QR">
 
       <p class="scan-text">
@@ -33,61 +30,47 @@
       </div>
 
       <p class="upi-id">
-        UPI ID: <strong>dixita3286@okicici</strong>
+        UPI ID: <strong>{{upiId}}</strong>
       </p>
 
       <p class="instruction">
-        After completing payment click the button below
+        Upload payment screenshot after paying
       </p>
+
+      <!-- 🔥 Screenshot Upload -->
+      <input type="file" (change)="uploadProof($event)" accept="image/*">
 
     </div>
 
-    <button class="pay-btn" (click)="payNow()">
+    <button class="pay-btn" (click)="confirmPayment()" [disabled]="isSubmitting">
       I Have Paid ₹{{amount}}
     </button>
 
   </div>
 
-
-  <!-- ================= CARD PAYMENT ================= -->
+  <!-- ================= CARD ================= -->
 
   <div class="payment-box" *ngIf="method === 'card' && !loading">
 
     <h3>Card Payment</h3>
 
-    <input
-      type="text"
-      maxlength="16"
-      placeholder="Card Number"
-      [(ngModel)]="cardNumber"
-    >
+    <input type="text" maxlength="16" placeholder="Card Number" [(ngModel)]="cardNumber">
 
     <div class="row">
-
-      <input
-        type="text"
-        placeholder="MM/YY"
-        [(ngModel)]="expiry"
-      >
-
-      <input
-        type="password"
-        maxlength="3"
-        placeholder="CVV"
-        [(ngModel)]="cvv"
-      >
-
+      <input type="text" placeholder="MM/YY" [(ngModel)]="expiry">
+      <input type="password" maxlength="3" placeholder="CVV" [(ngModel)]="cvv">
     </div>
 
-    <button class="pay-btn" (click)="payNow()">
+    <!-- Screenshot upload for card also -->
+    <input type="file" (change)="uploadProof($event)" accept="image/*">
+
+    <button class="pay-btn" (click)="confirmPayment()" [disabled]="isSubmitting">
       Pay ₹{{amount}}
     </button>
 
   </div>
 
-
-  <!-- CANCEL BUTTON -->
-
+  <!-- CANCEL -->
   <button class="cancel-btn" (click)="cancelPayment()" *ngIf="!loading">
     Cancel
   </button>

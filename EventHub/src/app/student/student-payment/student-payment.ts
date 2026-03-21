@@ -29,12 +29,15 @@ export class StudentPayment implements OnInit {
   cvv = '';
 
   loading:boolean = true;
+  isSubmitting:boolean = false;
+
+  paymentProof:any = null; // 🔥 screenshot
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private http: HttpClient,
-    private cd: ChangeDetectorRef   // 👈 important
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -55,8 +58,7 @@ export class StudentPayment implements OnInit {
         this.generateQR();
 
         this.loading = false;
-
-        this.cd.detectChanges();   // 👈 force UI refresh
+        this.cd.detectChanges();
 
       });
 
@@ -85,63 +87,85 @@ export class StudentPayment implements OnInit {
 
   }
 
-  payNow(){
+  // 🔥 Upload Screenshot
+  uploadProof(event:any){
+    this.paymentProof = event.target.files[0];
+  }
+
+  // 🔥 Confirmation popup
+  confirmPayment(){
+
+    if(!this.paymentProof){
+      Swal.fire('Upload Required','Please upload payment screenshot','warning');
+      return;
+    }
 
     Swal.fire({
-      title:'Processing Payment...',
+      title:'Confirm Payment',
+      text:'Are you sure you completed the payment?',
+      icon:'question',
+      showCancelButton:true,
+      confirmButtonText:'Yes, Paid'
+    }).then((result)=>{
+
+      if(result.isConfirmed){
+        this.payNow();
+      }
+
+    });
+
+  }
+
+  payNow(){
+
+    this.isSubmitting = true;
+
+    const formData = new FormData();
+
+    formData.append('eventId', this.eventId);
+    formData.append('userId', this.userId);
+    formData.append('amount', this.amount.toString());
+    formData.append('method', this.method);
+
+    // 🔥 attach screenshot
+    formData.append('paymentProof', this.paymentProof);
+
+    Swal.fire({
+      title:'Submitting...',
       allowOutsideClick:false,
       didOpen:()=>Swal.showLoading()
     });
 
-    setTimeout(()=>{
+    this.http.post(
+      'http://localhost:5000/api/registrations',
+      formData
+    ).subscribe({
 
-      this.http.post(
-        'http://localhost:5000/api/registrations',
-        {
-          eventId:this.eventId,
-          userId:this.userId,
-          amount:this.amount,
-          method:this.method
-        }
-      ).subscribe({
+      next:()=>{
 
-        next:()=>{
+        Swal.fire(
+          'Submitted',
+          'Waiting for admin verification',
+          'success'
+        ).then(()=>{
+          this.router.navigate(['/student/registrations']);
+        });
 
-          Swal.fire(
-            'Payment Successful',
-            'Registration completed',
-            'success'
-          ).then(()=>{
-            this.router.navigate(['/student/registrations']);
-          });
+      },
 
-        },
+      error:(err)=>{
 
-        error:(err)=>{
+        this.isSubmitting = false;
 
-          if(err.status === 409){
-
-            Swal.fire(
-              'Already Registered',
-              'You already joined this event',
-              'info'
-            );
-
-          }else{
-
-            Swal.fire(
-              'Error',
-              'Registration failed',
-              'error'
-            );
-
-          }
-
+        if(err.status === 409){
+          Swal.fire('Already Registered','You already joined','info');
+        }else{
+          Swal.fire('Error','Submission failed','error');
         }
 
-      });
+      }
 
-    },1500);
+    });
 
   }
 

@@ -24,6 +24,11 @@ export class AdminRegisteredStudent implements OnInit {
     const eventId = this.route.snapshot.paramMap.get('eventId');
     if (!eventId) return;
 
+    this.loadStudents(eventId);
+  }
+
+  /* ================= LOAD DATA ================= */
+  loadStudents(eventId: string) {
     this.http
       .get<any[]>(`http://localhost:5000/api/registrations/event/${eventId}`)
       .subscribe({
@@ -38,14 +43,56 @@ export class AdminRegisteredStudent implements OnInit {
       });
   }
 
+  /* ================= APPROVE ================= */
+  approve(id: string) {
+
+    this.http.put(`http://localhost:5000/api/registrations/approve/${id}`, {})
+    .subscribe(() => {
+
+      this.students = this.students.map(s => {
+        if (s._id === id) s.status = 'approved';
+        return s;
+      });
+
+      alert('Approved');
+
+    });
+
+  }
+
+  /* ================= REJECT ================= */
+  reject(id: string) {
+
+    this.http.put(`http://localhost:5000/api/registrations/reject/${id}`, {})
+    .subscribe(() => {
+
+      this.students = this.students.map(s => {
+        if (s._id === id) s.status = 'rejected';
+        return s;
+      });
+
+      alert('Rejected');
+
+    });
+
+  }
+
+  /* ================= VIEW IMAGE ================= */
+  viewImage(image: string) {
+
+    const url = 'http://localhost:5000/uploads/images/' + image;
+    window.open(url, '_blank');
+
+  }
+
+  /* ================= CANCEL ================= */
   cancelRegistration(registrationId: string) {
 
-      console.log('CANCEL ID:', registrationId);
+    if (!registrationId) {
+      alert('Registration ID missing');
+      return;
+    }
 
-      if (!registrationId) {
-    alert('Registration ID missing');
-    return;
-  }
     if (!confirm('Are you sure you want to cancel this registration?')) {
       return;
     }
@@ -66,4 +113,5 @@ export class AdminRegisteredStudent implements OnInit {
         }
       });
   }
+
 }

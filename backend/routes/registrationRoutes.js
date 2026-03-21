@@ -3,19 +3,43 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Registration = require('../models/Registration');
 
+const multer = require('multer');
+const path = require('path');
+
+/* ================= MULTER SETUP ================= */
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/images'); // 👈 taro folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
 /* =====================================================
-   REGISTER STUDENT FOR EVENT
-   POST /api/registrations
+   REGISTER STUDENT FOR EVENT (WITH PAYMENT PROOF)
 ===================================================== */
-router.post('/', async (req, res) => {
+
+router.post('/', upload.single('paymentProof'), async (req, res) => {
   try {
-    const { eventId, userId } = req.body;
+
+    const { eventId, userId, amount, method } = req.body;
+
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
     if (!eventId || !userId) {
       return res.status(400).json({ message: 'Missing data' });
     }
 
-    // prevent duplicate registration
+    if (!req.file) {
+      return res.status(400).json({ message: 'Screenshot required' });
+    }
+
+    // prevent duplicate
     const already = await Registration.findOne({ eventId, userId });
     if (already) {
       return res.status(409).json({ message: 'Already registered' });
@@ -24,12 +48,15 @@ router.post('/', async (req, res) => {
     const registration = new Registration({
       eventId,
       userId,
-      status: 'registered'
+      amount,
+      method,
+      paymentProof: req.file.filename,
+      status: 'pending'   // 🔥 change
     });
 
     await registration.save();
 
-    res.status(201).json(registration);
+    res.status(201).json({ message: 'Submitted for verification' });
 
   } catch (err) {
     console.error('Registration error:', err);
@@ -37,16 +64,15 @@ router.post('/', async (req, res) => {
   }
 });
 
-/* =====================================================
-   GET REGISTERED EVENTS FOR STUDENT
-   GET /api/registrations/student/:userId
-===================================================== */
+
+/* ================= GET STUDENT REGISTRATIONS ================= */
+
 router.get('/student/:userId', async (req, res) => {
   try {
     const registrations = await Registration.find({
       userId: req.params.userId
     })
-      .populate('eventId')   // 🔥 eventImage aavse
+      .populate('eventId')
       .sort({ registeredAt: -1 });
 
     res.json(registrations);
@@ -58,12 +84,12 @@ router.get('/student/:userId', async (req, res) => {
 });
 
 
-/* ================= GET REGISTERED STUDENTS BY EVENT ================= */
+/* ================= GET EVENT STUDENTS ================= */
+
 router.get('/event/:eventId', async (req, res) => {
   try {
-    const { eventId } = req.params;
 
-    console.log('EVENT ID RECEIVED:', eventId);
+    const { eventId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
       return res.status(400).json([]);
@@ -75,18 +101,16 @@ router.get('/event/:eventId', async (req, res) => {
       .populate('userId', 'name email mobile')
       .sort({ registeredAt: -1 });
 
-    console.log('REGISTRATIONS FOUND:', registrations.length);
-
-   const formatted = registrations.map(r => ({
+    const formatted = registrations.map(r => ({
   _id: r._id,
   name: r.userId?.name,
   email: r.userId?.email,
-  status: r.status || 'registered',
+  status: r.status || 'pending',
+  paymentProof: r.paymentProof,   // 🔥 ADD THIS
   createdAt: r.registeredAt
 }));
 
-res.json(formatted);
-
+    res.json(formatted);
 
   } catch (err) {
     console.error(err);
@@ -94,11 +118,12 @@ res.json(formatted);
   }
 });
 
-/* ================= CANCEL / DELETE REGISTRATION =================
-   DELETE /api/registrations/:id
-===================================================== */
+
+/* ================= DELETE ================= */
+
 router.delete('/:id', async (req, res) => {
   try {
+
     const { id } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -108,9 +133,43 @@ router.delete('/:id', async (req, res) => {
     await Registration.findByIdAndDelete(id);
 
     res.json({ message: 'Registration cancelled successfully' });
+
   } catch (err) {
-    console.error('Cancel registration error:', err);
+    console.error(err);
     res.status(500).json({ message: 'Failed to cancel registration' });
+  }
+});
+
+/* ================= APPROVE ================= */
+router.put('/approve/:id', async (req, res) => {
+  try {
+
+    await Registration.findByIdAndUpdate(req.params.id, {
+      status: 'approved'
+    });
+
+    res.json({ message: 'Approved' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error' });
+  }
+});
+
+
+/* ================= REJECT ================= */
+router.put('/reject/:id', async (req, res) => {
+  try {
+
+    await Registration.findByIdAndUpdate(req.params.id, {
+      status: 'rejected'
+    });
+
+    res.json({ message: 'Rejected' });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error' });
   }
 });
 
