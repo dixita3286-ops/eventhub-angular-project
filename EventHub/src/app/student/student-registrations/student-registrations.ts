@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import Swal from 'sweetalert2';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-student-registrations',
@@ -11,76 +11,70 @@ import Swal from 'sweetalert2';
 })
 export class StudentRegistrations implements OnInit {
 
-  students: any[] = [];
-  filteredStudents: any[] = [];
-  loading = true;
+  approved: any[] = [];
+  pending: any[] = [];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  loading: boolean = true;
+
+  constructor(
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadRegistrations();
   }
 
-  /* ================= LOAD REGISTRATIONS ================= */
+  /* ================= LOAD ================= */
   loadRegistrations() {
 
-    const userStr = localStorage.getItem('user');
-    if (!userStr) return;
+    const user = localStorage.getItem('user');
 
-    const user = JSON.parse(userStr);
+    if (!user) return;
 
-    fetch(`http://localhost:5000/api/registrations/student/${user._id}`)
-      .then(res => res.json())
-      .then(data => {
-        this.students = data;
-        this.filteredStudents = data;
-        this.loading = false;
-        this.cdr.detectChanges();
-      })
-      .catch(err => {
-        console.error(err);
-        this.loading = false;
+    const userId = JSON.parse(user)._id;
+
+    this.http
+      .get<any[]>(`http://localhost:5000/api/registrations/student/${userId}`)
+      .subscribe({
+        next: (data) => {
+
+          console.log('My Registrations:', data);
+
+          // 🔥 FILTER
+          this.approved = data.filter(r => r.status === 'approved');
+          this.pending = data.filter(r => r.status === 'pending');
+
+          this.loading = false;
+          this.cdr.detectChanges();
+
+        },
+        error: (err) => {
+          console.error(err);
+          this.loading = false;
+        }
       });
+
   }
 
-  /* ================= CANCEL REGISTRATION ================= */
-  cancelRegistration(registrationId: string) {
+  /* ================= CANCEL ================= */
+  cancelRegistration(id: string) {
 
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to cancel this registration?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Cancel',
-      cancelButtonText: 'No'
-    }).then(result => {
+    if (!confirm('Are you sure you want to cancel registration?')) return;
 
-      if (result.isConfirmed) {
+    this.http
+      .delete(`http://localhost:5000/api/registrations/${id}`)
+      .subscribe(() => {
 
-        fetch(`http://localhost:5000/api/registrations/${registrationId}`, {
-          method: 'DELETE'
-        })
-          .then(res => res.json())
-          .then(() => {
+        this.approved = this.approved.filter(r => r._id !== id);
+        this.pending = this.pending.filter(r => r._id !== id);
 
-            // Remove instantly from UI
-            this.filteredStudents =
-              this.filteredStudents.filter(
-                r => r._id !== registrationId
-              );
+        this.cdr.detectChanges();
 
-            Swal.fire(
-              'Cancelled!',
-              'Your registration has been cancelled.',
-              'success'
-            );
+        alert('Registration cancelled');
 
-            this.cdr.detectChanges();
-          })
-          .catch(err => console.error(err));
-      }
+      });
 
-    });
   }
 
 }

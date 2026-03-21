@@ -8,16 +8,17 @@
   </div>
 
   <!-- NO DATA -->
-  <div class="info" *ngIf="!loading && filteredStudents.length === 0">
+  <div class="info" *ngIf="!loading && approved.length === 0 && pending.length === 0">
     You have not registered for any events yet.
   </div>
 
-  <!-- EVENTS GRID -->
-  <div class="event-grid" *ngIf="!loading && filteredStudents.length > 0">
+  <!-- ================= PENDING ================= -->
+  <h2 *ngIf="pending.length > 0">⏳ Pending Approval</h2>
 
-    <div class="event-card" *ngFor="let reg of filteredStudents">
+  <div class="event-grid" *ngIf="pending.length > 0">
 
-      <!-- IMAGE -->
+    <div class="event-card" *ngFor="let reg of pending">
+
       <div class="img-wrap">
         <img
           *ngIf="reg.eventId?.eventImage"
@@ -26,7 +27,43 @@
         />
       </div>
 
-      <!-- BODY -->
+      <div class="card-body">
+
+        <h3>{{ reg.eventId?.title }}</h3>
+
+        <p class="meta">
+          📅 {{ reg.eventId?.date | date:'mediumDate' }}
+        </p>
+
+        <p class="meta">
+          📍 {{ reg.eventId?.venue }}
+        </p>
+
+        <p style="color:orange;">
+          Waiting for admin verification...
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ================= APPROVED ================= -->
+  <h2 *ngIf="approved.length > 0">✅ Approved Events</h2>
+
+  <div class="event-grid" *ngIf="approved.length > 0">
+
+    <div class="event-card" *ngFor="let reg of approved">
+
+      <div class="img-wrap">
+        <img
+          *ngIf="reg.eventId?.eventImage"
+          [src]="'http://localhost:5000' + reg.eventId.eventImage"
+          alt="Event Image"
+        />
+      </div>
+
       <div class="card-body">
 
         <h3>{{ reg.eventId?.title }}</h3>
@@ -43,7 +80,7 @@
           {{ reg.eventId?.description }}
         </p>
 
-        <!-- 🔥 CANCEL BUTTON -->
+        <!-- CANCEL -->
         <div class="card-actions">
           <button (click)="cancelRegistration(reg._id)">
             Cancel Registration

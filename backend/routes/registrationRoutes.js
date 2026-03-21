@@ -106,7 +106,13 @@ router.get('/event/:eventId', async (req, res) => {
   name: r.userId?.name,
   email: r.userId?.email,
   status: r.status || 'pending',
-  paymentProof: r.paymentProof,   // 🔥 ADD THIS
+
+  // 🔥 IMPORTANT (THIS LINE MUST BE THERE)
+  paymentProof: r.paymentProof,
+
+  // 🔥 EVENT
+  event: r.eventId,
+
   createdAt: r.registeredAt
 }));
 

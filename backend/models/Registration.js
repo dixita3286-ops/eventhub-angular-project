@@ -11,11 +11,19 @@ const registrationSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+
+  amount: Number,
+  method: String,
+
+  // 🔥 IMPORTANT
+  paymentProof: String,
+
   status: {
     type: String,
-    enum: ['registered', 'pending', 'cancelled'],
-    default: 'registered'
+    enum: ['registered', 'pending', 'approved', 'rejected', 'cancelled'],
+    default: 'pending'
   },
+
   registeredAt: {
     type: Date,
     default: Date.now

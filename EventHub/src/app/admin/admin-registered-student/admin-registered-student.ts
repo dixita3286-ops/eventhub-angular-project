@@ -27,90 +27,60 @@ export class AdminRegisteredStudent implements OnInit {
     this.loadStudents(eventId);
   }
 
-  /* ================= LOAD DATA ================= */
+  /* LOAD DATA */
   loadStudents(eventId: string) {
     this.http
       .get<any[]>(`http://localhost:5000/api/registrations/event/${eventId}`)
       .subscribe({
         next: (data) => {
-          console.log('Registrations:', data);
           this.students = data;
           this.cdr.detectChanges();
         },
         error: (err) => {
-          console.error('Error loading registrations', err);
+          console.error(err);
         }
       });
   }
 
-  /* ================= APPROVE ================= */
+  /* APPROVE */
   approve(id: string) {
-
     this.http.put(`http://localhost:5000/api/registrations/approve/${id}`, {})
     .subscribe(() => {
 
-      this.students = this.students.map(s => {
-        if (s._id === id) s.status = 'approved';
-        return s;
-      });
+      this.students = this.students.map(s =>
+        s._id === id ? { ...s, status: 'approved' } : s
+      );
 
-      alert('Approved');
-
+      this.cdr.detectChanges();
     });
-
   }
 
-  /* ================= REJECT ================= */
+  /* REJECT */
   reject(id: string) {
-
     this.http.put(`http://localhost:5000/api/registrations/reject/${id}`, {})
     .subscribe(() => {
 
-      this.students = this.students.map(s => {
-        if (s._id === id) s.status = 'rejected';
-        return s;
-      });
+      this.students = this.students.map(s =>
+        s._id === id ? { ...s, status: 'rejected' } : s
+      );
 
-      alert('Rejected');
-
+      this.cdr.detectChanges();
     });
-
   }
 
-  /* ================= VIEW IMAGE ================= */
-  viewImage(image: string) {
+  /* CANCEL */
+  cancelRegistration(id: string) {
 
-    const url = 'http://localhost:5000/uploads/images/' + image;
-    window.open(url, '_blank');
-
-  }
-
-  /* ================= CANCEL ================= */
-  cancelRegistration(registrationId: string) {
-
-    if (!registrationId) {
-      alert('Registration ID missing');
-      return;
-    }
-
-    if (!confirm('Are you sure you want to cancel this registration?')) {
-      return;
-    }
+    if (!confirm('Cancel this registration?')) return;
 
     this.http
-      .delete(`http://localhost:5000/api/registrations/${registrationId}`)
-      .subscribe({
-        next: () => {
-          this.students = this.students.filter(
-            s => s._id !== registrationId
-          );
-          this.cdr.detectChanges();
-          alert('Registration cancelled successfully');
-        },
-        error: (err) => {
-          console.error('Cancel failed', err);
-          alert('Failed to cancel registration');
-        }
+      .delete(`http://localhost:5000/api/registrations/${id}`)
+      .subscribe(() => {
+
+        this.students = this.students.filter(s => s._id !== id);
+        this.cdr.detectChanges();
+
+        alert('Registration cancelled');
       });
   }
 

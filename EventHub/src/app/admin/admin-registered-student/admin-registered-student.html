@@ -12,23 +12,86 @@
 
     <div class="student-card" *ngFor="let s of students">
 
+      <!-- AVATAR -->
       <div class="avatar">
         {{ s.name?.charAt(0) | uppercase }}
       </div>
 
       <div class="info">
+
+        <!-- USER DETAILS -->
         <h3>{{ s.name }}</h3>
         <p>{{ s.email }}</p>
+
         <span>
           Registered on {{ s.createdAt | date:'medium' }}
         </span>
 
-        <!-- Cancel Button -->
+        <!-- STATUS -->
+        <p style="margin-top:8px;">
+          Status:
+          <span 
+            [style.color]="
+              s.status === 'approved' ? 'green' :
+              s.status === 'rejected' ? 'red' : 'orange'
+            ">
+            {{ s.status }}
+          </span>
+        </p>
+
+        <!-- EVENT DETAILS -->
+        <div *ngIf="s.event" style="margin-top:10px;">
+          <img 
+            [src]="'http://localhost:5000' + s.event.eventImage"
+            style="width:100px; border-radius:6px;"
+          >
+          <p><b>{{ s.event.title }}</b></p>
+          <p>📅 {{ s.event.date | date }}</p>
+          <p>📍 {{ s.event.venue }}</p>
+          <p>💰 ₹{{ s.event.registrationFee }}</p>
+        </div>
+
+        <!-- PAYMENT SCREENSHOT -->
+        <div style="margin-top:10px;">
+          <p><b>Payment Proof:</b></p>
+
+          <img 
+            *ngIf="s.paymentProof"
+            [attr.src]="'http://localhost:5000/uploads/images/' + s.paymentProof"
+            style="width:150px; border-radius:8px; border:1px solid #555;"
+          >
+
+          <p *ngIf="!s.paymentProof" style="color:red;">
+            Screenshot not available ❌
+          </p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div style="margin-top:10px; display:flex; gap:10px;">
+
+          <button
+            (click)="approve(s._id)"
+            [disabled]="s.status === 'approved'"
+            style="background:green;color:white;padding:6px 10px;border:none;border-radius:5px;">
+            Approve
+          </button>
+
+          <button
+            (click)="reject(s._id)"
+            [disabled]="s.status === 'rejected'"
+            style="background:red;color:white;padding:6px 10px;border:none;border-radius:5px;">
+            Reject
+          </button>
+
+        </div>
+
+        <!-- CANCEL -->
         <button
           class="cancel-btn"
           (click)="cancelRegistration(s._id)">
           Cancel Registration
         </button>
+
       </div>
 
     </div>
