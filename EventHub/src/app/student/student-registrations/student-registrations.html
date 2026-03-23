@@ -13,36 +13,28 @@
   </div>
 
   <!-- ================= PENDING ================= -->
-  <h2 *ngIf="pending.length > 0">⏳ Pending Approval</h2>
+  <h2 *ngIf="pending.length > 0">⏳ Pending</h2>
 
   <div class="event-grid" *ngIf="pending.length > 0">
 
     <div class="event-card" *ngFor="let reg of pending">
 
+      <!-- BADGE -->
+      <div class="badge pending">⏳</div>
+
+      <!-- IMAGE -->
       <div class="img-wrap">
         <img
           *ngIf="reg.eventId?.eventImage"
           [src]="'http://localhost:5000' + reg.eventId.eventImage"
-          alt="Event Image"
         />
       </div>
 
+      <!-- BODY -->
       <div class="card-body">
-
         <h3>{{ reg.eventId?.title }}</h3>
-
-        <p class="meta">
-          📅 {{ reg.eventId?.date | date:'mediumDate' }}
-        </p>
-
-        <p class="meta">
-          📍 {{ reg.eventId?.venue }}
-        </p>
-
-        <p style="color:orange;">
-          Waiting for admin verification...
-        </p>
-
+        <p class="meta">📅 {{ reg.eventId?.date | date:'shortDate' }}</p>
+        <p class="meta">📍 {{ reg.eventId?.venue }}</p>
       </div>
 
     </div>
@@ -50,40 +42,30 @@
   </div>
 
   <!-- ================= APPROVED ================= -->
-  <h2 *ngIf="approved.length > 0">✅ Approved Events</h2>
+  <h2 *ngIf="approved.length > 0">✅ Approved</h2>
 
   <div class="event-grid" *ngIf="approved.length > 0">
 
     <div class="event-card" *ngFor="let reg of approved">
 
+      <!-- BADGE -->
+      <div class="badge approved">✔</div>
+
       <div class="img-wrap">
         <img
           *ngIf="reg.eventId?.eventImage"
           [src]="'http://localhost:5000' + reg.eventId.eventImage"
-          alt="Event Image"
         />
       </div>
 
       <div class="card-body">
-
         <h3>{{ reg.eventId?.title }}</h3>
+        <p class="meta">📅 {{ reg.eventId?.date | date:'shortDate' }}</p>
+        <p class="meta">📍 {{ reg.eventId?.venue }}</p>
 
-        <p class="meta">
-          📅 {{ reg.eventId?.date | date:'mediumDate' }}
-        </p>
-
-        <p class="meta">
-          📍 {{ reg.eventId?.venue }}
-        </p>
-
-        <p class="desc">
-          {{ reg.eventId?.description }}
-        </p>
-
-        <!-- CANCEL -->
         <div class="card-actions">
           <button (click)="cancelRegistration(reg._id)">
-            Cancel Registration
+            Cancel
           </button>
         </div>
 
@@ -92,5 +74,40 @@
     </div>
 
   </div>
+
+ <!-- ================= REJECTED ================= -->
+<h2 *ngIf="rejected.length > 0"> Rejected ❌</h2>
+
+<div class="event-grid" *ngIf="rejected.length > 0">
+
+  <div class="event-card" *ngFor="let reg of rejected">
+
+    <!-- BADGE -->
+    <div class="badge rejected">✖</div>
+
+    <div class="img-wrap">
+      <img
+        *ngIf="reg.eventId?.eventImage"
+        [src]="'http://localhost:5000' + reg.eventId.eventImage"
+      />
+    </div>
+
+    <div class="card-body">
+      <h3>{{ reg.eventId?.title }}</h3>
+      <p class="meta">📅 {{ reg.eventId?.date | date:'shortDate' }}</p>
+      <p class="meta">📍 {{ reg.eventId?.venue }}</p>
+
+      <!-- 👇 NEW BUTTON -->
+      <div class="card-actions">
+        <button class="reject-btn" (click)="showRejectReason(reg.rejectReason)">
+          View Reason
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
 
 </section>

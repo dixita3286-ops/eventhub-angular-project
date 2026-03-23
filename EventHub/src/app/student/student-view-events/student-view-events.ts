@@ -23,8 +23,8 @@ export class StudentViewEvents implements OnInit, OnDestroy {
   showMenu = false;
   typingTimer: any;
 
-  // REGISTERED EVENTS
-  registeredEventIds: string[] = [];
+  // 🔥 UPDATED
+  registeredEvents: any[] = [];
 
   private routeSub!: Subscription;
 
@@ -33,36 +33,26 @@ export class StudentViewEvents implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  /* ================= INIT ================= */
-
   ngOnInit(): void {
-
     this.reloadAll();
 
-    // navbar navigation refresh fix
     this.routeSub = this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe(() => {
         this.reloadAll();
       });
-
   }
 
   ngOnDestroy(): void {
     if (this.routeSub) this.routeSub.unsubscribe();
   }
 
-  /* ================= RELOAD ================= */
-
   reloadAll() {
     this.loadEvents();
     this.loadMyRegistrations();
   }
 
-  /* ================= LOAD EVENTS ================= */
-
   loadEvents() {
-
     const q = encodeURIComponent(this.search.trim());
 
     fetch(
@@ -70,38 +60,28 @@ export class StudentViewEvents implements OnInit, OnDestroy {
     )
     .then(res => res.json())
     .then(data => {
-
       this.events = data;
-
       this.cdr.detectChanges();
-
     })
     .catch(err => console.error(err));
-
   }
 
-  /* ================= SEARCH ================= */
-
   onSearchChange(value: string) {
-
     clearTimeout(this.typingTimer);
-
     this.search = value;
 
     this.typingTimer = setTimeout(() => {
       this.loadEvents();
     }, 300);
-
   }
 
-  /* ================= LOAD MY REGISTRATIONS ================= */
+  /* ================= LOAD REGISTRATIONS ================= */
 
   loadMyRegistrations() {
-
     const userStr = localStorage.getItem('user');
 
     if (!userStr) {
-      this.registeredEventIds = [];
+      this.registeredEvents = [];
       return;
     }
 
@@ -111,27 +91,29 @@ export class StudentViewEvents implements OnInit, OnDestroy {
       .then(res => res.json())
       .then(data => {
 
-        this.registeredEventIds = data.map(
-          (r: any) => r.eventId?._id
-        );
+        // 🔥 IMPORTANT
+        this.registeredEvents = data;
 
         this.cdr.detectChanges();
-
       });
-
   }
 
-  /* ================= CHECK REGISTERED ================= */
+  /* ================= GET REGISTRATION ================= */
 
-  isRegistered(eventId: string): boolean {
-    return this.registeredEventIds.includes(eventId);
+  getRegistration(eventId: string) {
+    return this.registeredEvents.find(
+      (r: any) => r.eventId?._id === eventId
+    );
   }
 
-  /* ================= REGISTER EVENT ================= */
+  /* ================= REGISTER ================= */
 
   registerEvent(eventId: string) {
 
-    if (this.isRegistered(eventId)) return;
+    const existing = this.getRegistration(eventId);
+
+    // ❌ prevent if pending/approved
+    if (existing && existing.status !== 'rejected') return;
 
     const userStr = localStorage.getItem('user');
 
@@ -144,111 +126,78 @@ export class StudentViewEvents implements OnInit, OnDestroy {
         showCancelButton: true,
         confirmButtonText: 'Login'
       }).then(res => {
-
         if (res.isConfirmed) {
           this.router.navigate(['/login']);
         }
-
       });
 
       return;
-
     }
 
-    // find event data
     const event = this.events.find(e => e._id === eventId);
-
     if (!event) return;
 
     const user = JSON.parse(userStr);
 
-    /* ================= FREE EVENT ================= */
+    /* ================= FREE ================= */
 
     if (event.registrationFee === 0) {
 
       Swal.fire({
         icon: 'info',
         title: 'Free Event',
-        text: 'This event is free. Register now?',
+        text: 'Register now?',
         showCancelButton: true,
         confirmButtonText: 'Register'
       }).then(res => {
 
         if (!res.isConfirmed) return;
 
-        fetch(`http://localhost:5000/api/registrations`,{
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json'
-          },
+        fetch(`http://localhost:5000/api/registrations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            eventId:eventId,
-            userId:user._id,
-            amount:0,
-            method:'free'
+            eventId,
+            userId: user._id,
+            amount: 0,
+            method: 'free'
           })
         })
-        .then(res=>res.json())
-        .then(()=>{
-
-          Swal.fire(
-            'Registered!',
-            'You are registered for this free event.',
-            'success'
-          );
+        .then(() => {
+          Swal.fire('Done!', 'Registered successfully', 'success');
 
           this.reloadAll();
-
-        })
-        .catch(err=>console.error(err));
+          setTimeout(() => this.cdr.detectChanges(), 100);
+        });
 
       });
 
       return;
-
     }
 
-    /* ================= PAID EVENT ================= */
+    /* ================= PAID ================= */
 
     Swal.fire({
-      title: 'Select Payment Method',
-      icon: 'question',
+      title: 'Select Payment',
       showCancelButton: true,
       confirmButtonText: 'UPI',
-      cancelButtonText: 'Card',
-      reverseButtons: true
+      cancelButtonText: 'Card'
     }).then(res => {
 
       if (res.isConfirmed) {
-
-        this.router.navigate(
-          ['/student/payment', eventId],
-          { queryParams: { method: 'upi' } }
-        );
-
+        this.router.navigate(['/student/payment', eventId], {
+          queryParams: { method: 'upi' }
+        });
       }
 
       if (res.dismiss === Swal.DismissReason.cancel) {
-
-        this.router.navigate(
-          ['/student/payment', eventId],
-          { queryParams: { method: 'card' } }
-        );
-
+        this.router.navigate(['/student/payment', eventId], {
+          queryParams: { method: 'card' }
+        });
       }
 
     });
 
-  }
-
-  /* ================= MENU ================= */
-
-  toggleMenu() {
-    this.showMenu = !this.showMenu;
-  }
-
-  closeMenu() {
-    this.showMenu = false;
   }
 
 }

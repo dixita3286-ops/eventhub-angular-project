@@ -1,100 +1,66 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
 <section class="page">
 
   <h1>Registered Students</h1>
-
-  <p *ngIf="students.length === 0" class="empty">
-    No registrations found.
-  </p>
 
   <div class="student-grid">
 
     <div class="student-card" *ngFor="let s of students">
 
-      <!-- AVATAR -->
-      <div class="avatar">
-        {{ s.name?.charAt(0) | uppercase }}
-      </div>
+      <!-- NAME + BADGE -->
+      <h3>
+        Name : {{ s.name }}
+        <span *ngIf="s.status==='approved'" class="badge">✔</span>
+      </h3>
 
-      <div class="info">
+      <p>Email : {{ s.email }}</p>
 
-        <!-- USER DETAILS -->
-        <h3>{{ s.name }}</h3>
-        <p>{{ s.email }}</p>
-
-        <span>
-          Registered on {{ s.createdAt | date:'medium' }}
+      <!-- STATUS -->
+      <p>
+        Status:
+        <span [ngClass]="s.status">
+          {{ s.status }}
         </span>
+      </p>
 
-        <!-- STATUS -->
-        <p style="margin-top:8px;">
-          Status:
-          <span 
-            [style.color]="
-              s.status === 'approved' ? 'green' :
-              s.status === 'rejected' ? 'red' : 'orange'
-            ">
-            {{ s.status }}
-          </span>
-        </p>
+      <!-- IMAGE -->
+      <img 
+        *ngIf="s.paymentProof"
+        [src]="'http://localhost:5000/uploads/images/' + s.paymentProof"
+        (click)="openImage(s.paymentProof)"
+      >
 
-        <!-- EVENT DETAILS -->
-        <div *ngIf="s.event" style="margin-top:10px;">
-          <img 
-            [src]="'http://localhost:5000' + s.event.eventImage"
-            style="width:100px; border-radius:6px;"
-          >
-          <p><b>{{ s.event.title }}</b></p>
-          <p>📅 {{ s.event.date | date }}</p>
-          <p>📍 {{ s.event.venue }}</p>
-          <p>💰 ₹{{ s.event.registrationFee }}</p>
-        </div>
+      <!-- NO IMAGE -->
+      <p *ngIf="!s.paymentProof" class="no-proof">
+        Screenshot not available ❌
+      </p>
 
-        <!-- PAYMENT SCREENSHOT -->
-        <div style="margin-top:10px;">
-          <p><b>Payment Proof:</b></p>
+      <!-- REJECT REASON -->
+      <p *ngIf="s.rejectReason" class="reject-reason">
+        Reject Reason :  {{ s.rejectReason }}
+      </p>
 
-          <img 
-            *ngIf="s.paymentProof"
-            [attr.src]="'http://localhost:5000/uploads/images/' + s.paymentProof"
-            style="width:150px; border-radius:8px; border:1px solid #555;"
-          >
 
-          <p *ngIf="!s.paymentProof" style="color:red;">
-            Screenshot not available ❌
-          </p>
-        </div>
+      <!-- ACTION -->
+      <div class="actions">
 
-        <!-- ACTION BUTTONS -->
-        <div style="margin-top:10px; display:flex; gap:10px;">
+        <button (click)="approve(s._id)">Approve</button>
 
-          <button
-            (click)="approve(s._id)"
-            [disabled]="s.status === 'approved'"
-            style="background:green;color:white;padding:6px 10px;border:none;border-radius:5px;">
-            Approve
-          </button>
-
-          <button
-            (click)="reject(s._id)"
-            [disabled]="s.status === 'rejected'"
-            style="background:red;color:white;padding:6px 10px;border:none;border-radius:5px;">
-            Reject
-          </button>
-
-        </div>
-
-        <!-- CANCEL -->
-        <button
-          class="cancel-btn"
-          (click)="cancelRegistration(s._id)">
-          Cancel Registration
+        <button class="reject-btn" (click)="rejectWithReason(s._id)">
+          Reject
         </button>
 
       </div>
 
     </div>
+
+  </div>
+
+  <!-- 🔥 FULL SCREEN MODAL -->
+  <div class="modal" *ngIf="selectedImage">
+
+    <span class="close" (click)="closeImage()">✖</span>
+
+    <img [src]="selectedImage" class="modal-img">
 
   </div>
 

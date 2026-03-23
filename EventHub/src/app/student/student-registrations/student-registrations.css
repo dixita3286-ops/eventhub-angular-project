@@ -1,22 +1,30 @@
 /* ================= PAGE ================= */
-:host {
-  display: block;
+.page {
+  padding: 50px;
+  background: #000;
   min-height: 100vh;
-  background: #0d0d0d;
   color: #fff;
-  padding: 90px 40px;
 }
 
+/* ================= HEADINGS ================= */
 h1 {
   text-align: center;
-  color: #ffcc66;
-  margin-bottom: 40px;
+  font-size: 36px;
+  color: #ffcc70;
+  margin-bottom: 30px;
+  font-family: cursive;
+}
+
+h2 {
+  margin: 30px 0 15px;
+  color: #ffcc70;
+  font-family: cursive;
 }
 
 /* ================= GRID ================= */
 .event-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 25px;
 }
 
@@ -24,58 +32,121 @@ h1 {
 .event-card {
   background: #111;
   border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(255, 170, 0, 0.1);
   transition: 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
 }
 
 .event-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 0 20px rgba(255,153,0,0.4);
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(255, 170, 0, 0.3);
+}
+
+/* ================= IMAGE ================= */
+.img-wrap {
+  width: 100%;
+  height: 160px; /* FIXED height -> all cards same */
+  overflow: hidden;
 }
 
 .img-wrap img {
   width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 15px;
+  height: 100%;
+  object-fit: cover; /* IMPORTANT */
 }
 
-.meta {
-  font-size: 13px;
-  color: #ccc;
-  margin: 4px 0;
+/* ================= BODY ================= */
+.card-body {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
-.desc {
-  font-size: 13px;
-  margin: 10px 0;
-  color: #ddd;
-}
-
-/* ================= BUTTON ================= */
-.card-actions {
-  margin-top: 15px;
-}
-
-.card-actions button {
-  background: #ff4444;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
+/* ================= TITLE ================= */
+.card-body h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
   color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
 }
 
-.card-actions button:hover {
+/* ================= META ================= */
+.meta {
+  font-size: 14px;
+  color: #bbb;
+  margin-bottom: 5px;
+}
+
+/* ================= ACTION ================= */
+.card-actions {
+  margin-top: auto;
+}
+
+button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #ff9800;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #ffc107;
+}
+
+/* ================= BADGES ================= */
+.badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.badge.pending {
+  background: orange;
+}
+
+.badge.approved {
+  background: green;
+}
+
+.badge.rejected {
+  background: red;
+  cursor: pointer;
+}
+
+.reject-btn {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #ff3b3b;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.reject-btn:hover {
   background: #ff0000;
 }
-
-/* ================= INFO ================= */
+/* ================= INFO TEXT ================= */
 .info {
   text-align: center;
   color: #aaa;
+  margin-top: 20px;
 }

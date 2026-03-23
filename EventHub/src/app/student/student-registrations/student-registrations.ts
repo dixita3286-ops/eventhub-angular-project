@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import Swal from 'sweetalert2'; // 🔥 ADD
 
 @Component({
   selector: 'app-student-registrations',
@@ -13,6 +14,7 @@ export class StudentRegistrations implements OnInit {
 
   approved: any[] = [];
   pending: any[] = [];
+  rejected: any[] = []; // 🔥 ADD
 
   loading: boolean = true;
 
@@ -41,9 +43,10 @@ export class StudentRegistrations implements OnInit {
 
           console.log('My Registrations:', data);
 
-          // 🔥 FILTER
+          // 🔥 FILTER ALL 3 TYPES
           this.approved = data.filter(r => r.status === 'approved');
           this.pending = data.filter(r => r.status === 'pending');
+          this.rejected = data.filter(r => r.status === 'rejected'); // 🔥 ADD
 
           this.loading = false;
           this.cdr.detectChanges();
@@ -60,21 +63,46 @@ export class StudentRegistrations implements OnInit {
   /* ================= CANCEL ================= */
   cancelRegistration(id: string) {
 
-    if (!confirm('Are you sure you want to cancel registration?')) return;
+    Swal.fire({
+      title: 'Cancel Registration?',
+      text: 'Are you sure?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, cancel'
+    }).then(res => {
 
-    this.http
-      .delete(`http://localhost:5000/api/registrations/${id}`)
-      .subscribe(() => {
+      if (!res.isConfirmed) return;
 
-        this.approved = this.approved.filter(r => r._id !== id);
-        this.pending = this.pending.filter(r => r._id !== id);
+      this.http
+        .delete(`http://localhost:5000/api/registrations/${id}`)
+        .subscribe(() => {
 
-        this.cdr.detectChanges();
+          this.approved = this.approved.filter(r => r._id !== id);
+          this.pending = this.pending.filter(r => r._id !== id);
+          this.rejected = this.rejected.filter(r => r._id !== id); // 🔥 ADD
 
-        alert('Registration cancelled');
+          this.cdr.detectChanges();
 
-      });
+          Swal.fire('Done!', 'Registration cancelled', 'success');
+
+        });
+
+    });
 
   }
+
+  /* ================= REJECT POPUP ================= */
+
+  showRejectReason(reason: string) {
+  Swal.fire({
+    title: ' Registration Rejected ❌',
+    text: reason || 'No reason provided',
+    icon: 'error',
+    confirmButtonText: 'OK',
+    confirmButtonColor: '#ff9800',
+    background: '#111',
+    color: '#fff'
+  });
+}
 
 }

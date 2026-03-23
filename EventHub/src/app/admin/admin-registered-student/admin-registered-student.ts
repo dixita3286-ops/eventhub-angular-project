@@ -14,6 +14,9 @@ export class AdminRegisteredStudent implements OnInit {
 
   students: any[] = [];
 
+  // 🔥 modal
+  selectedImage: string | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
@@ -27,61 +30,58 @@ export class AdminRegisteredStudent implements OnInit {
     this.loadStudents(eventId);
   }
 
-  /* LOAD DATA */
+  /* LOAD */
   loadStudents(eventId: string) {
     this.http
       .get<any[]>(`http://localhost:5000/api/registrations/event/${eventId}`)
-      .subscribe({
-        next: (data) => {
-          this.students = data;
-          this.cdr.detectChanges();
-        },
-        error: (err) => {
-          console.error(err);
-        }
+      .subscribe(data => {
+        this.students = data;
+        this.cdr.detectChanges();
       });
   }
 
   /* APPROVE */
   approve(id: string) {
     this.http.put(`http://localhost:5000/api/registrations/approve/${id}`, {})
-    .subscribe(() => {
-
-      this.students = this.students.map(s =>
-        s._id === id ? { ...s, status: 'approved' } : s
-      );
-
-      this.cdr.detectChanges();
-    });
-  }
-
-  /* REJECT */
-  reject(id: string) {
-    this.http.put(`http://localhost:5000/api/registrations/reject/${id}`, {})
-    .subscribe(() => {
-
-      this.students = this.students.map(s =>
-        s._id === id ? { ...s, status: 'rejected' } : s
-      );
-
-      this.cdr.detectChanges();
-    });
-  }
-
-  /* CANCEL */
-  cancelRegistration(id: string) {
-
-    if (!confirm('Cancel this registration?')) return;
-
-    this.http
-      .delete(`http://localhost:5000/api/registrations/${id}`)
       .subscribe(() => {
 
-        this.students = this.students.filter(s => s._id !== id);
-        this.cdr.detectChanges();
+        this.students = this.students.map(s =>
+          s._id === id ? { ...s, status: 'approved' } : s
+        );
 
-        alert('Registration cancelled');
+        this.cdr.detectChanges();
       });
   }
 
+  /* REJECT WITH REASON */
+  rejectWithReason(id: string) {
+
+    const reason = prompt("Enter reject reason:");
+
+    if (!reason) return;
+
+    this.http.put(`http://localhost:5000/api/registrations/reject/${id}`, { reason })
+      .subscribe(() => {
+
+        this.students = this.students.map(s =>
+          s._id === id
+            ? { ...s, status: 'rejected', rejectReason: reason }
+            : s
+        );
+
+        this.cdr.detectChanges();
+      });
+  }
+
+  /* IMAGE OPEN */
+  openImage(image: string) {
+    this.selectedImage = 'http://localhost:5000/uploads/images/' + image;
+    document.body.style.overflow = 'hidden';
+  }
+
+  /* IMAGE CLOSE */
+  closeImage() {
+    this.selectedImage = null;
+    document.body.style.overflow = 'auto';
+  }
 }

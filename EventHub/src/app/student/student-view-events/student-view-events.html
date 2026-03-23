@@ -1,7 +1,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
 
-<!-- ================= MAIN ================= -->
 <div class="main">
 
   <h1>Crafting Experiences, Not Just Events.</h1>
@@ -41,11 +40,12 @@
 
     <div class="event-card" *ngFor="let e of events">
 
-      <!-- 🔥 FREE BADGE IMAGE CORNER -->
+      <!-- FREE BADGE -->
       <div class="free-badge" *ngIf="e.registrationFee === 0">
         FREE
       </div>
 
+      <!-- IMAGE -->
       <div class="event-img-wrapper">
         <img
           [src]="'http://localhost:5000' + e.eventImage"
@@ -53,6 +53,7 @@
         />
       </div>
 
+      <!-- INFO -->
       <div class="event-info">
         <h3>{{ e.title }}</h3>
         <p>Category : {{ e.category }}</p>
@@ -60,20 +61,43 @@
         <p>Venue : {{ e.venue }}</p>
       </div>
 
+      <!-- ACTIONS -->
       <div class="event-actions">
 
         <a [routerLink]="['/student/event-details', e._id]">
           View Details |
         </a>
 
-        <!-- REGISTER / REGISTERED -->
         <a
           href="javascript:void(0)"
-          (click)="!isRegistered(e._id) && registerEvent(e._id)"
-          [style.pointerEvents]="isRegistered(e._id) ? 'none' : 'auto'"
-          [style.opacity]="isRegistered(e._id) ? '0.6' : '1'"
+          (click)="
+            (!getRegistration(e._id) || getRegistration(e._id)?.status === 'rejected')
+            && registerEvent(e._id)
+          "
         >
-          {{ isRegistered(e._id) ? 'Registered' : 'Register' }}
+
+          <!-- 🔥 STATUS LOGIC -->
+
+          <ng-container *ngIf="getRegistration(e._id) as reg; else notReg">
+
+            <span *ngIf="reg.status === 'approved'">
+              ✅ Registered
+            </span>
+
+            <span *ngIf="reg.status === 'pending'">
+              ⏳ Pending
+            </span>
+
+            <span *ngIf="reg.status === 'rejected'">
+              🔁 Register Again
+            </span>
+
+          </ng-container>
+
+          <ng-template #notReg>
+            Register
+          </ng-template>
+
         </a>
 
       </div>

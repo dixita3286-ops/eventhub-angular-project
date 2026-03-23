@@ -10,7 +10,7 @@ const path = require('path');
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/images'); // 👈 taro folder
+    cb(null, 'uploads/images');
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -28,21 +28,36 @@ router.post('/', upload.single('paymentProof'), async (req, res) => {
 
     const { eventId, userId, amount, method } = req.body;
 
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-
     if (!eventId || !userId) {
       return res.status(400).json({ message: 'Missing data' });
     }
 
-    if (!req.file) {
-      return res.status(400).json({ message: 'Screenshot required' });
-    }
-
-    // prevent duplicate
     const already = await Registration.findOne({ eventId, userId });
     if (already) {
       return res.status(409).json({ message: 'Already registered' });
+    }
+
+    /* ================= FREE EVENT ================= */
+
+    if (method === 'free') {
+
+      const registration = new Registration({
+        eventId,
+        userId,
+        amount: 0,
+        method: 'free',
+        status: 'approved' // 🔥 DIRECT APPROVED
+      });
+
+      await registration.save();
+
+      return res.status(201).json({ message: 'Free registered' });
+    }
+
+    /* ================= PAID EVENT ================= */
+
+    if (!req.file) {
+      return res.status(400).json({ message: 'Screenshot required' });
     }
 
     const registration = new Registration({
@@ -51,7 +66,7 @@ router.post('/', upload.single('paymentProof'), async (req, res) => {
       amount,
       method,
       paymentProof: req.file.filename,
-      status: 'pending'   // 🔥 change
+      status: 'pending'
     });
 
     await registration.save();
@@ -63,8 +78,6 @@ router.post('/', upload.single('paymentProof'), async (req, res) => {
     res.status(500).json({ message: 'Registration failed' });
   }
 });
-
-
 /* ================= GET STUDENT REGISTRATIONS ================= */
 
 router.get('/student/:userId', async (req, res) => {
@@ -83,7 +96,6 @@ router.get('/student/:userId', async (req, res) => {
   }
 });
 
-
 /* ================= GET EVENT STUDENTS ================= */
 
 router.get('/event/:eventId', async (req, res) => {
@@ -99,22 +111,26 @@ router.get('/event/:eventId', async (req, res) => {
       eventId: new mongoose.Types.ObjectId(eventId)
     })
       .populate('userId', 'name email mobile')
+      .populate('eventId', 'title date venue eventImage registrationFee') // 🔥 ADD
       .sort({ registeredAt: -1 });
 
     const formatted = registrations.map(r => ({
-  _id: r._id,
-  name: r.userId?.name,
-  email: r.userId?.email,
-  status: r.status || 'pending',
+      _id: r._id,
+      name: r.userId?.name,
+      email: r.userId?.email,
+      status: r.status || 'pending',
 
-  // 🔥 IMPORTANT (THIS LINE MUST BE THERE)
-  paymentProof: r.paymentProof,
+      // 🔥 FIX (IMPORTANT)
+      paymentProof: r.paymentProof,
 
-  // 🔥 EVENT
-  event: r.eventId,
+      // 🔥 NEW ADD
+      rejectReason: r.rejectReason || '',
 
-  createdAt: r.registeredAt
-}));
+      // 🔥 EVENT DETAILS
+      event: r.eventId,
+
+      createdAt: r.registeredAt
+    }));
 
     res.json(formatted);
 
@@ -123,7 +139,6 @@ router.get('/event/:eventId', async (req, res) => {
     res.status(500).json([]);
   }
 });
-
 
 /* ================= DELETE ================= */
 
@@ -151,7 +166,8 @@ router.put('/approve/:id', async (req, res) => {
   try {
 
     await Registration.findByIdAndUpdate(req.params.id, {
-      status: 'approved'
+      status: 'approved',
+      rejectReason: '' // 🔥 CLEAR REASON
     });
 
     res.json({ message: 'Approved' });
@@ -162,13 +178,15 @@ router.put('/approve/:id', async (req, res) => {
   }
 });
 
-
 /* ================= REJECT ================= */
 router.put('/reject/:id', async (req, res) => {
   try {
 
+    const { reason } = req.body; // 🔥 ADD
+
     await Registration.findByIdAndUpdate(req.params.id, {
-      status: 'rejected'
+      status: 'rejected',
+      rejectReason: reason // 🔥 ADD
     });
 
     res.json({ message: 'Rejected' });

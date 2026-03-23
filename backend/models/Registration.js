@@ -15,12 +15,15 @@ const registrationSchema = new mongoose.Schema({
   amount: Number,
   method: String,
 
-  // 🔥 IMPORTANT
+  // 🔥 PAYMENT PROOF
   paymentProof: String,
+
+  // 🔥 REJECT REASON
+  rejectReason: String,
 
   status: {
     type: String,
-    enum: ['registered', 'pending', 'approved', 'rejected', 'cancelled'],
+    enum: ['pending', 'approved', 'rejected', 'cancelled'],
     default: 'pending'
   },
 
