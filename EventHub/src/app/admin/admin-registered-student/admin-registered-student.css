@@ -1,126 +1,145 @@
-/* ===== PAGE ===== */
+/* IMPORT FONT 🔥 */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@500;600&display=swap');
+
+/* ================= PAGE ================= */
 .page {
+  padding: 60px;
+  background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
   min-height: 100vh;
-  padding: 40px;
-  background: radial-gradient(circle at top, #1a0d00, #000);
-  font-family: 'Poppins', sans-serif;
-  color: white;
+  color: #fff;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 🔥 CENTER */
 }
 
-/* ===== TITLE ===== */
+/* ================= TITLE ================= */
 h1 {
-  text-align: center;
-  color: #ffcc70;
+  font-family: 'Playfair Display', serif; /* 🔥 stylish */
+  font-size: 34px;
   margin-bottom: 30px;
-}
-
-/* ===== GRID ===== */
-.student-grid {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-/* ===== CARD ===== */
-.student-card {
-  width: 340px;
-  padding: 20px;
-  border-radius: 18px;
-
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-
-  box-shadow: 0 0 25px rgba(255,140,0,0.3);
-
+  letter-spacing: 1px;
   text-align: center;
+  position: relative;
 }
 
-/* ===== TEXT ===== */
-.student-card h3 {
-  margin-bottom: 5px;
-}
-
-.student-card p {
-  margin: 5px 0;
-}
-
-/* ===== STATUS ===== */
-.approved { color: #00ff88; }
-.rejected { color: red; }
-.pending { color: orange; }
-
-/* ===== IMAGE FIX (🔥 MAIN FIX) ===== */
-.student-card img {
-  width: 100%;
-  max-height: 320px;   /* 🔥 control height */
-  object-fit: contain; /* 🔥 no crop */
-  border-radius: 12px;
-  margin-top: 10px;
-  cursor: pointer;
-  background: #111;
-  padding: 5px;
-}
-
-/* ===== BUTTONS ===== */
-.actions {
-  margin-top: 12px;
-}
-
-.actions button {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 6px;
-  margin: 5px;
-  cursor: pointer;
-}
-
-.actions button:first-child {
-  background: #00c853;
-  color: white;
-}
-
-.reject-btn {
-  background: red;
-  color: white;
-}
-
-/* ===== TEXT ===== */
-.reject-reason {
-  color: red;
-  margin-top: 8px;
-}
-
-.no-proof {
-  color: #ff4d4d;
-}
-
-/* ===== MODAL PERFECT ===== */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.95);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  z-index: 9999;
-}
-
-.modal-img {
-  max-width: 85%;
-  max-height: 85%;
-  border-radius: 12px;
-}
-
-.close {
+/* underline glow */
+h1::after {
+  content: '';
   position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -8px;
+  width: 70%;
+  height: 3px;
+  background: linear-gradient(90deg, orange, #ff9800);
+  border-radius: 5px;
+}
+
+/* ================= INFO ================= */
+.info {
+  text-align: center;
+  color: #aaa;
+  margin-top: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ================= GRID ================= */
+.student-grid {
+  width: 100%;
+  max-width: 900px; /* 🔥 center layout */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* ================= CARD ================= */
+.student-card {
+  background: linear-gradient(145deg, #1c1c1c, #121212);
+  border-radius: 16px;
+  padding: 22px;
+
+  text-align: center; /* 🔥 CENTER ALL */
+
+  backdrop-filter: blur(10px);
+
+  box-shadow: 
+    0 5px 20px rgba(0,0,0,0.6),
+    0 0 10px rgba(255,165,0,0.05);
+
+  transition: all 0.3s ease;
   cursor: pointer;
-  color: white;
+}
+
+/* hover */
+.student-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 10px 30px rgba(255,165,0,0.2),
+    0 0 15px rgba(255,165,0,0.1);
+}
+
+/* ================= NAME ================= */
+.student-card h3 {
+  font-family: 'Playfair Display', serif; /* 🔥 classy */
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+/* ================= EMAIL ================= */
+.student-card p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #ccc;
+  margin: 6px 0;
+}
+
+/* ================= DATE ================= */
+.date {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #ff9800;
+  letter-spacing: 0.5px;
+}
+
+/* ================= ANIMATION ================= */
+.student-card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.student-card:nth-child(1) { animation-delay: 0.1s; }
+.student-card:nth-child(2) { animation-delay: 0.2s; }
+.student-card:nth-child(3) { animation-delay: 0.3s; }
+.student-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= SCROLL ================= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: orange;
+  border-radius: 10px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 600px) {
+  .page {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
 }

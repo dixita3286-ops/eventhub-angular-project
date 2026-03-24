@@ -2,65 +2,31 @@
 
   <h1>Registered Students</h1>
 
-  <div class="student-grid">
-
-    <div class="student-card" *ngFor="let s of students">
-
-      <!-- NAME + BADGE -->
-      <h3>
-        Name : {{ s.name }}
-        <span *ngIf="s.status==='approved'" class="badge">✔</span>
-      </h3>
-
-      <p>Email : {{ s.email }}</p>
-
-      <!-- STATUS -->
-      <p>
-        Status:
-        <span [ngClass]="s.status">
-          {{ s.status }}
-        </span>
-      </p>
-
-      <!-- IMAGE -->
-      <img 
-        *ngIf="s.paymentProof"
-        [src]="'http://localhost:5000/uploads/images/' + s.paymentProof"
-        (click)="openImage(s.paymentProof)"
-      >
-
-      <!-- NO IMAGE -->
-      <p *ngIf="!s.paymentProof" class="no-proof">
-        Screenshot not available ❌
-      </p>
-
-      <!-- REJECT REASON -->
-      <p *ngIf="s.rejectReason" class="reject-reason">
-        Reject Reason :  {{ s.rejectReason }}
-      </p>
-
-
-      <!-- ACTION -->
-      <div class="actions">
-
-        <button (click)="approve(s._id)">Approve</button>
-
-        <button class="reject-btn" (click)="rejectWithReason(s._id)">
-          Reject
-        </button>
-
-      </div>
-
-    </div>
-
+  <!-- LOADING -->
+  <div class="info" *ngIf="loading">
+    Loading students...
   </div>
 
-  <!-- 🔥 FULL SCREEN MODAL -->
-  <div class="modal" *ngIf="selectedImage">
+  <!-- NO DATA -->
+  <div class="info" *ngIf="!loading && students.length === 0">
+    No students registered yet.
+  </div>
 
-    <span class="close" (click)="closeImage()">✖</span>
+  <!-- STUDENTS -->
+  <div class="student-grid" *ngIf="students.length > 0">
 
-    <img [src]="selectedImage" class="modal-img">
+    <div class="student-card" *ngFor="let s of students; let i = index">
+
+      <!-- 🔥 FIXED -->
+      <h3> {{ s.name }}</h3>
+
+      <p>{{ s.email }}</p>
+
+      <p class="date">
+        Registered on: {{ s.registeredAt | date:'medium' }}
+      </p>
+
+    </div>
 
   </div>
 

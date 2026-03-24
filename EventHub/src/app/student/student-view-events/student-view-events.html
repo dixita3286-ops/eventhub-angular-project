@@ -81,15 +81,15 @@
           <ng-container *ngIf="getRegistration(e._id) as reg; else notReg">
 
             <span *ngIf="reg.status === 'approved'">
-              ✅ Registered
+               Registered ✅
             </span>
 
             <span *ngIf="reg.status === 'pending'">
-              ⏳ Pending
+               Pending ⏳
             </span>
 
             <span *ngIf="reg.status === 'rejected'">
-              🔁 Register Again
+               Register Again 🔁
             </span>
 
           </ng-container>

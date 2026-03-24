@@ -1,6 +1,6 @@
 /* PAGE */
 .page {
-  padding: 20px;
+  padding: 60px;
   background: #0f0f0f;
   min-height: 100vh;
   color: #fff;
@@ -14,36 +14,7 @@ h1 {
   padding-bottom: 10px;
 }
 
-/* SEARCH */
-.search {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-}
 
-/* FILTERS */
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.filters button {
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: none;
-  cursor: pointer;
-  background: #333;
-  color: white;
-  transition: 0.3s;
-}
-
-.filters button.active {
-  background: orange;
-}
 
 /* GRID */
 .student-grid {

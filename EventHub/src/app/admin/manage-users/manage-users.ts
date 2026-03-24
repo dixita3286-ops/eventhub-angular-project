@@ -19,22 +19,17 @@ export class ManageUsers implements OnInit {
   searchText: string = '';
   roleFilter: string = 'all';
 
-  private loaded = false;
-
   constructor(
     private http: HttpClient,
     private cdr: ChangeDetectorRef
-  ) {
-    this.loadUsers();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
+  // ===== LOAD USERS =====
   loadUsers() {
-    if (this.loaded) return;
-    this.loaded = true;
 
     // users list
     this.http.get<any[]>('http://localhost:5000/api/users')
@@ -51,34 +46,38 @@ export class ManageUsers implements OnInit {
       });
   }
 
-  // ✅ FINAL FILTER LOGIC (FIXED)
+  // ===== FINAL FILTER =====
   get filteredUsers() {
-    return this.users.filter(u => {
+    return this.users
+      .filter(u => (u.role || '').toLowerCase() !== 'admin') // 🔥 ADMIN HIDE
+      .filter(u => {
 
-      const text = this.searchText.toLowerCase();
-      const name = (u.name || '').toLowerCase();
-      const email = (u.email || '').toLowerCase();
-      const role = (u.role || '').toLowerCase();
+        const text = this.searchText.toLowerCase();
+        const name = (u.name || '').toLowerCase();
+        const email = (u.email || '').toLowerCase();
+        const role = (u.role || '').toLowerCase();
 
-      const matchText =
-        name.includes(text) || email.includes(text);
+        const matchText =
+          name.includes(text) || email.includes(text);
 
-      let matchRole = true;
+        let matchRole = true;
 
-      if (this.roleFilter !== 'all') {
-        if (this.roleFilter === 'user') {
-          // STUDENTS = user OR student
-          matchRole = role === 'user' || role === 'student';
-        } else {
-          matchRole = role === this.roleFilter;
+        if (this.roleFilter !== 'all') {
+
+          if (this.roleFilter === 'user') {
+            // STUDENTS = user OR student
+            matchRole = role === 'user' || role === 'student';
+          } else {
+            matchRole = role === this.roleFilter;
+          }
+
         }
-      }
 
-      return matchText && matchRole;
-    });
+        return matchText && matchRole;
+      });
   }
 
-  // back button
+  // ===== BACK BUTTON =====
   goBack() {
     window.history.back();
   }

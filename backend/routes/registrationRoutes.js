@@ -46,7 +46,7 @@ router.post('/', upload.single('paymentProof'), async (req, res) => {
         userId,
         amount: 0,
         method: 'free',
-        status: 'approved' // 🔥 DIRECT APPROVED
+        status: 'approved'
       });
 
       await registration.save();
@@ -78,6 +78,7 @@ router.post('/', upload.single('paymentProof'), async (req, res) => {
     res.status(500).json({ message: 'Registration failed' });
   }
 });
+
 /* ================= GET STUDENT REGISTRATIONS ================= */
 
 router.get('/student/:userId', async (req, res) => {
@@ -111,25 +112,24 @@ router.get('/event/:eventId', async (req, res) => {
       eventId: new mongoose.Types.ObjectId(eventId)
     })
       .populate('userId', 'name email mobile')
-      .populate('eventId', 'title date venue eventImage registrationFee') // 🔥 ADD
+      .populate('eventId', 'title date venue eventImage registrationFee')
       .sort({ registeredAt: -1 });
 
-    const formatted = registrations.map(r => ({
+    // 🔥 IMPORTANT FIX (UI mate perfect data)
+    const formatted = registrations.map((r, index) => ({
       _id: r._id,
-      name: r.userId?.name,
-      email: r.userId?.email,
-      status: r.status || 'pending',
 
-      // 🔥 FIX (IMPORTANT)
+      // 🔥 USER DATA
+      name: r.userId?.name || 'No Name',
+      email: r.userId?.email || 'No Email',
+
+      // 🔥 DATE FIX
+      registeredAt: r.registeredAt,
+
+      // 🔥 EXTRA (future use)
+      status: r.status,
       paymentProof: r.paymentProof,
-
-      // 🔥 NEW ADD
-      rejectReason: r.rejectReason || '',
-
-      // 🔥 EVENT DETAILS
-      event: r.eventId,
-
-      createdAt: r.registeredAt
+      rejectReason: r.rejectReason || ''
     }));
 
     res.json(formatted);
@@ -162,12 +162,13 @@ router.delete('/:id', async (req, res) => {
 });
 
 /* ================= APPROVE ================= */
+
 router.put('/approve/:id', async (req, res) => {
   try {
 
     await Registration.findByIdAndUpdate(req.params.id, {
       status: 'approved',
-      rejectReason: '' // 🔥 CLEAR REASON
+      rejectReason: ''
     });
 
     res.json({ message: 'Approved' });
@@ -179,14 +180,15 @@ router.put('/approve/:id', async (req, res) => {
 });
 
 /* ================= REJECT ================= */
+
 router.put('/reject/:id', async (req, res) => {
   try {
 
-    const { reason } = req.body; // 🔥 ADD
+    const { reason } = req.body;
 
     await Registration.findByIdAndUpdate(req.params.id, {
       status: 'rejected',
-      rejectReason: reason // 🔥 ADD
+      rejectReason: reason
     });
 
     res.json({ message: 'Rejected' });
