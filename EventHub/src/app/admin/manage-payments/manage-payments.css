@@ -1,0 +1,233 @@
+/* PAGE */
+.page {
+  padding: 20px;
+  background: #0f0f0f;
+  min-height: 100vh;
+  color: #fff;
+}
+
+/* TITLE */
+h1 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  border-bottom: 2px solid orange;
+  padding-bottom: 10px;
+}
+
+/* SEARCH */
+.search {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+/* FILTERS */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filters button {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #333;
+  color: white;
+  transition: 0.3s;
+}
+
+.filters button.active {
+  background: orange;
+}
+
+/* GRID */
+.student-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.student-card {
+  background: #1a1a1a;
+  border-radius: 14px;
+  padding: 15px;
+  transition: 0.3s;
+}
+
+.student-card:hover {
+  transform: translateY(-5px);
+}
+
+/* TEXT */
+.student-card h3 {
+  font-size: 18px;
+}
+
+.student-card p {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* STATUS */
+.pending { color: orange; font-weight: bold; }
+.approved { color: #00e676; font-weight: bold; }
+.rejected { color: red; font-weight: bold; }
+
+/* BADGE */
+.badge {
+  margin-left: 8px;
+}
+
+/* VERIFIED BADGE */
+.verified {
+  background: #00e676;
+  color: black;
+  padding: 3px 6px;
+  border-radius: 6px;
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+/* IMAGE */
+img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* HOVER ZOOM */
+.zoom-img {
+  transition: 0.3s;
+}
+
+.zoom-img:hover {
+  transform: scale(1.05);
+}
+
+/* FREE LABEL */
+.free-label {
+  margin-top: 10px;
+  color: #00e676;
+  font-weight: bold;
+}
+
+/* REJECT */
+.reject-reason {
+  color: #ff6b6b;
+  font-size: 13px;
+}
+
+/* BUTTONS */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button {
+  flex: 1;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:not(.reject-btn) {
+  background: green;
+  color: white;
+}
+
+button:not(.reject-btn):hover {
+  background: #00e676;
+}
+
+.reject-btn {
+  background: red;
+  color: white;
+}
+
+.reject-btn:hover {
+  background: #ff5252;
+}
+
+/* APPROVE GLOW */
+.approved {
+  animation: glow 0.8s ease;
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 0px green; }
+  100% { box-shadow: 0 0 20px #00e676; }
+}
+
+/* REJECT SHAKE */
+.rejected {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  position: relative;
+}
+
+.modal-img {
+  max-width: 80vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 10px;
+  cursor: grab;
+  transition: transform 0.2s ease;
+}
+
+/* 🔥 FIXED CROSS */
+.close-fixed {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  z-index: 10000;
+
+  background: rgba(0,0,0,0.7);
+  padding: 8px 12px;
+  border-radius: 50%;
+}
+
+.close-fixed:hover {
+  background: red;
+}

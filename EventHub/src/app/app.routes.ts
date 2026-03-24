@@ -17,6 +17,7 @@ import { ManageUsers } from './admin/manage-users/manage-users';
 import { AdminRegisteredStudent } from './admin/admin-registered-student/admin-registered-student';
 import { AdminModifyEvents } from './admin/admin-modify-events/admin-modify-events';
 import { ManageProposals } from './admin/manage-proposals/manage-proposals';
+import { ManagePayments } from './admin/manage-payments/manage-payments';
 
 /* ===== ORGANIZER ===== */
 import { OrganizerHome } from './organizer/organizer-home/organizer-home';
@@ -107,6 +108,12 @@ export const routes: Routes = [
   path: 'admin/manage-proposals',
   component: ManageProposals
 },
+
+ {
+    path: 'admin/manage-payments',
+    component: ManagePayments
+  },
+
 
   /* ================= STUDENT ================= */
   {

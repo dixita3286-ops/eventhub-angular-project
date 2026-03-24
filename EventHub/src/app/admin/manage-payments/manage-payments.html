@@ -1,0 +1,103 @@
+<section class="page">
+
+  <h1>Manage Payments</h1>
+
+  <!-- SEARCH -->
+  <input 
+    type="text"
+    placeholder="Search student..."
+    (input)="onSearch($event)"
+    class="search"
+  >
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button (click)="setFilter('all')" [class.active]="selectedFilter==='all'">All</button>
+    <button (click)="setFilter('pending')" [class.active]="selectedFilter==='pending'">Pending</button>
+    <button (click)="setFilter('approved')" [class.active]="selectedFilter==='approved'">Approved</button>
+    <button (click)="setFilter('rejected')" [class.active]="selectedFilter==='rejected'">Rejected</button>
+  </div>
+
+  <!-- GRID -->
+  <div class="student-grid">
+
+    <div 
+      class="student-card"
+      *ngFor="let p of filteredPayments"
+      [ngClass]="p.animate"
+    >
+
+      <!-- NAME -->
+      <h3>
+        {{ p.userId?.name }}
+
+        <!-- VERIFIED BADGE -->
+        <span *ngIf="p.status==='approved'" class="badge verified">
+          ✔ Verified
+        </span>
+      </h3>
+
+      <p>{{ p.userId?.email }}</p>
+      <p>{{ p.eventId?.title }}</p>
+
+      <!-- STATUS -->
+      <p>
+        Status:
+        <span [ngClass]="p.status">{{ p.status }}</span>
+      </p>
+
+      <!-- PAID IMAGE -->
+      <img 
+        *ngIf="p.paymentProof && p.method !== 'free'"
+        [src]="'http://localhost:5000/uploads/images/' + p.paymentProof"
+        (click)="openImage(p.paymentProof)"
+        class="zoom-img"
+      >
+
+      <!-- FREE EVENT -->
+      <p *ngIf="p.method === 'free'" class="free-label">
+        Free Event 🎉 (No Payment Required)
+      </p>
+
+      <!-- REJECT REASON -->
+      <p *ngIf="p.rejectReason" class="reject-reason">
+        {{ p.rejectReason }}
+      </p>
+
+      <!-- 🔥 ACTION BUTTONS (ONLY PENDING + PAID) -->
+      <div class="actions" *ngIf="p.status === 'pending' && p.method !== 'free'">
+
+        <button (click)="approve(p._id)">
+          Approve
+        </button>
+
+        <button class="reject-btn" (click)="rejectWithReason(p._id)">
+          Reject
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+ <!-- MODAL -->
+<div class="modal" *ngIf="selectedImage" (click)="closeImage()">
+
+  <!-- 🔥 TOP RIGHT CROSS -->
+  <span class="close-fixed" (click)="closeImage()">✖</span>
+
+  <div class="modal-content" (click)="$event.stopPropagation()">
+
+    <img 
+      [src]="selectedImage"
+      class="modal-img"
+      (dblclick)="toggleZoom()"
+      (mousedown)="startDrag($event)"
+    >
+
+  </div>
+
+</div>
+
+</section>

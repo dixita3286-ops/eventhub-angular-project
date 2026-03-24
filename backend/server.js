@@ -7,7 +7,7 @@ const authRoutes = require('./routes/auth.routes');
 const eventRoutes = require('./routes/event.routes');
 const registrationRoutes = require('./routes/registrationRoutes');
 const userRoutes = require('./routes/user.routes');
-
+const paymentRoutes = require('./routes/paymentRoutes');
 
 const app = express();
 
@@ -56,6 +56,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/registrations', registrationRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
 
 /* ================= SERVER ================= */
 app.listen(5000, () => {

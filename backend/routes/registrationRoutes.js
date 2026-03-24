@@ -197,4 +197,21 @@ router.put('/reject/:id', async (req, res) => {
   }
 });
 
+/* ================= ADMIN - GET ALL PAYMENTS ================= */
+
+router.get('/payments', async (req, res) => {
+  try {
+
+    const data = await Registration.find()
+      .populate('userId', 'name email')
+      .populate('eventId', 'title');
+
+    res.json(data);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json([]);
+  }
+});
+
 module.exports = router;
