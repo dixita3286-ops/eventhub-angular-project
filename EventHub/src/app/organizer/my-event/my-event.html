@@ -1,6 +1,4 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
-
 
 <div class="main">
 
@@ -15,11 +13,11 @@
 
     <!-- TAB SELECT -->
     <select (change)="changeTab($any($event.target).value)">
-      <option value="all" [selected]="activeTab==='all'">All Events</option>
-      <option value="my" [selected]="activeTab==='my'">My Events</option>
+      <option value="all">All Events</option>
+      <option value="my">My Events</option>
     </select>
 
-    <!-- STATUS (ONLY MY EVENTS) -->
+    <!-- STATUS -->
     <div class="status-inline" *ngIf="activeTab==='my'">
       <button (click)="setStatus('all')" [class.active]="status==='all'">All</button>
       <button (click)="setStatus('approved')" [class.active]="status==='approved'">Approved</button>
@@ -59,10 +57,11 @@
 
     <div class="event-card" *ngFor="let e of filteredEvents">
 
-       <img
-          [src]="'http://localhost:5000' + e.eventImage"
-          alt="Event Image"
-        />
+      <img
+        [src]="'http://localhost:5000' + e.eventImage"
+        alt="Event Image"
+      />
+
       <div class="event-info">
         <h3>{{ e.title }}</h3>
         <p><b>Category:</b> {{ e.category }}</p>
@@ -70,21 +69,30 @@
         <p><b>Venue:</b> {{ e.venue }}</p>
       </div>
 
+      <!-- ✅ FIXED ACTIONS -->
       <div class="event-actions">
-        <a (click)="modify(e._id)">Modify</a>
-        <span class="separator">|</span>
+
+        <!-- MODIFY ONLY FOR MY EVENTS -->
+        <a *ngIf="activeTab === 'my'" (click)="modify(e._id)">Modify</a>
+
+        <span class="separator" *ngIf="activeTab === 'my'">|</span>
+
+        <!-- ALWAYS -->
         <a (click)="viewDetails(e._id)">View Details</a>
 
-        <ng-container *ngIf="activeTab==='my'">
+        <!-- ONLY MY EVENTS -->
+        <ng-container *ngIf="activeTab === 'my'">
           <span class="separator">|</span>
           <a (click)="viewRegistrations(e._id)">View Registrations</a>
         </ng-container>
+
       </div>
 
     </div>
 
   </div>
 
+  <!-- NO DATA -->
   <p class="no-data" *ngIf="filteredEvents.length === 0">
     No events found.
   </p>

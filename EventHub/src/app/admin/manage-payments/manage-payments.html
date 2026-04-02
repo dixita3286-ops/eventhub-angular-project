@@ -2,6 +2,9 @@
 
   <h1>Manage Payments</h1>
 
+  <!-- LOADING -->
+  <p *ngIf="loading">Loading payments...</p>
+
   <!-- GRID -->
   <div class="student-grid">
 
@@ -15,7 +18,6 @@
       <h3>
         {{ p.userId?.name }}
 
-        <!-- VERIFIED BADGE -->
         <span *ngIf="p.status==='approved'" class="badge verified">
           ✔ Verified
         </span>
@@ -30,54 +32,56 @@
         <span [ngClass]="p.status">{{ p.status }}</span>
       </p>
 
-      <!-- PAID IMAGE -->
-      <img 
-        *ngIf="p.paymentProof && p.method !== 'free'"
-        [src]="'http://localhost:5000/uploads/images/' + p.paymentProof"
-        (click)="openImage(p.paymentProof)"
-        class="zoom-img"
+      <!-- ✅ VIEW BUTTON ONLY FOR PENDING -->
+      <button 
+        *ngIf="p.paymentProof && p.status === 'pending'"
+        class="view-btn"
+        (click)="openImage(p)"
       >
-
-      <!-- FREE EVENT -->
-      <p *ngIf="p.method === 'free'" class="free-label">
-        Free Event 🎉 (No Payment Required)
-      </p>
+        View Payment Proof
+      </button>
 
       <!-- REJECT REASON -->
       <p *ngIf="p.rejectReason" class="reject-reason">
         {{ p.rejectReason }}
       </p>
 
-      <!-- ACTION BUTTONS -->
-      <div class="actions" *ngIf="p.status === 'pending' && p.method !== 'free'">
-
-        <button (click)="approve(p._id)">
-          Approve
-        </button>
-
-        <button class="reject-btn" (click)="rejectWithReason(p._id)">
-          Reject
-        </button>
-
-      </div>
-
     </div>
 
   </div>
 
+  <!-- EMPTY STATE -->
+  <p *ngIf="!loading && payments.length === 0">
+    No payment records found.
+  </p>
+
   <!-- MODAL -->
-  <div class="modal" *ngIf="selectedImage" (click)="closeImage()">
+  <div class="modal" *ngIf="selectedPayment" (click)="closeImage()">
 
     <span class="close-fixed" (click)="closeImage()">✖</span>
 
     <div class="modal-content" (click)="$event.stopPropagation()">
 
+      <!-- IMAGE -->
       <img 
         [src]="selectedImage"
         class="modal-img"
         (dblclick)="toggleZoom()"
         (mousedown)="startDrag($event)"
       >
+
+      <!-- ACTION BUTTONS -->
+      <div class="modal-actions" *ngIf="selectedPayment.status === 'pending'">
+
+        <button (click)="approve(selectedPayment._id)">
+          Approve
+        </button>
+
+        <button class="reject-btn" (click)="rejectWithReason(selectedPayment._id)">
+          Reject
+        </button>
+
+      </div>
 
     </div>
 

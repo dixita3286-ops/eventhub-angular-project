@@ -1,5 +1,4 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Parisienne&display=swap" rel="stylesheet">
 
 <div class="main">
 
@@ -26,23 +25,25 @@
     </select>
   </div>
 
-  <!-- LOADER -->
-  
+  <!-- LOADING -->
+  <p *ngIf="loading" class="loading-text">Loading students...</p>
 
-  <!-- SQUARE CARDS -->
+  <!-- CARDS -->
   <div class="card-grid" *ngIf="!loading && filteredStudents.length > 0">
+
     <div class="student-card" *ngFor="let s of filteredStudents; let i = index">
 
       <div class="card-top">
         <span class="index">No : {{ i + 1 }}</span>
+
         <span class="badge" [ngClass]="s.status || 'registered'">
           {{ s.status || 'registered' }}
         </span>
       </div>
 
       <div class="card-body">
-        <h3>{{ s.name }}</h3>
-        <p class="email">{{ s.email }}</p>
+        <h3>{{ s.name || 'No Name' }}</h3>
+        <p class="email">{{ s.email || 'No Email' }}</p>
       </div>
 
       <div class="card-footer">
@@ -51,6 +52,7 @@
       </div>
 
     </div>
+
   </div>
 
   <!-- NO DATA -->

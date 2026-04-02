@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -30,8 +30,7 @@ export class RegisteredStudent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef   // 🔥 THIS IS THE KEY
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -59,29 +58,28 @@ export class RegisteredStudent implements OnInit {
           this.students = data || [];
           this.applyFilter();
           this.loading = false;
-
-          // 🔥 FORCE UI REFRESH
-          this.cdr.detectChanges();
         },
         error: err => {
-          console.error(err);
+          console.error('Error loading students:', err);
           this.loading = false;
-          this.cdr.detectChanges();
         }
       });
   }
 
   /* ================= FILTER ================= */
   applyFilter() {
+
+    const searchLower = this.search.toLowerCase();
+
     this.filteredStudents = this.students.filter(s => {
 
       const matchSearch =
         !this.search ||
-        s.name?.toLowerCase().includes(this.search.toLowerCase()) ||
-        s.email?.toLowerCase().includes(this.search.toLowerCase());
+        (s.name || '').toLowerCase().includes(searchLower) ||
+        (s.email || '').toLowerCase().includes(searchLower);
 
       const matchStatus =
-        !this.status || s.status === this.status;
+        !this.status || (s.status || 'registered') === this.status;
 
       return matchSearch && matchStatus;
     });
@@ -89,6 +87,10 @@ export class RegisteredStudent implements OnInit {
 
   /* ================= BACK ================= */
   goBack() {
+
+    // 🔥 FORCE BACK TO "MY EVENTS"
+    localStorage.setItem('activeTab', 'my');
+
     this.router.navigate(['/organizer/my-event']);
   }
 }

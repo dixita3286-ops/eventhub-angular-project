@@ -16,6 +16,7 @@ export class ManagePayments implements OnInit {
   payments: any[] = [];
 
   selectedImage: string | null = null;
+  selectedPayment: any = null;
 
   // 🔥 zoom + drag
   isZoomed = false;
@@ -38,7 +39,10 @@ export class ManagePayments implements OnInit {
   loadPayments() {
     this.http.get<any[]>('http://localhost:5000/api/registrations/payments')
       .subscribe(data => {
-        this.payments = data;
+
+        // ✅ REMOVE FREE EVENTS
+        this.payments = data.filter(p => p.method !== 'free');
+
         this.loading = false;
         this.cdr.detectChanges();
       });
@@ -46,9 +50,8 @@ export class ManagePayments implements OnInit {
 
   /* APPROVE */
   approve(id: string) {
-
     const item = this.payments.find(p => p._id === id);
-    if (item.status !== 'pending') return;
+    if (!item || item.status !== 'pending') return;
 
     this.http.put(`http://localhost:5000/api/registrations/approve/${id}`, {})
       .subscribe(() => {
@@ -60,6 +63,7 @@ export class ManagePayments implements OnInit {
         );
 
         this.launchConfetti();
+        this.closeImage();
         this.cdr.detectChanges();
       });
   }
@@ -75,9 +79,8 @@ export class ManagePayments implements OnInit {
 
   /* REJECT */
   rejectWithReason(id: string) {
-
     const item = this.payments.find(p => p._id === id);
-    if (item.status !== 'pending') return;
+    if (!item || item.status !== 'pending') return;
 
     Swal.fire({
       title: 'Reject Payment ❌',
@@ -103,26 +106,28 @@ export class ManagePayments implements OnInit {
             : p
         );
 
+        this.closeImage();
         this.cdr.detectChanges();
       });
 
     });
   }
 
-  /* IMAGE OPEN */
-  openImage(image: string) {
-    this.selectedImage = 'http://localhost:5000/uploads/images/' + image;
+  /* OPEN MODAL */
+  openImage(payment: any) {
+    this.selectedPayment = payment;
+    this.selectedImage = 'http://localhost:5000/uploads/images/' + payment.paymentProof;
 
-    // reset zoom
     this.scale = 1;
     this.posX = 0;
     this.posY = 0;
     this.isZoomed = false;
   }
 
-  /* IMAGE CLOSE */
+  /* CLOSE MODAL */
   closeImage() {
     this.selectedImage = null;
+    this.selectedPayment = null;
   }
 
   /* DOUBLE CLICK ZOOM */

@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-modify-events-org',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './modify-events-org.html',
   styleUrls: ['./modify-events-org.css']
 })
@@ -14,7 +15,16 @@ export class ModifyEventsOrg implements OnInit {
 
   eventId: string = '';
 
-  event = {
+  categories: string[] = [
+    'Workshop',
+    'Seminar',
+    'Cultural',
+    'Sports',
+    'Social',
+    'Exhibition'
+  ];
+
+  event: any = {
     title: '',
     description: '',
     category: '',
@@ -24,17 +34,19 @@ export class ModifyEventsOrg implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-
-    // ✅ SAFEST WAY: subscribe param (snapshot pan chale, but aa best)
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
 
+      console.log("Received ID:", id); // 🔥 DEBUG
+
       if (!id) {
-        console.error('Event ID not found in route');
+        alert("Invalid Event ID");
         return;
       }
 
@@ -43,51 +55,55 @@ export class ModifyEventsOrg implements OnInit {
     });
   }
 
-  /* ================= LOAD EVENT DETAILS ================= */
+  /* ================= LOAD EVENT ================= */
   loadEventDetails() {
-    fetch(`http://localhost:5000/api/events/${this.eventId}`)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed to fetch event');
+    this.http.get<any>(`http://localhost:5000/api/events/${this.eventId}`)
+      .subscribe({
+        next: (data) => {
+
+          console.log("Fetched Event:", data); // 🔥 DEBUG
+
+          this.event = {
+            title: data.title || '',
+            description: data.description || '',
+            category: data.category || '',
+            date: data.date ? data.date.split('T')[0] : '',
+            venue: data.venue || ''
+          };
+
+          this.cdr.detectChanges();
+        },
+        error: err => {
+          console.error('Load error:', err);
+          alert("Failed to load event");
         }
-        return res.json();
-      })
-      .then(data => {
-        // ✅ AUTO FILL FORM (SAFE DATE HANDLING)
-        this.event = {
-          title: data.title || '',
-          description: data.description || '',
-          category: data.category || '',
-          date: data.date ? data.date.split('T')[0] : '',
-          venue: data.venue || ''
-        };
-      })
-      .catch(err => {
-        console.error('Failed to load event', err);
       });
   }
 
   /* ================= UPDATE EVENT ================= */
   updateEvent() {
-    fetch(`http://localhost:5000/api/events/${this.eventId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.event)
-    })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Update failed');
+
+    console.log("Updating ID:", this.eventId);   // 🔥 DEBUG
+    console.log("Sending Data:", this.event);    // 🔥 DEBUG
+
+    this.http.put(`http://localhost:5000/api/events/${this.eventId}`, this.event)
+      .subscribe({
+        next: (res: any) => {
+          console.log("Update Success:", res);
+
+          alert('✅ Event Updated Successfully!');
+          this.router.navigate(['/organizer/my-event']);
+        },
+        error: (err) => {
+          console.error('❌ Update failed:', err);
+
+          // 🔥 SHOW ACTUAL ERROR
+          if (err.status === 404) {
+            alert("❌ API not found (Check backend route)");
+          } else {
+            alert("❌ Update failed");
+          }
         }
-        return res.json();
-      })
-      .then(() => {
-        alert('Event Updated Successfully!');
-        this.router.navigate(['/organizer/my-event']);
-      })
-      .catch(err => {
-        console.error('Update failed', err);
       });
   }
 }

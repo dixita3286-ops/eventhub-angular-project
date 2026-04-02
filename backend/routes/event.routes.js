@@ -16,14 +16,13 @@ const storage = multer.diskStorage({
     }
 
     else if (file.fieldname === 'eventFile') {
-  cb(null, 'uploads/files');
-}
+      cb(null, 'uploads/files');
+    }
   },
 
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
   }
-
 });
 
 const upload = multer({ storage: storage });
@@ -35,15 +34,14 @@ const upload = multer({ storage: storage });
 router.post(
   '/',
   upload.fields([
-  { name: 'eventImage', maxCount: 1 },
-  { name: 'eventFile', maxCount: 1 }
+    { name: 'eventImage', maxCount: 1 },
+    { name: 'eventFile', maxCount: 1 }
   ]),
   async (req, res) => {
 
     try {
 
       const event = new Event({
-
         title: req.body.title,
         description: req.body.description,
         category: req.body.category,
@@ -53,12 +51,12 @@ router.post(
         createdBy: req.body.createdBy,
 
         eventImage: req.files['eventImage']
-  ? '/uploads/images/' + req.files['eventImage'][0].filename
-  : '',
+          ? '/uploads/images/' + req.files['eventImage'][0].filename
+          : '',
 
-eventFile: req.files['eventFile']
-  ? '/uploads/files/' + req.files['eventFile'][0].filename
-  : '',
+        eventFile: req.files['eventFile']
+          ? '/uploads/files/' + req.files['eventFile'][0].filename
+          : '',
       });
 
       await event.save();
@@ -68,9 +66,7 @@ eventFile: req.files['eventFile']
         event: event
       });
 
-    }
-
-    catch (err) {
+    } catch (err) {
 
       console.error('Create event error:', err);
 
@@ -79,7 +75,6 @@ eventFile: req.files['eventFile']
       });
 
     }
-
   }
 );
 
@@ -97,9 +92,7 @@ router.get('/organizer/:organizerId', async (req, res) => {
 
     res.json(events);
 
-  }
-
-  catch (err) {
+  } catch (err) {
 
     console.error('Organizer events error:', err);
 
@@ -108,93 +101,55 @@ router.get('/organizer/:organizerId', async (req, res) => {
     });
 
   }
-
 });
 
 /* =====================================================
-   GET ALL EVENTS (ADMIN - ALL)
+   GET ALL EVENTS (ADMIN)
 ===================================================== */
 
 router.get('/admin', async (req, res) => {
 
   try {
-
     const events = await Event.find().sort({ date: -1 });
-
     res.json(events);
-
-  }
-
-  catch (err) {
-
-    console.error('Admin events error:', err);
-
-    res.status(500).json({
-      message: 'Error fetching admin events'
-    });
-
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching admin events' });
   }
 
 });
 
 /* =====================================================
-   GET ONLY APPROVED EVENTS
+   GET APPROVED EVENTS
 ===================================================== */
 
 router.get('/admin/approved', async (req, res) => {
 
   try {
-
-    const events = await Event.find({
-      status: 'approved'
-    }).sort({ date: -1 });
-
+    const events = await Event.find({ status: 'approved' }).sort({ date: -1 });
     res.json(events);
-
-  }
-
-  catch (err) {
-
-    console.error('Approved events error:', err);
-
-    res.status(500).json({
-      message: 'Error fetching approved events'
-    });
-
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching approved events' });
   }
 
 });
 
 /* =====================================================
-   GET ONLY PENDING EVENTS
+   GET PENDING EVENTS
 ===================================================== */
 
 router.get('/admin/pending', async (req, res) => {
 
   try {
-
-    const events = await Event.find({
-      status: 'pending'
-    }).sort({ date: -1 });
-
+    const events = await Event.find({ status: 'pending' }).sort({ date: -1 });
     res.json(events);
-
-  }
-
-  catch (err) {
-
-    console.error('Pending events error:', err);
-
-    res.status(500).json({
-      message: 'Error fetching pending events'
-    });
-
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching pending events' });
   }
 
 });
 
 /* =====================================================
-   STUDENT / PUBLIC EVENTS (WITH CATEGORY FILTER)
+   PUBLIC EVENTS (FILTER + SEARCH)
 ===================================================== */
 
 router.get('/', async (req, res) => {
@@ -203,16 +158,12 @@ router.get('/', async (req, res) => {
 
     const { category, search, sort } = req.query;
 
-    let filter = {
-      status: 'approved'
-    };
+    let filter = { status: 'approved' };
 
-    /* CATEGORY FILTER */
     if (category && category !== '') {
       filter.category = category;
     }
 
-    /* SEARCH FILTER */
     if (search && search !== '') {
       filter.title = { $regex: search, $options: 'i' };
     }
@@ -227,22 +178,14 @@ router.get('/', async (req, res) => {
 
     res.json(events);
 
-  }
-
-  catch (err) {
-
-    console.error('Public events error:', err);
-
-    res.status(500).json({
-      message: 'Error fetching events'
-    });
-
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching events' });
   }
 
 });
 
 /* =====================================================
-   GET SINGLE EVENT  🔥 (VERY IMPORTANT FIX)
+   GET SINGLE EVENT
 ===================================================== */
 
 router.get('/:id', async (req, res) => {
@@ -252,21 +195,57 @@ router.get('/:id', async (req, res) => {
     const event = await Event.findById(req.params.id);
 
     if (!event) {
-      return res.status(404).json({
-        message: 'Event not found'
-      });
+      return res.status(404).json({ message: 'Event not found' });
     }
 
     res.json(event);
 
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching event' });
   }
 
-  catch (err) {
+});
 
-    console.error('Get event error:', err);
+/* =====================================================
+   ✅ UPDATE EVENT (🔥 MAIN FIX)
+===================================================== */
+
+router.put('/:id', async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    console.log("Updating Event:", id);
+    console.log("Data:", req.body);
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      id,
+      {
+        title: req.body.title,
+        description: req.body.description,
+        category: req.body.category,
+        date: req.body.date,
+        venue: req.body.venue
+      },
+      { new: true }
+    );
+
+    if (!updatedEvent) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    res.json({
+      message: 'Event updated successfully',
+      event: updatedEvent
+    });
+
+  } catch (err) {
+
+    console.error('Update error:', err);
 
     res.status(500).json({
-      message: 'Error fetching event'
+      message: 'Error updating event'
     });
 
   }
@@ -301,15 +280,9 @@ router.put('/:id/status', async (req, res) => {
       });
     }
 
-    res.json({
-      message: 'Status updated successfully'
-    });
+    res.json({ message: 'Status updated successfully' });
 
-  }
-
-  catch (err) {
-
-    console.error('Update status error:', err);
+  } catch (err) {
 
     res.status(500).json({
       message: 'Error updating status'
@@ -339,11 +312,7 @@ router.delete('/:id', async (req, res) => {
       message: 'Event deleted successfully'
     });
 
-  }
-
-  catch (err) {
-
-    console.error('Delete event error:', err);
+  } catch (err) {
 
     res.status(500).json({
       message: 'Server error'

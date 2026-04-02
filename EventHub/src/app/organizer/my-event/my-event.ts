@@ -23,7 +23,6 @@ export class MyEvent implements OnInit {
   events: any[] = [];
   filteredEvents: any[] = [];
 
-  /* 🔥 DEFAULT = ALL EVENTS OF THIS ORGANIZER */
   activeTab: Tab = 'all';
   status: Status = 'all';
   search: string = '';
@@ -39,11 +38,19 @@ export class MyEvent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
     const userStr = localStorage.getItem('user');
     if (!userStr) return;
 
     const user = JSON.parse(userStr);
     this.organizerId = user._id;
+
+    // ✅ RESTORE STATE
+    this.activeTab = (localStorage.getItem('activeTab') as Tab) || 'all';
+    this.status = (localStorage.getItem('status') as Status) || 'all';
+    this.search = localStorage.getItem('search') || '';
+    this.category = localStorage.getItem('category') || '';
+    this.dateSort = (localStorage.getItem('dateSort') as any) || 'newest';
 
     this.fetchEvents();
   }
@@ -51,7 +58,13 @@ export class MyEvent implements OnInit {
   /* ================= FETCH EVENTS ================= */
   fetchEvents() {
 
-    const url = `http://localhost:5000/api/events/organizer/${this.organizerId}`;
+    let url = '';
+
+    if (this.activeTab === 'my') {
+      url = `http://localhost:5000/api/events/organizer/${this.organizerId}`;
+    } else {
+      url = `http://localhost:5000/api/events`;
+    }
 
     this.http.get<any[]>(url).subscribe({
       next: res => {
@@ -63,7 +76,7 @@ export class MyEvent implements OnInit {
     });
   }
 
-  /* ================= FILTER LOGIC ================= */
+  /* ================= FILTER ================= */
   applyAllFilters() {
     let data = [...this.events];
 
@@ -73,9 +86,7 @@ export class MyEvent implements OnInit {
 
     if (this.search.trim()) {
       const q = this.search.toLowerCase();
-      data = data.filter(e =>
-        e.title?.toLowerCase().includes(q)
-      );
+      data = data.filter(e => e.title?.toLowerCase().includes(q));
     }
 
     if (this.category) {
@@ -89,31 +100,24 @@ export class MyEvent implements OnInit {
     });
 
     this.filteredEvents = data;
+
+    // ✅ SAVE STATE
+    localStorage.setItem('activeTab', this.activeTab);
+    localStorage.setItem('status', this.status);
+    localStorage.setItem('search', this.search);
+    localStorage.setItem('category', this.category);
+    localStorage.setItem('dateSort', this.dateSort);
   }
 
-  /* ================= IMAGE FIX ADD ================= */
-
-  getImageUrl(image: string) {
-
-    if (!image) {
-      return 'assets/default.jpg';
-    }
-
-    // old images from public folder
-    if (image.includes('/public')) {
-      return 'http://localhost:5000' + image;
-    }
-
-    // uploaded images
-    return 'http://localhost:5000/uploads/images/' + image;
-  }
-
-  /* ================= UI ACTIONS ================= */
+  /* ================= ACTIONS ================= */
 
   changeTab(tab: Tab) {
     this.activeTab = tab;
     this.status = 'all';
-    this.applyAllFilters();
+
+    localStorage.setItem('activeTab', tab); // ✅ SAVE
+
+    this.fetchEvents();
   }
 
   setStatus(s: Status) {
@@ -136,5 +140,4 @@ export class MyEvent implements OnInit {
   viewRegistrations(eventId: string) {
     this.router.navigate(['/organizer/registered-student', eventId]);
   }
-
 }

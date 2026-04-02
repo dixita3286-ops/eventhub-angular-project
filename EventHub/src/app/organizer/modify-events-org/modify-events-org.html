@@ -3,25 +3,26 @@
   <h2>Modify Event</h2>
 
   <label>Event Title</label>
-  <input [(ngModel)]="event.title">
+  <input [(ngModel)]="event.title" name="title">
 
   <label>Description</label>
-  <textarea [(ngModel)]="event.description"></textarea>
+  <textarea [(ngModel)]="event.description" name="description"></textarea>
 
   <label>Category</label>
-  <select [(ngModel)]="event.category">
-    <option>Workshop</option>
-    <option>Seminar</option>
-    <option>Cultural</option>
-    <option>Sports</option>
+  <select [(ngModel)]="event.category" name="category">
+    <option value="">Select Category</option>
+    <option *ngFor="let c of categories" [value]="c">
+      {{ c }}
+    </option>
   </select>
 
   <label>Date</label>
-  <input type="date" [(ngModel)]="event.date">
+  <input type="date" [(ngModel)]="event.date" name="date">
 
   <label>Venue</label>
-  <input [(ngModel)]="event.venue">
+  <input [(ngModel)]="event.venue" name="venue">
 
+  <!-- ✅ BUTTON -->
   <button (click)="updateEvent()">Update Event</button>
 
 </div>
