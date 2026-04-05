@@ -115,7 +115,7 @@ export class MyEvent implements OnInit {
     this.activeTab = tab;
     this.status = 'all';
 
-    localStorage.setItem('activeTab', tab); // ✅ SAVE
+    localStorage.setItem('activeTab', tab);
 
     this.fetchEvents();
   }

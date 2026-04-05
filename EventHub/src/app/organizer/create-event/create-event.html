@@ -1,117 +1,76 @@
-<div class="main">
+<div class="page-wrapper">
 
-  <div class="form-box">
+  <div class="main">
 
-    <h1>Create Event</h1>
+    <div class="form-box">
 
-    <form (ngSubmit)="createEvent()" #eventForm="ngForm">
+      <h1>Create Event</h1>
 
-      <!-- TITLE -->
-      <div class="form-group">
-        <label>Event Title</label>
-        <input
-          type="text"
-          [(ngModel)]="title"
-          name="title"
-          required>
-      </div>
+      <form (ngSubmit)="createEvent()" #eventForm="ngForm">
 
-      <!-- DESCRIPTION -->
-      <div class="form-group">
-        <label>Description</label>
-        <textarea
-          rows="4"
-          [(ngModel)]="description"
-          name="description">
-        </textarea>
-      </div>
+        <!-- TITLE -->
+        <div class="form-group">
+          <label>Event Title</label>
+          <input type="text" [(ngModel)]="title" name="title" required>
+        </div>
 
-      <!-- CATEGORY -->
-      <div class="form-group">
-        <label>Category</label>
-        <select
-          [(ngModel)]="category"
-          name="category"
-          required>
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+          <label>Description</label>
+          <textarea rows="4" [(ngModel)]="description" name="description"></textarea>
+        </div>
 
-          <option value="">Select Category</option>
-          <option value="Workshop">Workshop</option>
-          <option value="Seminar">Seminar</option>
-          <option value="Cultural">Cultural</option>
-          <option value="Sports">Sports</option>
-          <option value="Social">Social</option>
-          <option value="Exhibition">Exhibition</option>
+        <!-- CATEGORY -->
+        <div class="form-group">
+          <label>Category</label>
+          <select [(ngModel)]="category" name="category" required>
+            <option value="">Select Category</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Seminar">Seminar</option>
+            <option value="Cultural">Cultural</option>
+            <option value="Sports">Sports</option>
+            <option value="Social">Social</option>
+            <option value="Exhibition">Exhibition</option>
+          </select>
+        </div>
 
-        </select>
-      </div>
+        <!-- DATE -->
+        <div class="form-group">
+          <label>Event Date</label>
+          <input type="date" [(ngModel)]="date" name="date" [min]="minDate" required>
+        </div>
 
-      <!-- DATE -->
-      <div class="form-group">
-        <label>Event Date</label>
-        <input
-          type="date"
-          [(ngModel)]="date"
-          name="date"
-          [min]="minDate"
-          required>
-      </div>
+        <!-- VENUE -->
+        <div class="form-group">
+          <label>Venue</label>
+          <input type="text" [(ngModel)]="venue" name="venue" required>
+        </div>
 
-      <!-- VENUE -->
-      <div class="form-group">
-        <label>Venue</label>
-        <input
-          type="text"
-          [(ngModel)]="venue"
-          name="venue"
-          required>
-      </div>
+        <!-- FEE -->
+        <div class="form-group">
+          <label>Registration Fee</label>
+          <input type="number" [(ngModel)]="registrationFee" name="registrationFee" min="0" required>
+        </div>
 
-      <!-- REGISTRATION FEE -->
-      <div class="form-group">
-        <label>Registration Fee</label>
-        <input
-          type="number"
-          [(ngModel)]="registrationFee"
-          name="registrationFee"
-          min="0"
-          required>
-      </div>
+        <!-- IMAGE -->
+        <div class="form-group">
+          <label>Upload Event Image</label>
+          <input type="file" accept="image/*" (change)="onFileChange($event)">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="preview">
+        </div>
 
-      <!-- IMAGE -->
-      <div class="form-group">
+        <!-- PDF -->
+        <div class="form-group">
+          <label>Upload Event PDF</label>
+          <input type="file" accept="application/pdf" (change)="onPdfChange($event)">
+        </div>
 
-        <label>Upload Event Image</label>
+        <!-- BUTTON -->
+        <button type="submit">Create Event</button>
 
-        <input
-          type="file"
-          accept="image/*"
-          (change)="onFileChange($event)">
+      </form>
 
-        <img
-          *ngIf="imagePreview"
-          [src]="imagePreview"
-          class="preview">
-
-      </div>
-
-      <!-- PDF -->
-      <div class="form-group">
-
-        <label>Upload Event PDF</label>
-
-        <input
-          type="file"
-          accept="application/pdf"
-          (change)="onPdfChange($event)">
-
-      </div>
-
-      <!-- BUTTON -->
-      <button type="submit">
-        Create Event
-      </button>
-
-    </form>
+    </div>
 
   </div>
 

@@ -6,21 +6,22 @@
   font-family: "Segoe UI", sans-serif;
 }
 
-/* ===== PAGE ===== */
-:host{
-  display:block;
+/* ===== PAGE WRAPPER (🔥 IMPORTANT FIX) ===== */
+.page-wrapper{
   min-height:100vh;
   background:#0a0a0a;
   color:white;
+
+  /* 🔥 THIS FIXES CUT ISSUE */
+  overflow-y:auto;
 }
 
-/* ===== MAIN WRAPPER ===== */
+/* ===== MAIN ===== */
 .main{
   width:100%;
-  min-height:100vh;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
+
   padding:60px 20px;
 }
 
@@ -28,10 +29,15 @@
 .form-box{
   width:100%;
   max-width:600px;
+
   background:#121212;
   padding:40px;
+
   border-radius:10px;
   border:1px solid #ff8c00;
+
+  /* 🔥 IMPORTANT */
+  margin-bottom:60px;
 }
 
 /* ===== TITLE ===== */
@@ -67,6 +73,7 @@
   background:#1a1a1a;
   color:white;
   font-size:14px;
+  transition:0.3s;
 }
 
 /* ===== FOCUS ===== */
@@ -75,6 +82,7 @@
 .form-group select:focus{
   outline:none;
   border:1px solid #ff8c00;
+  box-shadow:0 0 6px rgba(255,140,0,0.6);
 }
 
 /* ===== TEXTAREA ===== */
@@ -87,13 +95,14 @@ input[type="file"]{
   padding:8px;
 }
 
-/* ===== IMAGE PREVIEW ===== */
+/* ===== IMAGE ===== */
 .preview{
   margin-top:10px;
   width:100%;
   max-height:180px;
   object-fit:cover;
   border-radius:6px;
+  border:1px solid #333;
 }
 
 /* ===== BUTTON ===== */
@@ -104,16 +113,28 @@ button{
   border:none;
   border-radius:6px;
   font-weight:600;
+  font-size:15px;
   cursor:pointer;
+  transition:0.3s;
 }
 
 button:hover{
   background:#ffa733;
+  transform:scale(1.03);
 }
 
-/* ===== MOBILE FIX ===== */
+/* ===== MOBILE ===== */
 @media(max-width:600px){
+
+  .main{
+    padding:40px 15px;
+  }
+
   .form-box{
     padding:25px;
+  }
+
+  .form-box h1{
+    font-size:24px;
   }
 }

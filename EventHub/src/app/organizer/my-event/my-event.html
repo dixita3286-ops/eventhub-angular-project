@@ -11,7 +11,7 @@
   <!-- FILTER BAR -->
   <div class="filter-bar">
 
-    <!-- TAB SELECT -->
+    <!-- TAB -->
     <select (change)="changeTab($any($event.target).value)">
       <option value="all">All Events</option>
       <option value="my">My Events</option>
@@ -44,7 +44,7 @@
       <option value="Exhibition">Exhibition</option>
     </select>
 
-    <!-- DATE SORT -->
+    <!-- DATE -->
     <select [(ngModel)]="dateSort" (change)="applyAllFilters()">
       <option value="newest">Newest First</option>
       <option value="oldest">Oldest First</option>
@@ -52,7 +52,7 @@
 
   </div>
 
-  <!-- EVENTS GRID -->
+  <!-- EVENTS -->
   <div class="event-grid">
 
     <div class="event-card" *ngFor="let e of filteredEvents">
@@ -69,21 +69,23 @@
         <p><b>Venue:</b> {{ e.venue }}</p>
       </div>
 
-      <!-- ✅ FIXED ACTIONS -->
+      <!-- ✅ ACTIONS -->
       <div class="event-actions">
 
-        <!-- MODIFY ONLY FOR MY EVENTS -->
-        <a *ngIf="activeTab === 'my'" (click)="modify(e._id)">Modify</a>
+        <!-- ONLY SHOW WHEN MY EVENTS + ALL -->
+        <ng-container *ngIf="activeTab === 'my' && status === 'all'">
 
-        <span class="separator" *ngIf="activeTab === 'my'">|</span>
-
-        <!-- ALWAYS -->
-        <a (click)="viewDetails(e._id)">View Details</a>
-
-        <!-- ONLY MY EVENTS -->
-        <ng-container *ngIf="activeTab === 'my'">
+          <a (click)="modify(e._id)">Modify</a>
+          <span class="separator">|</span>
+          <a (click)="viewDetails(e._id)">View Details</a>
           <span class="separator">|</span>
           <a (click)="viewRegistrations(e._id)">View Registrations</a>
+
+        </ng-container>
+
+        <!-- ALL EVENTS TAB -->
+        <ng-container *ngIf="activeTab === 'all'">
+          <a (click)="viewDetails(e._id)">View Details</a>
         </ng-container>
 
       </div>
