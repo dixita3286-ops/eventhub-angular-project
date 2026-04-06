@@ -210,3 +210,25 @@ h1::after {
     font-size: 26px;
   }
 }
+/* ACTIONS CENTER */
+.actions{
+  margin-top:15px;
+  display:flex;
+  justify-content:center; /* 🔥 CENTER BUTTON */
+}
+
+/* DELETE BUTTON */
+.delete-btn{
+  background:red;
+  color:white;
+  border:none;
+  padding:8px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.delete-btn:hover{
+  background:#ff4d4d;
+  transform:scale(1.05);
+}

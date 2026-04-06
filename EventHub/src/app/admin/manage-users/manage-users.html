@@ -1,20 +1,13 @@
 <section class="page">
 
-  <!-- ===== HEADER ===== -->
+  <!-- HEADER -->
   <div class="top-bar">
-
-    <!-- CENTERED TITLE -->
     <div class="title-wrapper">
       <h1>Manage Users</h1>
-      
     </div>
-
-   
   </div>
 
- 
-
-  <!-- ===== CONTROLS ===== -->
+  <!-- CONTROLS -->
   <div class="control-bar">
 
     <input
@@ -31,18 +24,17 @@
       <option value="all">All</option>
       <option value="user">Students</option>
       <option value="organizer">Organizers</option>
-      
+
     </select>
 
   </div>
 
-
-
-  <!-- ===== USERS ===== -->
+  <!-- EMPTY -->
   <p *ngIf="filteredUsers.length === 0" class="empty">
     No users found.
   </p>
 
+  <!-- USERS -->
   <div class="user-grid">
 
     <div class="user-card" *ngFor="let u of filteredUsers">
@@ -58,6 +50,14 @@
         <span class="role">
           {{ u.role | uppercase }}
         </span>
+
+        <!-- 🔥 CENTER DELETE BUTTON -->
+        <div class="actions">
+          <button class="delete-btn" (click)="deleteUser(u._id)">
+            Delete User
+          </button>
+        </div>
+
       </div>
 
     </div>

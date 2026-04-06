@@ -12,10 +12,10 @@
   <div class="filter-bar">
 
     <!-- TAB -->
-    <select (change)="changeTab($any($event.target).value)">
-      <option value="all">All Events</option>
-      <option value="my">My Events</option>
-    </select>
+    <select [(ngModel)]="activeTab" (change)="changeTab(activeTab)">
+  <option value="all">All Events</option>
+  <option value="my">My Events</option>
+</select>
 
     <!-- STATUS -->
     <div class="status-inline" *ngIf="activeTab==='my'">

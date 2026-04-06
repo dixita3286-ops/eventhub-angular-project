@@ -15,9 +15,11 @@ export class ManageUsers implements OnInit {
   users: any[] = [];
   totalUsers = 0;
 
-  // search & dropdown
   searchText: string = '';
   roleFilter: string = 'all';
+
+  // 🔥 EDIT STATE
+  editingUser: any = null;
 
   constructor(
     private http: HttpClient,
@@ -28,17 +30,15 @@ export class ManageUsers implements OnInit {
     this.loadUsers();
   }
 
-  // ===== LOAD USERS =====
+  /* ===== LOAD USERS ===== */
   loadUsers() {
 
-    // users list
     this.http.get<any[]>('http://localhost:5000/api/users')
       .subscribe(data => {
         this.users = data;
         this.cdr.detectChanges();
       });
 
-    // users count
     this.http.get<any>('http://localhost:5000/api/users/count')
       .subscribe(res => {
         this.totalUsers = res.totalUsers;
@@ -46,10 +46,10 @@ export class ManageUsers implements OnInit {
       });
   }
 
-  // ===== FINAL FILTER =====
+  /* ===== FILTER ===== */
   get filteredUsers() {
     return this.users
-      .filter(u => (u.role || '').toLowerCase() !== 'admin') // 🔥 ADMIN HIDE
+      .filter(u => (u.role || '').toLowerCase() !== 'admin')
       .filter(u => {
 
         const text = this.searchText.toLowerCase();
@@ -65,19 +65,65 @@ export class ManageUsers implements OnInit {
         if (this.roleFilter !== 'all') {
 
           if (this.roleFilter === 'user') {
-            // STUDENTS = user OR student
             matchRole = role === 'user' || role === 'student';
           } else {
             matchRole = role === this.roleFilter;
           }
-
         }
 
         return matchText && matchRole;
       });
   }
 
-  // ===== BACK BUTTON =====
+  /* ===== EDIT USER ===== */
+  startEdit(user: any) {
+    this.editingUser = { ...user }; // clone
+  }
+
+  cancelEdit() {
+    this.editingUser = null;
+  }
+
+  saveEdit() {
+    this.http.put(`http://localhost:5000/api/users/${this.editingUser._id}`, this.editingUser)
+      .subscribe(() => {
+
+        // update UI
+        this.users = this.users.map(u =>
+          u._id === this.editingUser._id ? this.editingUser : u
+        );
+
+        this.editingUser = null;
+        alert('User updated successfully');
+        this.cdr.detectChanges();
+      });
+  }
+
+  /* ===== DELETE USER ===== */
+  deleteUser(id: string) {
+
+  console.log("Deleting user:", id); // 🔥 DEBUG
+
+  if (!confirm('Are you sure you want to delete this user?')) return;
+
+  this.http.delete(`http://localhost:5000/api/users/${id}`)
+    .subscribe({
+      next: (res) => {
+
+        console.log("Deleted:", res); // 🔥 DEBUG
+
+        // remove from UI
+        this.users = this.users.filter(u => u._id !== id);
+
+        alert('User deleted successfully');
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Delete error:", err);
+        alert('Delete failed');
+      }
+    });
+}
   goBack() {
     window.history.back();
   }

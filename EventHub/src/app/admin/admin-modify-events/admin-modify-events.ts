@@ -29,13 +29,19 @@ export class AdminModifyEvents implements OnInit {
   }
 
   loadEvent() {
-    this.http
-      .get(`http://localhost:5000/api/events/${this.eventId}`)
-      .subscribe(data => {
-        this.event = data;
-        this.cdr.detectChanges(); // 🔥 IMPORTANT
-      });
-  }
+  this.http
+    .get<any>(`http://localhost:5000/api/events/${this.eventId}`)
+    .subscribe(data => {
+
+      // 🔥 FIX DATE FORMAT
+      if (data.date) {
+        data.date = data.date.split('T')[0];
+      }
+
+      this.event = data;
+      this.cdr.detectChanges();
+    });
+}
 
   updateEvent() {
     this.http
