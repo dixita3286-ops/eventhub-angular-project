@@ -1,4 +1,9 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -14,7 +19,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './student-event-details.html',
   styleUrls: ['./student-event-details.css']
 })
-export class StudentEventDetails implements OnInit {
+export class StudentEventDetails implements OnInit, OnDestroy {
 
   event: any = null;
   loading = true;
@@ -26,14 +31,19 @@ export class StudentEventDetails implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ✅ SUBSCRIBE TO PARAM CHANGES
+
+    // 🔥 SCROLL LOCK
+    document.body.style.overflow = 'hidden';
+
+    // 🔥 FORCE INITIAL TOP POSITION (FIX GLITCH)
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 0);
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
 
-      console.log('EVENT ID:', id);
-
       if (!id) {
-        console.error('❌ ID NOT FOUND');
         this.loading = false;
         return;
       }
@@ -41,6 +51,8 @@ export class StudentEventDetails implements OnInit {
       this.fetchEvent(id);
     });
   }
+
+  /* ================= FETCH EVENT ================= */
 
   fetchEvent(id: string) {
     this.loading = true;
@@ -50,12 +62,18 @@ export class StudentEventDetails implements OnInit {
       .get(`http://localhost:5000/api/events/${id}`)
       .subscribe({
         next: (data) => {
+
           this.event = data;
           this.loading = false;
 
-          // 🔥 FORCE UI UPDATE
           this.cdr.detectChanges();
+
+          // 🔥 FORCE PERFECT CENTER AFTER DATA LOAD
+          setTimeout(() => {
+            window.scrollTo(0, 0);
+          }, 50);
         },
+
         error: (err) => {
           console.error(err);
           this.loading = false;
@@ -64,29 +82,34 @@ export class StudentEventDetails implements OnInit {
       });
   }
 
+  /* ================= DOWNLOAD ================= */
+
   downloadFile(filePath: string) {
-  const fileUrl = 'http://localhost:5000' + filePath;
+    const fileUrl = 'http://localhost:5000' + filePath;
 
-  this.http.get(fileUrl, { responseType: 'blob' }).subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
 
-      const a = document.createElement('a');
-      a.href = url;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filePath.split('/').pop() || 'event-file';
 
-      // ✅ extract filename from path
-      a.download = filePath.split('/').pop() || 'event-file';
+        document.body.appendChild(a);
+        a.click();
 
-      document.body.appendChild(a);
-      a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('❌ File download failed', err);
+      }
+    });
+  }
 
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      console.error('❌ File download failed', err);
-    }
-  });
-}
+  /* ================= UNLOCK SCROLL ================= */
 
+  ngOnDestroy(): void {
+    document.body.style.overflow = 'auto'; // 🔥 RESTORE SCROLL
+  }
 }

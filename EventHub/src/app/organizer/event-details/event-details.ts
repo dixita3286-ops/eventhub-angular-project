@@ -1,7 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-event-details',
@@ -10,7 +15,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   templateUrl: './event-details.html',
   styleUrl: './event-details.css',
 })
-export class EventDetails implements OnInit {
+export class EventDetails implements OnInit, OnDestroy {
 
   event: any = null;
   loading = true;
@@ -22,7 +27,10 @@ export class EventDetails implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // ✅ SUBSCRIBE TO PARAM CHANGES
+
+    // 🔥 SCROLL LOCK ON
+    document.body.style.overflow = 'hidden';
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
 
@@ -48,8 +56,6 @@ export class EventDetails implements OnInit {
         next: (data) => {
           this.event = data;
           this.loading = false;
-
-          // 🔥 FORCE UI UPDATE
           this.cdr.detectChanges();
         },
         error: (err) => {
@@ -61,27 +67,30 @@ export class EventDetails implements OnInit {
   }
 
   downloadFile(filePath: string) {
-  const fileUrl = 'http://localhost:5000' + filePath;
+    const fileUrl = 'http://localhost:5000' + filePath;
 
-  this.http.get(fileUrl, { responseType: 'blob' }).subscribe({
-    next: (blob) => {
-      const url = window.URL.createObjectURL(blob);
+    this.http.get(fileUrl, { responseType: 'blob' }).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
 
-      const a = document.createElement('a');
-      a.href = url;
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filePath.split('/').pop() || 'event-file';
 
-      // ✅ extract filename from path
-      a.download = filePath.split('/').pop() || 'event-file';
+        document.body.appendChild(a);
+        a.click();
 
-      document.body.appendChild(a);
-      a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => {
+        console.error('❌ File download failed', err);
+      }
+    });
+  }
 
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    },
-    error: (err) => {
-      console.error('❌ File download failed', err);
-    }
-  });
-}
+  // 🔥 SCROLL UNLOCK WHEN LEAVING PAGE
+  ngOnDestroy(): void {
+    document.body.style.overflow = 'auto';
+  }
 }
