@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -30,7 +30,9 @@ export class RegisteredStudent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef,   // 🔥 ADD
+    private zone: NgZone              // 🔥 ADD
   ) {}
 
   ngOnInit(): void {
@@ -55,13 +57,24 @@ export class RegisteredStudent implements OnInit {
       .get<any[]>(`http://localhost:5000/api/registrations/event/${this.eventId}`)
       .subscribe({
         next: data => {
-          this.students = data || [];
-          this.applyFilter();
-          this.loading = false;
+
+          // 🔥 IMPORTANT FIX
+          this.zone.run(() => {
+            this.students = data || [];
+            this.applyFilter();
+            this.loading = false;
+
+            this.cdr.detectChanges(); // 🔥 force UI update
+          });
+
         },
         error: err => {
           console.error('Error loading students:', err);
-          this.loading = false;
+
+          this.zone.run(() => {
+            this.loading = false;
+            this.cdr.detectChanges();
+          });
         }
       });
   }
@@ -83,14 +96,14 @@ export class RegisteredStudent implements OnInit {
 
       return matchSearch && matchStatus;
     });
+
+    this.cdr.detectChanges(); // 🔥 ensure update
   }
 
   /* ================= BACK ================= */
   goBack() {
 
-    // 🔥 FORCE BACK TO "MY EVENTS"
     localStorage.setItem('activeTab', 'my');
-
     this.router.navigate(['/organizer/my-event']);
   }
 }

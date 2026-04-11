@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -13,16 +13,20 @@ import { HttpClient } from '@angular/common/http';
 export class AdminRegisteredStudent implements OnInit {
 
   students: any[] = [];
-
   loading = true;
 
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone   // 🔥 ADD
   ) {}
 
   ngOnInit(): void {
+
+    // 🔥 ALWAYS START FROM TOP
+    window.scrollTo(0, 0);
+
     const eventId = this.route.snapshot.paramMap.get('eventId');
     if (!eventId) return;
 
@@ -31,16 +35,33 @@ export class AdminRegisteredStudent implements OnInit {
 
   /* LOAD STUDENTS */
   loadStudents(eventId: string) {
+    this.loading = true;
+
     this.http
       .get<any[]>(`http://localhost:5000/api/registrations/event/${eventId}`)
       .subscribe({
         next: (data) => {
-          this.students = data;
-          this.loading = false;
-          this.cdr.detectChanges();
+
+          this.zone.run(() => {
+            this.students = data || [];
+            this.loading = false;
+
+            this.cdr.detectChanges();
+
+            // 🔥 FORCE UI + SCROLL FIX
+            setTimeout(() => {
+              window.scrollTo(0, 0);
+            }, 50);
+          });
+
         },
         error: () => {
-          this.loading = false;
+
+          this.zone.run(() => {
+            this.loading = false;
+            this.cdr.detectChanges();
+          });
+
         }
       });
   }
