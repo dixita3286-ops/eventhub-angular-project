@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -26,109 +26,90 @@ export class CreateEvent implements OnInit {
 
   minDate = '';
 
-  ngOnInit() {
+  @ViewChild('imageInput') imageInput!: ElementRef;
+  @ViewChild('pdfInput') pdfInput!: ElementRef;
 
+  ngOnInit() {
     const today = new Date();
     today.setDate(today.getDate() + 5);
-
     this.minDate = today.toISOString().split('T')[0];
-
   }
 
   /* IMAGE CHANGE */
-
   onFileChange(event: any) {
-
     const file = event.target.files[0];
-
     if (!file) return;
 
     this.eventImage = file;
 
     const reader = new FileReader();
-
     reader.onload = (e: any) => {
       this.imagePreview = e.target.result;
     };
-
     reader.readAsDataURL(file);
-
   }
 
   /* PDF CHANGE */
-
   onPdfChange(event: any) {
-
     const file = event.target.files[0];
-
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-
       Swal.fire({
         icon: 'warning',
         title: 'Invalid File',
         text: 'Only PDF files allowed.'
       });
 
+      event.target.value = '';
       return;
     }
 
     this.eventFile = file;
-
   }
 
   /* CREATE EVENT */
-
-  createEvent() {
+  createEvent(eventForm: NgForm) {
 
     const today = new Date();
     const minDate = new Date();
     minDate.setDate(today.getDate() + 5);
 
     if (new Date(this.date) < minDate) {
-
       Swal.fire({
         icon: 'warning',
         title: 'Invalid Date',
         text: 'Event date must be at least 5 days from today.'
       });
-
       return;
     }
 
     if (!this.eventImage) {
-
       Swal.fire({
         icon: 'warning',
         title: 'Image Required',
         text: 'Please upload event image.'
       });
-
       return;
     }
 
     if (!this.eventFile) {
-
       Swal.fire({
         icon: 'warning',
         title: 'PDF Required',
         text: 'Please upload event PDF.'
       });
-
       return;
     }
 
     const userStr = localStorage.getItem('user');
 
     if (!userStr) {
-
       Swal.fire({
         icon: 'error',
         title: 'Login Required',
         text: 'You must login first.'
       });
-
       return;
     }
 
@@ -161,16 +142,16 @@ export class CreateEvent implements OnInit {
         confirmButtonColor: '#3085d6'
       });
 
-      this.title = '';
-      this.description = '';
-      this.category = '';
-      this.date = '';
-      this.venue = '';
-      this.registrationFee = null;
+      /* ✅ RESET FORM */
+      eventForm.resetForm();
 
+      this.imagePreview = null;
       this.eventImage = null;
       this.eventFile = null;
-      this.imagePreview = null;
+
+      /* ✅ CLEAR FILE INPUTS */
+      this.imageInput.nativeElement.value = '';
+      this.pdfInput.nativeElement.value = '';
 
     })
     .catch(err => {

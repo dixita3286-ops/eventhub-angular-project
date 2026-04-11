@@ -6,7 +6,7 @@
 
       <h1>Create Event</h1>
 
-      <form (ngSubmit)="createEvent()" #eventForm="ngForm">
+      <form #eventForm="ngForm" (ngSubmit)="createEvent(eventForm)">
 
         <!-- TITLE -->
         <div class="form-group">
@@ -55,14 +55,14 @@
         <!-- IMAGE -->
         <div class="form-group">
           <label>Upload Event Image</label>
-          <input type="file" accept="image/*" (change)="onFileChange($event)">
+          <input type="file" #imageInput accept="image/*" (change)="onFileChange($event)">
           <img *ngIf="imagePreview" [src]="imagePreview" class="preview">
         </div>
 
         <!-- PDF -->
         <div class="form-group">
           <label>Upload Event PDF</label>
-          <input type="file" accept="application/pdf" (change)="onPdfChange($event)">
+          <input type="file" #pdfInput accept="application/pdf" (change)="onPdfChange($event)">
         </div>
 
         <!-- BUTTON -->

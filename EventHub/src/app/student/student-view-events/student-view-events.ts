@@ -23,7 +23,6 @@ export class StudentViewEvents implements OnInit, OnDestroy {
   showMenu = false;
   typingTimer: any;
 
-  // 🔥 UPDATED
   registeredEvents: any[] = [];
 
   private routeSub!: Subscription;
@@ -90,10 +89,7 @@ export class StudentViewEvents implements OnInit, OnDestroy {
     fetch(`http://localhost:5000/api/registrations/student/${user._id}`)
       .then(res => res.json())
       .then(data => {
-
-        // 🔥 IMPORTANT
         this.registeredEvents = data;
-
         this.cdr.detectChanges();
       });
   }
@@ -175,24 +171,20 @@ export class StudentViewEvents implements OnInit, OnDestroy {
       return;
     }
 
-    /* ================= PAID ================= */
+    /* ================= PAID (ONLY UPI NOW) ================= */
 
     Swal.fire({
-      title: 'Select Payment',
+      icon: 'question',
+      title: 'UPI Payment',
+      text: 'Proceed with UPI payment?',
       showCancelButton: true,
-      confirmButtonText: 'UPI',
-      cancelButtonText: 'Card'
+      confirmButtonText: 'Continue',
+      confirmButtonColor: '#3085d6'
     }).then(res => {
 
       if (res.isConfirmed) {
         this.router.navigate(['/student/payment', eventId], {
           queryParams: { method: 'upi' }
-        });
-      }
-
-      if (res.dismiss === Swal.DismissReason.cancel) {
-        this.router.navigate(['/student/payment', eventId], {
-          queryParams: { method: 'card' }
         });
       }
 

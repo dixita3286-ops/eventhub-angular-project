@@ -1,78 +1,57 @@
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<div class="page-wrapper">
 
-<div class="payment-container">
+  <div class="payment-container">
 
-  <h2>Secure Payment</h2>
-  <p class="sub">Complete your registration</p>
+    <h2>Secure Payment</h2>
+    <p class="sub">Complete your registration</p>
 
-  <!-- LOADING -->
-  <div *ngIf="loading" class="loading-box">
-    Loading payment details...
-  </div>
+    <!-- LOADING -->
+    <div *ngIf="loading" class="loading-box">
+      Loading payment details...
+    </div>
 
-  <!-- ================= UPI ================= -->
+    <!-- ================= UPI ================= -->
 
-  <div class="payment-box" *ngIf="method === 'upi' && !loading">
+    <div class="payment-box" *ngIf="method === 'upi' && !loading">
 
-    <h3>UPI Payment</h3>
+      <h3>UPI Payment</h3>
 
-    <div class="qr-box">
+      <div class="qr-box">
 
-      <img [src]="qrCode" alt="UPI QR">
+        <img [src]="qrCode" alt="UPI QR">
 
-      <p class="scan-text">
-        Scan using Google Pay / PhonePe / Paytm
-      </p>
+        <p class="scan-text">
+          Scan using Google Pay / PhonePe / Paytm
+        </p>
 
-      <div class="amount-box">
-        <span>Amount</span>
-        <h4>₹{{amount}}</h4>
+        <div class="amount-box">
+          <span>Amount</span>
+          <h4>₹{{amount}}</h4>
+        </div>
+
+        <p class="upi-id">
+          UPI ID: <strong>{{upiId}}</strong>
+        </p>
+
+        <p class="instruction">
+          Upload payment screenshot after paying
+        </p>
+
+        <input type="file" (change)="uploadProof($event)" accept="image/*">
+
       </div>
 
-      <p class="upi-id">
-        UPI ID: <strong>{{upiId}}</strong>
-      </p>
-
-      <p class="instruction">
-        Upload payment screenshot after paying
-      </p>
-
-      <!-- 🔥 Screenshot Upload -->
-      <input type="file" (change)="uploadProof($event)" accept="image/*">
+      <button class="pay-btn" (click)="confirmPayment()" [disabled]="isSubmitting">
+        I Have Paid ₹{{amount}}
+      </button>
 
     </div>
 
-    <button class="pay-btn" (click)="confirmPayment()" [disabled]="isSubmitting">
-      I Have Paid ₹{{amount}}
+    <!-- CANCEL -->
+    <button class="cancel-btn" (click)="cancelPayment()" *ngIf="!loading">
+      Cancel
     </button>
 
   </div>
-
-  <!-- ================= CARD ================= -->
-
-  <div class="payment-box" *ngIf="method === 'card' && !loading">
-
-    <h3>Card Payment</h3>
-
-    <input type="text" maxlength="16" placeholder="Card Number" [(ngModel)]="cardNumber">
-
-    <div class="row">
-      <input type="text" placeholder="MM/YY" [(ngModel)]="expiry">
-      <input type="password" maxlength="3" placeholder="CVV" [(ngModel)]="cvv">
-    </div>
-
-    <!-- Screenshot upload for card also -->
-    <input type="file" (change)="uploadProof($event)" accept="image/*">
-
-    <button class="pay-btn" (click)="confirmPayment()" [disabled]="isSubmitting">
-      Pay ₹{{amount}}
-    </button>
-
-  </div>
-
-  <!-- CANCEL -->
-  <button class="cancel-btn" (click)="cancelPayment()" *ngIf="!loading">
-    Cancel
-  </button>
 
 </div>

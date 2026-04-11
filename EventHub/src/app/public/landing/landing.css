@@ -1,7 +1,7 @@
 /* ================= PAGE BASE ================= */
 app-landing {
   display: block;
-  height: 100vh;
+  height: calc(100vh);   /* 🔥 NAVBAR HEIGHT FIX */
   width: 100%;
   font-family: 'Times New Roman', serif;
   background: radial-gradient(1200px circle at top, #141414, #050505);
@@ -29,7 +29,7 @@ app-landing {
 
 /* ================= EVENTS SECTION ================= */
 .events-container {
-  height: 48vh;
+  min-height: 48vh;
   display: flex;
   flex-direction: column;
   align-items: center;
