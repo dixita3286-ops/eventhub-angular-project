@@ -1,166 +1,151 @@
-/* MAIN CONTAINER */
+/* PAGE WRAPPER */
+.page-wrapper{
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 100px;
+  background: #0f0f0f; /* 🔥 pure dark */
+}
 
+
+/* MAIN CONTAINER */
 .payment-container{
-max-width:420px;
-margin:auto;
-margin-top:40px;
-padding:30px;
-background:#ffffff;
-border-radius:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.1);
-font-family:'Poppins',sans-serif;
-text-align:center;
-transition:0.3s;
+  width: 100%;
+  max-width: 420px;
+  padding: 30px;
+
+  background: linear-gradient(145deg, #1c1c1c, #121212); /* depth */
+
+  border-radius: 18px;
+
+  /* 🔥 MAIN FIX */
+  border: 1px solid rgba(255, 122, 0, 0.3);
+
+  box-shadow: 
+    0 20px 60px rgba(0,0,0,0.8),
+    0 0 25px rgba(255, 122, 0, 0.15); /* orange glow */
+
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  color: #fff;
+
+  backdrop-filter: blur(10px); /* glass feel */
 }
 
 
 /* HEADINGS */
-
 h2{
-margin-bottom:5px;
-font-weight:600;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #fff;
 }
 
 .sub{
-color:#777;
-margin-bottom:25px;
-font-size:14px;
-}
-
-
-/* PAYMENT BOX */
-
-.payment-box{
-margin-top:10px;
+  color: #aaa;
+  margin-bottom: 25px;
+  font-size: 14px;
 }
 
 
 /* QR IMAGE */
-
 .qr-box img{
-width:220px;
-margin:15px 0;
-border-radius:12px;
-box-shadow:0 4px 10px rgba(0,0,0,0.1);
+  width: 200px;
+  margin: 15px 0;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
 }
 
 
-/* SCAN TEXT */
-
+/* TEXT */
 .scan-text{
-font-size:13px;
-color:#777;
+  font-size: 13px;
+  color: #bbb;
 }
-
-
-/* AMOUNT BOX */
-
-.amount-box{
-margin:10px 0;
-}
-
-.amount-box span{
-font-size:13px;
-color:#888;
-}
-
-.amount-box h4{
-font-size:26px;
-color:#2ecc71;
-margin:5px 0;
-font-weight:600;
-}
-
-
-/* UPI ID */
 
 .upi-id{
-font-size:13px;
-color:#555;
-margin-top:5px;
+  font-size: 13px;
+  color: #ccc;
+  margin-top: 5px;
 }
-
-
-/* INSTRUCTION */
 
 .instruction{
-font-size:12px;
-color:#888;
-margin-top:5px;
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
 }
 
 
-/* INPUT FIELDS */
+/* AMOUNT */
+.amount-box h4{
+  font-size: 28px;
+  color: #ff7a00; /* 🔥 orange */
+  margin: 5px 0;
+  font-weight: 600;
+}
 
+
+/* INPUT */
 input{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:1px solid #ddd;
-outline:none;
-transition:0.2s;
+  width: 100%;
+  padding: 10px;
+  margin-top: 12px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: #111;
+  color: #fff;
+  outline: none;
 }
 
 input:focus{
-border-color:#2ecc71;
+  border-color: #ff7a00;
 }
 
 
-/* ROW FOR CARD INPUT */
-
-.row{
-display:flex;
-gap:10px;
-}
-
-
-/* PAY BUTTON */
-
+/* BUTTON (🔥 ORANGE THEME) */
 .pay-btn{
-width:100%;
-padding:12px;
-margin-top:15px;
-background:#2ecc71;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
-font-size:15px;
-font-weight:500;
-transition:0.2s;
+  width: 100%;
+  padding: 13px;
+  margin-top: 18px;
+  background: linear-gradient(135deg, #ff7a00, #ff5500);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.3s;
 }
 
 .pay-btn:hover{
-background:#27ae60;
-transform:scale(1.02);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 122, 0, 0.4);
 }
 
 
 /* CANCEL BUTTON */
-
 .cancel-btn{
-width:100%;
-margin-top:10px;
-padding:10px;
-border:none;
-background:#eee;
-border-radius:8px;
-cursor:pointer;
-font-size:14px;
-transition:0.2s;
+  width: 100%;
+  margin-top: 12px;
+  padding: 11px;
+  border: none;
+  background: #2a2a2a;
+  color: #ccc;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
 .cancel-btn:hover{
-background:#ddd;
+  background: #3a3a3a;
 }
 
 
-/* LOADING STATE */
-
+/* LOADING */
 .loading-box{
-padding:40px;
-text-align:center;
-font-size:16px;
-color:#666;
+  padding: 40px;
+  text-align: center;
+  font-size: 16px;
+  color: #bbb;
 }
