@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-users',
@@ -100,29 +101,55 @@ export class ManageUsers implements OnInit {
   }
 
   /* ===== DELETE USER ===== */
-  deleteUser(id: string) {
+ deleteUser(id: string) {
 
-  console.log("Deleting user:", id); // 🔥 DEBUG
+  Swal.fire({
+    title: 'Are you sure?',
+    text: "You won't be able to undo this!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#ff9800',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Yes, delete it!',
+    background: '#1c1c1c',
+    color: '#fff'
+  }).then((result) => {
 
-  if (!confirm('Are you sure you want to delete this user?')) return;
+    if (result.isConfirmed) {
 
-  this.http.delete(`http://localhost:5000/api/users/${id}`)
-    .subscribe({
-      next: (res) => {
+      this.http.delete(`http://localhost:5000/api/users/${id}`)
+        .subscribe({
+          next: () => {
 
-        console.log("Deleted:", res); // 🔥 DEBUG
+            this.users = this.users.filter(u => u._id !== id);
 
-        // remove from UI
-        this.users = this.users.filter(u => u._id !== id);
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'User has been deleted.',
+              icon: 'success',
+              confirmButtonColor: '#ff9800',
+              background: '#1c1c1c',
+              color: '#fff'
+            });
 
-        alert('User deleted successfully');
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error("Delete error:", err);
-        alert('Delete failed');
-      }
-    });
+            this.cdr.detectChanges();
+          },
+
+          error: (err) => {
+            console.error(err);
+
+            Swal.fire({
+              title: 'Error!',
+              text: 'Delete failed',
+              icon: 'error',
+              confirmButtonColor: '#ff9800'
+            });
+          }
+        });
+
+    }
+
+  });
 }
   goBack() {
     window.history.back();

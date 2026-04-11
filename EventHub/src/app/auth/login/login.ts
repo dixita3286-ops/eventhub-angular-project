@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import Swal from 'sweetalert2';
+import confetti from 'canvas-confetti';
 
 @Component({
   selector: 'app-login',
@@ -32,7 +34,12 @@ export class Login {
   login(): void {
 
     if (!this.email || !this.password) {
-      alert('Please enter email and password');
+      Swal.fire({
+        title: 'Oops!',
+        text: 'Please enter email and password',
+        icon: 'warning',
+        confirmButtonColor: '#ff9800'
+      });
       return;
     }
 
@@ -50,29 +57,58 @@ export class Login {
         // 🔥 SAVE USER
         localStorage.setItem('user', JSON.stringify(user));
 
-        // 🔥 ROLE BASED REDIRECT (FIXED)
-         if (user.role === 'student') {
-           this.router.navigateByUrl('/student');
-        }
+        // 🎆 SMALL CONFETTI (OPTIONAL BUT COOL 😏)
+        confetti({
+          particleCount: 80,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+
+        // 🔥 SUCCESS ALERT
+        Swal.fire({
+          title: 'Welcome Back 👋',
+          text: 'Login successful!',
+          icon: 'success',
+          confirmButtonColor: '#ff9800',
+          background: '#1c1c1c',
+          color: '#fff',
+          timer: 1800,
+          showConfirmButton: false
+        });
+
+        // 🔥 ROLE BASED REDIRECT (AFTER SHORT DELAY)
+        setTimeout(() => {
+
+          if (user.role === 'student') {
+            this.router.navigateByUrl('/student');
+          }
           else if (user.role === 'admin') {
             this.router.navigateByUrl('/admin');
-        }
+          }
           else if (user.role === 'organizer') {
-              this.router.navigateByUrl('/organizer');
-        }
+            this.router.navigateByUrl('/organizer');
+          }
+          else {
+            Swal.fire('Error', 'Invalid user role', 'error');
+            localStorage.removeItem('user');
+          }
 
-        else {
-          alert('Invalid user role');
-          localStorage.removeItem('user');
-        }
+        }, 1800);
 
         this.loading = false;
       },
 
       error: () => {
         this.loading = false;
-        alert('Invalid email or password');
+
+        Swal.fire({
+          title: 'Login Failed',
+          text: 'Invalid email or password',
+          icon: 'error',
+          confirmButtonColor: '#ff9800'
+        });
       }
+
     });
   }
 
@@ -80,4 +116,5 @@ export class Login {
   goToRegister(): void {
     this.router.navigateByUrl('/register');
   }
+
 }
