@@ -1,16 +1,20 @@
+
+
 /* PAGE BACKGROUND */
 
-.main{
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#0f0f0f,#1a1a1a,#000);
-  padding:40px;
-  font-family:'Poppins',sans-serif;
+.main {
+  height: 100vh;           /* 🔥 FIX */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;        /* optional */
 }
 
-
+:host {
+  display: block;
+  height: 100vh;
+  overflow: hidden;   /* 🔥 SCROLL LOCK */
+}
 
 /* EVENT CARD */
 

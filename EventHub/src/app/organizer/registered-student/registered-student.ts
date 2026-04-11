@@ -60,7 +60,7 @@ export class RegisteredStudent implements OnInit {
 
           // 🔥 IMPORTANT FIX
           this.zone.run(() => {
-            this.students = data || [];
+            this.students = (data || []).filter(s => s.status === 'approved');
             this.applyFilter();
             this.loading = false;
 
