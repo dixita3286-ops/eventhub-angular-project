@@ -110,7 +110,22 @@ h1::after {
   color: #ff9800;
   letter-spacing: 0.5px;
 }
+/* 🔥 CANCEL BUTTON */
+.cancel-btn{
+  margin-top:12px;
+  padding:8px 14px;
+  border:none;
+  border-radius:8px;
+  background:#ff4d4d;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
 
+.cancel-btn:hover{
+  background:#e60000;
+}
 /* ================= ANIMATION ================= */
 .student-card {
   opacity: 0;

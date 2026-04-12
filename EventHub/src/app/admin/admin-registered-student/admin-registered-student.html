@@ -26,6 +26,11 @@
         Registered on: {{ s.registeredAt | date:'medium' }}
       </p>
 
+        <!-- 🔥 NEW BUTTON -->
+<button class="cancel-btn" (click)="cancelRegistration(s._id)">
+  Cancel Registration
+</button>
+
     </div>
 
   </div>

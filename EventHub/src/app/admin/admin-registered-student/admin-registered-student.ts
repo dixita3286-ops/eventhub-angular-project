@@ -19,12 +19,11 @@ export class AdminRegisteredStudent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    private zone: NgZone   // 🔥 ADD
+    private zone: NgZone
   ) {}
 
   ngOnInit(): void {
 
-    // 🔥 ALWAYS START FROM TOP
     window.scrollTo(0, 0);
 
     const eventId = this.route.snapshot.paramMap.get('eventId');
@@ -48,7 +47,6 @@ export class AdminRegisteredStudent implements OnInit {
 
             this.cdr.detectChanges();
 
-            // 🔥 FORCE UI + SCROLL FIX
             setTimeout(() => {
               window.scrollTo(0, 0);
             }, 50);
@@ -56,13 +54,38 @@ export class AdminRegisteredStudent implements OnInit {
 
         },
         error: () => {
-
           this.zone.run(() => {
             this.loading = false;
             this.cdr.detectChanges();
           });
-
         }
       });
   }
+
+  /* 🔥 CANCEL REGISTRATION */
+  cancelRegistration(id: any) {
+
+  if (!confirm('Are you sure?')) return;
+
+  this.http.delete(`http://localhost:5000/api/registrations/${id}`)
+    .subscribe({
+      next: () => {
+
+        this.zone.run(() => {
+
+          this.students = this.students.filter(s => s._id !== id);
+
+          this.cdr.detectChanges();
+
+        });
+
+        alert('Cancelled successfully');
+
+      },
+      error: () => {
+        alert('Error cancelling registration');
+      }
+    });
+}
+
 }
