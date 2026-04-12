@@ -1,48 +1,80 @@
 <div class="signup-page">
 
-
-
-  <!-- SIGNUP CARD -->
   <div class="signup-box">
     <h2>User Signup</h2>
 
-    <!-- FULL NAME -->
-    <label>Full Name</label>
-    <input
-      type="text"
-      placeholder="Enter your name"
-      [(ngModel)]="name"
-    />
+    <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
 
-    <!-- EMAIL -->
-    <label>Email</label>
-    <input
-      type="email"
-      placeholder="Enter your email"
-      [(ngModel)]="email"
-    />
+      <!-- NAME -->
+      <div class="form-group">
+        <label>Full Name</label>
+        <input
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          required
+          #nameRef="ngModel"
+          placeholder="Enter your name"
+        />
+        <small class="error" *ngIf="nameRef.invalid && (nameRef.touched || registerForm.submitted)">
+          Name is required
+        </small>
+      </div>
 
-    <!-- PASSWORD -->
-    <label>Password</label>
-    <input
-      type="password"
-      placeholder="Enter your password"
-      [(ngModel)]="password"
-    />
+      <!-- EMAIL -->
+      <div class="form-group">
+        <label>Email</label>
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          #emailRef="ngModel"
+          placeholder="Enter your Gmail"
+        />
+        <small class="error" *ngIf="emailRef.invalid && (emailRef.touched || registerForm.submitted)">
+          Enter a valid email
+        </small>
+      </div>
 
-    <!-- ROLE -->
-    <label>Select Role</label>
-    <select [(ngModel)]="role">
-      <option value="" disabled selected>-- Select Role --</option>
-      <option value="student">Student</option>
-      <option value="organizer">Organizer</option>
-    </select>
+      <!-- PASSWORD -->
+      <div class="form-group">
+        <label>Password</label>
+        <input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          minlength="6"
+          #passRef="ngModel"
+          placeholder="Enter password"
+        />
+        <small class="error" *ngIf="passRef.invalid && (passRef.touched || registerForm.submitted)">
+          Minimum 6 characters required
+        </small>
+      </div>
 
-    <button (click)="register()">Sign Up</button>
+      <!-- ROLE -->
+      <div class="form-group">
+        <label>Select Role</label>
+        <select [(ngModel)]="role" name="role" required #roleRef="ngModel">
+          <option value="">-- Select Role --</option>
+          <option value="student">Student</option>
+          <option value="organizer">Organizer</option>
+        </select>
+        <small class="error" *ngIf="roleRef.invalid && (roleRef.touched || registerForm.submitted)">
+          Please select role
+        </small>
+      </div>
+
+      <!-- BUTTON -->
+      <button type="submit">Sign Up</button>
+
+    </form>
 
     <a class="login-link" (click)="goToLogin()">
-  Already have an account? Login
-</a>
+      Already have an account? Login
+    </a>
 
   </div>
 

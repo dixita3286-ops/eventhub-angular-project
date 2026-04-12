@@ -25,21 +25,14 @@ export class Login {
     private router: Router
   ) {}
 
-  // ================= TOGGLE PASSWORD =================
   togglePassword(): void {
     this.showPassword = !this.showPassword;
   }
 
-  // ================= LOGIN =================
   login(): void {
 
     if (!this.email || !this.password) {
-      Swal.fire({
-        title: 'Oops!',
-        text: 'Please enter email and password',
-        icon: 'warning',
-        confirmButtonColor: '#ff9800'
-      });
+      Swal.fire('Oops!', 'Enter email & password', 'warning');
       return;
     }
 
@@ -52,31 +45,30 @@ export class Login {
 
       next: (user: any) => {
 
-        console.log('LOGIN SUCCESS:', user);
-
-        // 🔥 SAVE USER
         localStorage.setItem('user', JSON.stringify(user));
 
-        // 🎆 SMALL CONFETTI (OPTIONAL BUT COOL 😏)
         confetti({
           particleCount: 80,
           spread: 70,
           origin: { y: 0.6 }
         });
 
-        // 🔥 SUCCESS ALERT
-        Swal.fire({
-          title: 'Welcome Back 👋',
-          text: 'Login successful!',
-          icon: 'success',
-          confirmButtonColor: '#ff9800',
-          background: '#1c1c1c',
-          color: '#fff',
-          timer: 1800,
-          showConfirmButton: false
-        });
+        // 🔥 CHECK FLAG
+        const justRegistered = localStorage.getItem('justRegistered');
 
-        // 🔥 ROLE BASED REDIRECT (AFTER SHORT DELAY)
+        if (!justRegistered) {
+          Swal.fire({
+            title: 'Welcome Back 👋',
+            text: 'Login successful!',
+            icon: 'success',
+            timer: 1800,
+            showConfirmButton: false
+          });
+        } else {
+          // 🔥 REMOVE FLAG
+          localStorage.removeItem('justRegistered');
+        }
+
         setTimeout(() => {
 
           if (user.role === 'student') {
@@ -89,11 +81,11 @@ export class Login {
             this.router.navigateByUrl('/organizer');
           }
           else {
-            Swal.fire('Error', 'Invalid user role', 'error');
+            Swal.fire('Error', 'Invalid role', 'error');
             localStorage.removeItem('user');
           }
 
-        }, 1800);
+        }, 1500);
 
         this.loading = false;
       },
@@ -101,18 +93,12 @@ export class Login {
       error: () => {
         this.loading = false;
 
-        Swal.fire({
-          title: 'Login Failed',
-          text: 'Invalid email or password',
-          icon: 'error',
-          confirmButtonColor: '#ff9800'
-        });
+        Swal.fire('Login Failed', 'Invalid credentials', 'error');
       }
 
     });
   }
 
-  // ================= GO TO REGISTER =================
   goToRegister(): void {
     this.router.navigateByUrl('/register');
   }

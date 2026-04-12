@@ -40,12 +40,22 @@ export class ManagePayments implements OnInit {
     this.http.get<any[]>('http://localhost:5000/api/registrations/payments')
       .subscribe(data => {
 
-        // ✅ REMOVE FREE EVENTS
-        this.payments = data.filter(p => p.method !== 'free');
+        let filtered = data.filter(p => p.method !== 'free');
+
+        this.payments = this.sortPayments(filtered);
 
         this.loading = false;
         this.cdr.detectChanges();
       });
+  }
+
+  /* 🔥 SORT FUNCTION */
+  sortPayments(list: any[]) {
+    return list.sort((a, b) => {
+      if (a.status === 'pending' && b.status !== 'pending') return -1;
+      if (a.status !== 'pending' && b.status === 'pending') return 1;
+      return 0;
+    });
   }
 
   /* APPROVE */
@@ -56,11 +66,15 @@ export class ManagePayments implements OnInit {
     this.http.put(`http://localhost:5000/api/registrations/approve/${id}`, {})
       .subscribe(() => {
 
+        // ✅ UPDATE STATUS
         this.payments = this.payments.map(p =>
           p._id === id
             ? { ...p, status: 'approved', animate: 'approved' }
             : p
         );
+
+        // 🔥 RE-SORT
+        this.payments = this.sortPayments(this.payments);
 
         this.launchConfetti();
         this.closeImage();
@@ -82,35 +96,44 @@ export class ManagePayments implements OnInit {
     const item = this.payments.find(p => p._id === id);
     if (!item || item.status !== 'pending') return;
 
-    Swal.fire({
-      title: 'Reject Payment ❌',
-      input: 'text',
-      inputPlaceholder: 'Enter reason...',
-      showCancelButton: true
-    }).then(res => {
+    this.closeImage();
 
-      if (!res.value) return;
+    setTimeout(() => {
 
-      this.http.put(`http://localhost:5000/api/registrations/reject/${id}`, {
-        reason: res.value
-      }).subscribe(() => {
+      Swal.fire({
+        title: 'Reject Payment ❌',
+        input: 'text',
+        inputPlaceholder: 'Enter reason...',
+        showCancelButton: true
+      }).then(res => {
 
-        this.payments = this.payments.map(p =>
-          p._id === id
-            ? {
-                ...p,
-                status: 'rejected',
-                rejectReason: res.value,
-                animate: 'rejected'
-              }
-            : p
-        );
+        if (!res.value) return;
 
-        this.closeImage();
-        this.cdr.detectChanges();
+        this.http.put(`http://localhost:5000/api/registrations/reject/${id}`, {
+          reason: res.value
+        }).subscribe(() => {
+
+          // ✅ UPDATE STATUS
+          this.payments = this.payments.map(p =>
+            p._id === id
+              ? {
+                  ...p,
+                  status: 'rejected',
+                  rejectReason: res.value,
+                  animate: 'rejected'
+                }
+              : p
+          );
+
+          // 🔥 RE-SORT
+          this.payments = this.sortPayments(this.payments);
+
+          this.cdr.detectChanges();
+        });
+
       });
 
-    });
+    }, 200);
   }
 
   /* OPEN MODAL */

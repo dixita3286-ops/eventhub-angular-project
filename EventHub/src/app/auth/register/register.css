@@ -28,6 +28,7 @@
   filter: blur(100px);
   opacity: 0.35;
   animation: float 8s infinite alternate ease-in-out;
+  pointer-events: none; /* FIX */
 }
 
 .signup-page::before {
@@ -51,7 +52,7 @@
 .signup-box {
   width: 400px;
   background: rgba(255,255,255,0.06);
-  padding: 25px 25px;
+  padding: 25px;
   border-radius: 18px;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.15);
@@ -68,11 +69,6 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-.signup-page::before,
-.signup-page::after {
-  pointer-events: none;   /* 🔥 THIS LINE FIXES EVERYTHING */
-}
-
 /* HEADING */
 .signup-box h2 {
   font-family: 'Parisienne', cursive;
@@ -82,20 +78,25 @@
   text-shadow: 0 0 10px rgba(255,170,70,0.5);
 }
 
-/* INPUTS */
+/* FORM GROUP */
+.form-group {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+/* LABEL */
 label {
   display: block;
-  text-align: left;
   color: #ddd;
   margin-bottom: 6px;
   font-size: 14px;
 }
 
+/* INPUTS */
 input,
 select {
   width: 100%;
   padding: 12px;
-  margin-bottom: 18px;
   border-radius: 10px;
   border: none;
   background: rgba(255,255,255,0.15);
@@ -103,16 +104,27 @@ select {
   font-size: 14px;
 }
 
+/* SELECT OPTIONS */
 select option {
   background: #000;
   color: #fff;
 }
 
+/* INPUT FOCUS */
 input:focus,
 select:focus {
   outline: none;
   background: rgba(255,255,255,0.22);
   box-shadow: 0 0 8px #ff9900;
+}
+
+/* 🔥 ERROR MESSAGE (CLEAN UI) */
+.error {
+  color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
+  font-weight: 400;
 }
 
 /* BUTTON */

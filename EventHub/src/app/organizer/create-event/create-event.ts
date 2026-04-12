@@ -35,7 +35,7 @@ export class CreateEvent implements OnInit {
     this.minDate = today.toISOString().split('T')[0];
   }
 
-  /* IMAGE CHANGE */
+  /* IMAGE */
   onFileChange(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -49,18 +49,13 @@ export class CreateEvent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  /* PDF CHANGE */
+  /* PDF */
   onPdfChange(event: any) {
     const file = event.target.files[0];
     if (!file) return;
 
     if (file.type !== 'application/pdf') {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid File',
-        text: 'Only PDF files allowed.'
-      });
-
+      Swal.fire('Invalid File', 'Only PDF allowed', 'warning');
       event.target.value = '';
       return;
     }
@@ -71,49 +66,33 @@ export class CreateEvent implements OnInit {
   /* CREATE EVENT */
   createEvent(eventForm: NgForm) {
 
+    // Form validation
+    if (eventForm.invalid) {
+      Swal.fire('Invalid Form', 'Please fill all required fields', 'warning');
+      return;
+    }
+
+    // Fee validation
+    if (this.registrationFee === null || this.registrationFee < 0) {
+      Swal.fire('Invalid Fee', 'Fee cannot be negative', 'warning');
+      return;
+    }
+
+    // Date validation
     const today = new Date();
     const minDate = new Date();
     minDate.setDate(today.getDate() + 5);
 
     if (new Date(this.date) < minDate) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Invalid Date',
-        text: 'Event date must be at least 5 days from today.'
-      });
+      Swal.fire('Invalid Date', 'Select date after 5 days', 'warning');
       return;
     }
 
-    if (!this.eventImage) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Image Required',
-        text: 'Please upload event image.'
-      });
-      return;
-    }
+    // File validation
+    if (!this.eventImage) return;
+    if (!this.eventFile) return;
 
-    if (!this.eventFile) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'PDF Required',
-        text: 'Please upload event PDF.'
-      });
-      return;
-    }
-
-    const userStr = localStorage.getItem('user');
-
-    if (!userStr) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Required',
-        text: 'You must login first.'
-      });
-      return;
-    }
-
-    const user = JSON.parse(userStr);
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     const formData = new FormData();
 
@@ -133,39 +112,22 @@ export class CreateEvent implements OnInit {
       body: formData
     })
     .then(res => res.json())
-    .then(data => {
+    .then(() => {
 
-      Swal.fire({
-        icon: 'success',
-        title: 'Event Created',
-        text: 'Event created successfully. Waiting for admin approval.',
-        confirmButtonColor: '#3085d6'
-      });
+      Swal.fire('Success', 'Event Created Successfully', 'success');
 
-      /* ✅ RESET FORM */
       eventForm.resetForm();
 
       this.imagePreview = null;
       this.eventImage = null;
       this.eventFile = null;
 
-      /* ✅ CLEAR FILE INPUTS */
       this.imageInput.nativeElement.value = '';
       this.pdfInput.nativeElement.value = '';
 
     })
-    .catch(err => {
-
-      console.error(err);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error creating event.'
-      });
-
+    .catch(() => {
+      Swal.fire('Error', 'Something went wrong', 'error');
     });
-
   }
-
 }

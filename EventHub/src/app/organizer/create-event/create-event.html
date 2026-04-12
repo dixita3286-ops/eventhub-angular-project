@@ -1,7 +1,5 @@
 <div class="page-wrapper">
-
   <div class="main">
-
     <div class="form-box">
 
       <h1>Create Event</h1>
@@ -11,19 +9,25 @@
         <!-- TITLE -->
         <div class="form-group">
           <label>Event Title</label>
-          <input type="text" [(ngModel)]="title" name="title" required>
+          <input type="text" [(ngModel)]="title" name="title" required #titleRef="ngModel">
+          <div *ngIf="titleRef.invalid && (titleRef.touched || eventForm.submitted)" style="color:red">
+            Title is required
+          </div>
         </div>
 
         <!-- DESCRIPTION -->
         <div class="form-group">
           <label>Description</label>
-          <textarea rows="4" [(ngModel)]="description" name="description"></textarea>
+          <textarea rows="4" [(ngModel)]="description" name="description" required #descRef="ngModel"></textarea>
+          <div *ngIf="descRef.invalid && (descRef.touched || eventForm.submitted)" style="color:red">
+            Description is required
+          </div>
         </div>
 
         <!-- CATEGORY -->
         <div class="form-group">
           <label>Category</label>
-          <select [(ngModel)]="category" name="category" required>
+          <select [(ngModel)]="category" name="category" required #catRef="ngModel">
             <option value="">Select Category</option>
             <option value="Workshop">Workshop</option>
             <option value="Seminar">Seminar</option>
@@ -32,30 +36,52 @@
             <option value="Social">Social</option>
             <option value="Exhibition">Exhibition</option>
           </select>
+          <div *ngIf="catRef.invalid && (catRef.touched || eventForm.submitted)" style="color:red">
+            Category is required
+          </div>
         </div>
 
         <!-- DATE -->
         <div class="form-group">
           <label>Event Date</label>
-          <input type="date" [(ngModel)]="date" name="date" [min]="minDate" required>
+          <input type="date" [(ngModel)]="date" name="date" [min]="minDate" required #dateRef="ngModel">
+          <div *ngIf="dateRef.invalid && (dateRef.touched || eventForm.submitted)" style="color:red">
+            Date is required
+          </div>
         </div>
 
         <!-- VENUE -->
         <div class="form-group">
           <label>Venue</label>
-          <input type="text" [(ngModel)]="venue" name="venue" required>
+          <input type="text" [(ngModel)]="venue" name="venue" required #venueRef="ngModel">
+          <div *ngIf="venueRef.invalid && (venueRef.touched || eventForm.submitted)" style="color:red">
+            Venue is required
+          </div>
         </div>
 
         <!-- FEE -->
         <div class="form-group">
           <label>Registration Fee</label>
-          <input type="number" [(ngModel)]="registrationFee" name="registrationFee" min="0" required>
+          <input 
+            type="number"
+            [(ngModel)]="registrationFee"
+            name="registrationFee"
+            min="0"
+            required
+            #feeRef="ngModel"
+          >
+          <div *ngIf="(feeRef.invalid || registrationFee < 0) && (feeRef.touched || eventForm.submitted)" style="color:red">
+            Fee must be 0 or greater
+          </div>
         </div>
 
         <!-- IMAGE -->
         <div class="form-group">
           <label>Upload Event Image</label>
           <input type="file" #imageInput accept="image/*" (change)="onFileChange($event)">
+          <div *ngIf="!eventImage && eventForm.submitted" style="color:red">
+            Image is required
+          </div>
           <img *ngIf="imagePreview" [src]="imagePreview" class="preview">
         </div>
 
@@ -63,6 +89,9 @@
         <div class="form-group">
           <label>Upload Event PDF</label>
           <input type="file" #pdfInput accept="application/pdf" (change)="onPdfChange($event)">
+          <div *ngIf="!eventFile && eventForm.submitted" style="color:red">
+            PDF is required
+          </div>
         </div>
 
         <!-- BUTTON -->
@@ -71,7 +100,5 @@
       </form>
 
     </div>
-
   </div>
-
 </div>
